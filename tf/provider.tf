@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "6.3.0"
-    }
-  }
-}
-
 variable "project" {
   type = string
 }
@@ -17,6 +8,24 @@ variable "region" {
 
 variable "zone" {
   type = string
+}
+
+variable "backend_gcs_bucket" {
+  type = string
+}
+
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "6.3.0"
+    }
+  }
+
+  backend "gcs" {
+    bucket  = var.backend_gcs_bucket
+    prefix  = "terraform/state/global"
+  }
 }
 
 provider "google" {

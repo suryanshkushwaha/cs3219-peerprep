@@ -4,7 +4,7 @@ source ../source.sh
 
 set -o allexport
 
-source ./.env
+SERVICE_NAME=backend
 
 GCLOUD_REPOSITORY_URL=$(cd ../tf && tofu output -raw repository_url)
 TF_VAR_service_name=${SERVICE_NAME}

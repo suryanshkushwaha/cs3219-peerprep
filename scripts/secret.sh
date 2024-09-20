@@ -4,15 +4,13 @@ COMMAND=$1
 shift
 
 FILES=(
-    secrets/*
-    tf_backend/*.tfstate*
+    secrets/gcp_credentials.json
+    tf_backend/terraform.tfstate
+    tf_backend/terraform.tfstate.backup
 )
 
 encrypt() {
     for FILE in ${FILES[@]}; do
-        if [[ $FILE == *".enc" ]]; then
-            continue
-        fi
         echo "Encrypting $FILE to $FILE.enc"
         sops -e --input-type json --output-type json $FILE > $FILE.enc
     done
@@ -20,9 +18,6 @@ encrypt() {
 
 decrypt() {
     for FILE in ${FILES[@]}; do
-        if [[ $FILE == *".enc" ]]; then
-            continue
-        fi
         echo "Decrypting $FILE.enc to $FILE"
         sops -d --input-type json --output-type json $FILE.enc > $FILE
     done

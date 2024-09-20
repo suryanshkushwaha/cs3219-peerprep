@@ -24,6 +24,8 @@ jobs:
 
       - name: Setup Runner Dependencies
         uses: ./.github/actions/setup_runner
+        with:
+          AGE_SECRET_KEY: ${{ secrets.AGE_SECRET_KEY }}
 
       # Runs a single command using the runners shell
       - name: Run a one-line script

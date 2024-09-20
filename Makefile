@@ -11,10 +11,10 @@ help: ## Display this help text
 ## Google Cloud CLI
 ##
 
-gcloud_auth: ## Authenticate with gcloud and launch a new shell.
-	set -o allexport && source ./.env && set +o allexport && \
-		gcloud auth activate-service-account --key-file=$$GOOGLE_APPLICATION_CREDENTIALS
-		$$SHELL
+gcloud_auth: ## Authenticate with gcloud
+	. source.sh && \
+		gcloud auth activate-service-account --key-file=$$GOOGLE_APPLICATION_CREDENTIALS && \
+		gcloud auth configure-docker $$GCLOUD_REGION-docker.pkg.dev
 
 ##
 ## Global Terraform Infrastructure
@@ -24,11 +24,13 @@ deploy_infra: ## Deploy Global OpenTofu/Terraform infrastructure
 	. source.sh && \
 		cd tf && \
 		tofu init && \
+		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
 		tofu apply -auto-approve
 
 destroy_infra: ## Destroy Global OpenTofu/Terraform infrastructure
 	. source.sh && \
 		cd tf && \
+		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
 		tofu destroy -auto-approve
 
 ##

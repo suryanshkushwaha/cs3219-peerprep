@@ -1,3 +1,5 @@
+SHELL=/bin/bash
+
 deploy: infra_deploy code_deploy
 destroy: infra_destroy
 
@@ -14,14 +16,17 @@ infra_deploy:
 	. ./source.sh && \
 		cd tf && \
 		tofu init && \
+		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
 		tofu apply -auto-approve
 
 infra_destroy:
-	. ./source.sh && \
+	. ./source.sh &&
+		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
 		cd tf && \
 		tofu destroy -auto-approve
 
 api_url:
 	@ . ./source.sh && \
 		cd tf && \
+		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
 		tofu output -raw service_url

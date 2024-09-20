@@ -24,6 +24,8 @@ else
   ENV=$(echo $BRANCH | tr '[:upper:]' '[:lower:]' | tr "/" "-")
 fi
 
-TF_WORKSPACE=$ENV
+# Stupid issue: TF_WORKSPACE environment variable is literally broken, WTF?
+# https://discuss.hashicorp.com/t/help-using-terraform-workspaces-in-an-automation-pipeline-with-tf-workspace-currently-selected-workspace-x-does-not-exist/40676
+TERRAFORM_WORKSPACE=$ENV
 
 set +o allexport

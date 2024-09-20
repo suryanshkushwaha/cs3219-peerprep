@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Checks on Push
+name: Actions on Push
 
 # Controls when the workflow will run
 on:
@@ -24,6 +24,8 @@ jobs:
 
       - name: Setup Runner Dependencies
         uses: ./.github/actions/setup_runner
+        with:
+          AGE_SECRET_KEY: ${{ secrets.AGE_SECRET_KEY }}
 
     # We don't use this, for now.
     #   - name: Find Changed Files
@@ -37,18 +39,23 @@ jobs:
     #           - 'frontend/**'
     #         backend:
     #           - 'backend/**'
-            
+      - name: Decrypt Secret Files
+        shell: bash
+        run: /bin/bash ./scripts/secret.sh decrypt
+
+      - name: Authenticate to Google Cloud
+        shell: bash
+        run: make gcloud_auth
+
       - name: Deploy Global Infrastructure
-        run: |
-            make deploy_infra
+        shell: bash
+        run: make deploy_infra
     
       - name: Deploy Backend
-        run: |
-            cd backend
-            make deploy
+        shell: bash
+        run: cd backend && make deploy
     
       - name: Deploy Frontend
-        run: |
-            cd frontend
-            make deploy
+        shell: bash
+        run: cd frontend && make deploy
 

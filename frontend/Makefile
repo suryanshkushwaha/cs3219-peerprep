@@ -4,7 +4,8 @@ deploy: infra_deploy code_deploy
 destroy: infra_destroy
 
 BACKEND_SERVICE_URL=$(shell cd ../backend && $(MAKE) -s api_url | head -n 2)
-	
+test:
+	@echo $(BACKEND_SERVICE_URL)
 serve:
 	@if [[ "$(BACKEND_SERVICE_URL)" == *"No outputs found"* ]] ; then \
 		echo "Backend service URL not found, please go to the backend service and deploy it first."; \
@@ -19,6 +20,7 @@ code_build:
 		exit 1; \
 	fi
 	export VITE_BACKEND_SERVICE_URL=$(BACKEND_SERVICE_URL) && \
+		yarn && \
 		yarn run build
 
 code_deploy: code_build
@@ -32,9 +34,11 @@ infra_deploy: tf/*
 	. ./source.sh && \
 		cd tf && \
 		tofu init && \
+		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
 		tofu apply -auto-approve \
 
 infra_destroy:
 	. ./source.sh && \
 		cd tf && \
+		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
 		tofu destroy -auto-approve \
