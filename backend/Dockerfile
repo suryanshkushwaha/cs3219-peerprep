@@ -1,4 +1,6 @@
 FROM node:22-alpine
+ARG PORT
+ENV PORT=$PORT
 
 COPY --link package.json yarn.lock ./
 
@@ -6,7 +8,6 @@ RUN yarn
 
 COPY --link . .
 
-# The port should be specified in an .env file.
-EXPOSE 3333
+EXPOSE ${PORT}
 
 CMD ["yarn", "run", "start"]

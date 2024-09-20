@@ -1,4 +1,6 @@
+SHELL := /bin/bash
 .PHONY: help gcloud_auth deploy_tf_backend destroy_tf_backend
+
 
 
 help: ## Display this help text
@@ -15,22 +17,35 @@ gcloud_auth: ## Authenticate with gcloud and launch a new shell.
 		$$SHELL
 
 ##
+## Global Terraform Infrastructure
+##
+
+deploy_infra: ## Deploy Global OpenTofu/Terraform infrastructure
+	. source.sh && \
+		cd tf && \
+		tofu init && \
+		tofu apply -auto-approve
+
+destroy_infra: ## Destroy Global OpenTofu/Terraform infrastructure
+	. source.sh && \
+		cd tf && \
+		tofu destroy -auto-approve
+
+##
 ## Terraform backend
 ##
 
 deploy_tf_backend: ## Deploy the OpenTofu/Terraform backend to GCP
-	set -o allexport && source ./.env && set +o allexport && \
-	export GOOGLE_APPLICATION_CREDENTIALS=$(shell realpath ./secrets/gcp_credentials.json) && \
+	. source.sh && \
+		unset TF_WORKSPACE && \
 		cd tf_backend && \
 		tofu init && \
 		tofu apply -auto-approve \
-			-var="bucket_name=$$TF_BACKEND_BUCKET_NAME" \
-			-var="project=$$TF_PROJECT_NAME"
+			-var="bucket_name=$$TF_BACKEND_BUCKET_NAME"
 
 destroy_tf_backend: ## Destroy the OpenTofu/Terraform backend on GCP
-	set -o allexport && source ./.env && set +o allexport && \
-	export GOOGLE_APPLICATION_CREDENTIALS=$(shell realpath ./secrets/gcp_credentials.json) && \
+	. source.sh && \
+		unset TF_WORKSPACE && \
 		cd tf_backend && \
 		tofu destroy -auto-approve \
-			-var="bucket_name=$$TF_BACKEND_BUCKET_NAME" \
-			-var="project=$$TF_PROJECT_NAME"
+			-var="bucket_name=$$TF_BACKEND_BUCKET_NAME"
