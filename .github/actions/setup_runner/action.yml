@@ -19,6 +19,9 @@ runs:
     - name: Install age
       shell: bash
       run: sudo apt install -y age
+    - name: Setup age secret key
+      shell: bash
+      run: echo ${{ secrets.AGE_SECRET_KEY }} > ${XDG_CONFIG_HOME:-$HOME/.config}/sops/age/keys.txt
     - name: Install OpenTofu
       shell: bash
       run: |

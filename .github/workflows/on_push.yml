@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Checks on PRs
+name: Checks on Push
 
 # Controls when the workflow will run
 on:
@@ -21,10 +21,34 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-      
+
       - name: Setup Runner Dependencies
         uses: ./.github/actions/setup_runner
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+    # We don't use this, for now.
+    #   - name: Find Changed Files
+    #     uses: dorny/paths-filter@v3
+    #     id: changes
+    #     with:
+    #       filters: |
+    #         global_infra:
+    #           - 'tf/**'
+    #         frontend:
+    #           - 'frontend/**'
+    #         backend:
+    #           - 'backend/**'
+            
+      - name: Deploy Global Infrastructure
+        run: |
+            make deploy_infra
+    
+      - name: Deploy Backend
+        run: |
+            cd backend
+            make deploy
+    
+      - name: Deploy Frontend
+        run: |
+            cd frontend
+            make deploy
+

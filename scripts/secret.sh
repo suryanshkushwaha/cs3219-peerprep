@@ -10,19 +10,21 @@ FILES=(
 
 encrypt() {
     for FILE in ${FILES[@]}; do
-        if [[ $FILE == *.enc ]]; then
+        if [[ $FILE == *".enc" ]]; then
             continue
         fi
-        sops -e $FILE > $FILE.enc
+        echo "Encrypting $FILE to $FILE.enc"
+        sops -e --input-type json --output-type json $FILE > $FILE.enc
     done
 }
 
 decrypt() {
     for FILE in ${FILES[@]}; do
-        if [[ $FILE != *.enc ]]; then
+        if [[ $FILE == *".enc" ]]; then
             continue
         fi
-        sops -d $FILE.enc > $FILE
+        echo "Decrypting $FILE.enc to $FILE"
+        sops -d --input-type json --output-type json $FILE.enc > $FILE
     done
 }
 
