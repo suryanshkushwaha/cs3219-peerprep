@@ -1,6 +1,16 @@
+variable "backend_gcs_bucket" {
+  type = string
+  description = "The name of the bucket for storing Terraform state"
+}
+
 variable "service_name" {
     type = string
     description = "Name of the service. This name should be unique within the project."
+}
+
+variable "project" {
+  type = string
+  description = "Name of the project. This value should be shared within the entire repository."
 }
 
 terraform {
@@ -12,7 +22,29 @@ terraform {
   }
 
   backend "gcs" {
-    bucket  = var.bucket_name
+    bucket  = var.backend_gcs_bucket
     prefix  = "terraform/state/${var.service_name}"
   }
+}
+
+provider "google" {
+  # Configuration options
+  project = var.project
+
+  default_labels = {
+    "managed-by"  = "opentofu"
+    "project"     = var.project
+    # "environment" = "production" # TODO: This depends on the environment/branch.
+  }
+}
+
+provider "google-beta" {
+    # Configuration options
+    project = var.project
+    
+    default_labels = {
+        "managed-by"  = "opentofu"
+        "project"     = var.project
+        # "environment" = "production" # TODO: This depends on the environment/branch.
+    }
 }
