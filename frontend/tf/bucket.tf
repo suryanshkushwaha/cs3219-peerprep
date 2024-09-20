@@ -1,5 +1,5 @@
 resource "google_storage_bucket" "frontend" {
-  name          = "${var.project}-frontend"
+  name          = "${var.project}-${terraform.workspace}-frontend"
   location      = "US"
   force_destroy = true
 
