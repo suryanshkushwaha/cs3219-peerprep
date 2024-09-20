@@ -1,10 +1,21 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import axios from 'axios'
+
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_SERVICE_URL
 
 function App() {
   const [count, setCount] = useState(0)
+
+  const [res, setRes] = useState('Processing...')
+
+  useEffect(() => {
+    axios.get('/hello').then((response) => {
+      setRes(response.data)
+    })
+  })
 
   return (
     <>
@@ -23,6 +34,10 @@ function App() {
         </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
+        </p>
+        <p>
+          Pinging the backend service at <code>{axios.defaults.baseURL}</code>: <br />
+          {res}
         </p>
       </div>
       <p className="read-the-docs">

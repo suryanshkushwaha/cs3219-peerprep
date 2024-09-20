@@ -20,3 +20,8 @@ infra_destroy:
 	. ./source.sh && \
 		cd tf && \
 		tofu destroy -auto-approve
+
+api_url:
+	@ . ./source.sh && \
+		cd tf && \
+		tofu output -raw service_url
