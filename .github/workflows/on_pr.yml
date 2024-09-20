@@ -16,16 +16,18 @@ jobs:
   test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container:
+      image: kimyongbeom/peerprep-actions-runner:latest
+      env:
+        AGE_SECRET_KEY: ${{ secrets.AGE_SECRET_KEY }}
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+      options: --privileged
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-
-      - name: Setup Runner Dependencies
-        uses: ./.github/actions/setup_runner
-        with:
-          AGE_SECRET_KEY: ${{ secrets.AGE_SECRET_KEY }}
 
       # Runs a single command using the runners shell
       - name: Run a one-line script

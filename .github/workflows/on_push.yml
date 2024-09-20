@@ -13,19 +13,24 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  test:
+  deploy:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container:
+      image: kimyongbeom/peerprep-actions-runner:latest
+      env:
+        AGE_SECRET_KEY: ${{ secrets.AGE_SECRET_KEY }}
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+      options: --privileged
+
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-
-      - name: Setup Runner Dependencies
-        uses: ./.github/actions/setup_runner
-        with:
-          AGE_SECRET_KEY: ${{ secrets.AGE_SECRET_KEY }}
+      # https://github.com/actions/checkout/issues/1169
+      - run: git config --global --add safe.directory "$PWD"
 
     # We don't use this, for now.
     #   - name: Find Changed Files
@@ -41,7 +46,10 @@ jobs:
     #           - 'backend/**'
       - name: Decrypt Secret Files
         shell: bash
-        run: /bin/bash ./scripts/secret.sh decrypt
+        run: |
+          mkdir -p ${XDG_CONFIG_HOME:-$HOME/.config}/sops/age
+          echo $AGE_SECRET_KEY > ${XDG_CONFIG_HOME:-$HOME/.config}/sops/age/keys.txt
+          /bin/bash ./scripts/secret.sh decrypt
 
       - name: Authenticate to Google Cloud
         shell: bash
@@ -57,5 +65,5 @@ jobs:
     
       - name: Deploy Frontend
         shell: bash
-        run: cd frontend && make deploy
+        run: . $NVM_DIR/nvm.sh && cd frontend && make deploy
 

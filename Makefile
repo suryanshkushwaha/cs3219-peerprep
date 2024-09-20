@@ -14,7 +14,7 @@ help: ## Display this help text
 gcloud_auth: ## Authenticate with gcloud
 	. source.sh && \
 		gcloud auth activate-service-account --key-file=$$GOOGLE_APPLICATION_CREDENTIALS && \
-		gcloud auth configure-docker $$GCLOUD_REGION-docker.pkg.dev
+		gcloud auth configure-docker $$GCLOUD_REGION-docker.pkg.dev --quiet
 
 ##
 ## Global Terraform Infrastructure

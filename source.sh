@@ -14,7 +14,7 @@ TF_VAR_project=$GCLOUD_PROJECT
 TF_VAR_region=$GCLOUD_REGION
 TF_VAR_zone=$GCLOUD_ZONE
 
-# Environmen.t
+# Environment
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 if [[ $BRANCH == "main" ]]; then
   ENV="production"
