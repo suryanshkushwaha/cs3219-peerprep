@@ -18,6 +18,7 @@ jobs:
     if: github.event.pull_request.merged == true
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
     container:
       image: kimyongbeom/peerprep-actions-runner:latest
       env:
@@ -25,9 +26,12 @@ jobs:
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
       options: --privileged
+
     concurrency:
       # current branch
       group: ${{ github.event.pull_request.head.ref }}
+
+    permissions: write-all
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -47,20 +51,3 @@ jobs:
       - name: Destroy Frontend
         shell: bash
         run: . $NVM_DIR/nvm.sh && cd frontend && make destroy
-  
-  cleanup_branch:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-
-    steps:
-      - uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.git.deleteRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: ${{ github.event.pull_request.head.ref }}
-            })
