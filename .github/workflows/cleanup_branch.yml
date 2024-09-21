@@ -56,11 +56,13 @@ jobs:
 
     steps:
       - uses: actions/github-script@v7
+        env:
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             github.rest.git.deleteRef({ 
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: `heads/${context.payload.pull_request.head.ref}`
+              ref: `heads/${process.env.BRANCH_NAME}`
             })
