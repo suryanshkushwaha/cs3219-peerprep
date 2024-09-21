@@ -4,8 +4,10 @@ name: Actions on Push
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # On push @ branch
   push:
+  # When branch is created
+  create:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -27,43 +29,33 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-      # https://github.com/actions/checkout/issues/1169
-      - run: git config --global --add safe.directory "$PWD"
+      - uses: ./.github/actions/container_setup
 
-    # We don't use this, for now.
-    #   - name: Find Changed Files
-    #     uses: dorny/paths-filter@v3
-    #     id: changes
-    #     with:
-    #       filters: |
-    #         global_infra:
-    #           - 'tf/**'
-    #         frontend:
-    #           - 'frontend/**'
-    #         backend:
-    #           - 'backend/**'
-      - name: Decrypt Secret Files
-        shell: bash
-        run: |
-          mkdir -p ${XDG_CONFIG_HOME:-$HOME/.config}/sops/age
-          echo $AGE_SECRET_KEY > ${XDG_CONFIG_HOME:-$HOME/.config}/sops/age/keys.txt
-          /bin/bash ./scripts/secret.sh decrypt
-
-      - name: Authenticate to Google Cloud
-        shell: bash
-        run: make gcloud_auth
+      - name: Find Changed Files
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            global_infra:
+              - 'tf/**'
+            frontend:
+              - 'frontend/**'
+            backend:
+              - 'backend/**'
 
       - name: Deploy Global Infrastructure
         shell: bash
+        if: ${{ github.event_name }} == 'create' || ${{ steps.changes.outputs.global_infra }} == 'true'
         run: make deploy_infra
     
       - name: Deploy Backend
+        if: ${{ github.event_name }} == 'create' || ${{ steps.changes.outputs.backend }} == 'true'
         shell: bash
         run: cd backend && make deploy
     
       - name: Deploy Frontend
+        if: ${{ github.event_name }} == 'create' || ${{ steps.changes.outputs.frontend }} == 'true'
         shell: bash
         run: . $NVM_DIR/nvm.sh && cd frontend && make deploy
 
