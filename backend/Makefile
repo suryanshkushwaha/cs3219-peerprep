@@ -21,8 +21,9 @@ infra_deploy:
 
 infra_destroy:
 	. ./source.sh &&
-		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
 		cd tf && \
+		tofu init && \
+		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
 		tofu destroy -auto-approve
 
 url:

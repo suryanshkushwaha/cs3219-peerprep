@@ -36,6 +36,7 @@ deploy_infra: ## Deploy Global OpenTofu/Terraform infrastructure
 destroy_infra: ## Destroy Global OpenTofu/Terraform infrastructure
 	. source.sh && \
 		cd tf && \
+		tofu init && \
 		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
 		tofu destroy -auto-approve
 
