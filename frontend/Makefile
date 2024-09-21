@@ -4,8 +4,10 @@ deploy: infra_deploy code_deploy
 destroy: infra_destroy
 
 BACKEND_SERVICE_URL=$(shell cd ../backend && $(MAKE) -s url | head -n 2)
+
 test:
 	@echo $(BACKEND_SERVICE_URL)
+
 serve:
 	@if [[ "$(BACKEND_SERVICE_URL)" == *"No outputs found"* ]] ; then \
 		echo "Backend service URL not found, please go to the backend service and deploy it first."; \
@@ -30,7 +32,7 @@ code_deploy: code_build
 		gsutil -m cp -r dist/** $$bucket_url && \
 		cd tf && tofu output
 	
-infra_deploy: tf/*
+infra_deploy:
 	. ./source.sh && \
 		cd tf && \
 		tofu init && \
@@ -40,7 +42,8 @@ infra_deploy: tf/*
 infra_destroy:
 	. ./source.sh && \
 		cd tf && \
-		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
+		tofu init && \
+		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \	
 		tofu destroy -auto-approve \
 
 url:
