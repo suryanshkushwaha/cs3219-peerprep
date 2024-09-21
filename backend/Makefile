@@ -20,7 +20,7 @@ infra_deploy:
 		tofu apply -auto-approve
 
 infra_destroy:
-	. ./source.sh &&
+	. ./source.sh && \
 		cd tf && \
 		tofu init && \
 		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \

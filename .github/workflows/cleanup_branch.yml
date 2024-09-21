@@ -31,6 +31,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/container_setup
+        with:
+          branch: ${{ github.event.pull_request.head.ref }}
 
       - name: Destroy Global Infrastructure
         shell: bash
