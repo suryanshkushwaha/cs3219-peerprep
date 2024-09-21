@@ -24,6 +24,10 @@ jobs:
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
       options: --privileged
+    
+    permissions:
+      contents: read
+      pull-requests: write
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -32,8 +36,8 @@ jobs:
       - name: Get all deployment URLs
         id: urls
         run: |
-          echo "::set-output name=frontend::$(cd frontend && make url)"
-          echo "::set-output name=backend::$(cd backend && make url)"
+          echo frontend=$(cd frontend && make url) >> $GITHUB_OUTPUT
+          echo backend=$(cd backend && make url) >> $GITHUB_OUTPUT
         
 
       - name: Add a comment to the pull request
