@@ -13,7 +13,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  cleanup:
+  cleanup_infra:
     # Run only if PR is merged
     if: github.event.pull_request.merged == true
     # The type of runner that the job will run on
@@ -47,4 +47,20 @@ jobs:
       - name: Destroy Frontend
         shell: bash
         run: . $NVM_DIR/nvm.sh && cd frontend && make destroy
+  
+  cleanup_branch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 
+    steps:
+      - uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.git.deleteRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: ${{ github.event.pull_request.head.ref }}
+            })
