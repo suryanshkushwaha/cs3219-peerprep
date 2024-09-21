@@ -55,12 +55,12 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/github-script@v3
+      - uses: actions/github-script@v7
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.git.deleteRef({
+            github.rest.git.deleteRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: ${{ github.event.pull_request.head.ref }}
+              ref: refs/heads/${{ github.event.pull_request.head.ref }}
             })
