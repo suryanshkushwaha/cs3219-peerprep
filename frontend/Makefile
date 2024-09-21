@@ -44,7 +44,7 @@ infra_destroy:
 		cd tf && \
 		tofu init && \
 		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \	
-		tofu destroy -auto-approve \
+		tofu destroy -auto-approve
 
 url:
 	@. ./source.sh && \
