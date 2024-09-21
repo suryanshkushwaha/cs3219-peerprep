@@ -3,7 +3,7 @@ SHELL=/bin/bash
 deploy: infra_deploy code_deploy
 destroy: infra_destroy
 
-BACKEND_SERVICE_URL=$(shell cd ../backend && $(MAKE) -s api_url | head -n 2)
+BACKEND_SERVICE_URL=$(shell cd ../backend && $(MAKE) -s url | head -n 2)
 test:
 	@echo $(BACKEND_SERVICE_URL)
 serve:
@@ -42,3 +42,10 @@ infra_destroy:
 		cd tf && \
 		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
 		tofu destroy -auto-approve \
+
+url:
+	@. ./source.sh && \
+		cd tf && \
+		tofu init &> /dev/null && \
+		tofu workspace select -or-create $$TERRAFORM_WORKSPACE &> /dev/null && \
+		tofu output -raw frontend_bucket_website_url
