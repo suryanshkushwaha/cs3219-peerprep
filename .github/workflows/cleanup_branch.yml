@@ -25,14 +25,16 @@ jobs:
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
       options: --privileged
-
+    concurrency:
+      # current branch
+      group: ${{ github.event.pull_request.head.ref }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/container_setup
         with:
-          branch: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Destroy Global Infrastructure
         shell: bash
