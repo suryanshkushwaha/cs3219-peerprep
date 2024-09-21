@@ -25,8 +25,8 @@ infra_destroy:
 		cd tf && \
 		tofu destroy -auto-approve
 
-api_url:
+url:
 	@ . ./source.sh && \
 		cd tf && \
-		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
+		tofu workspace select -or-create $$TERRAFORM_WORKSPACE &> /dev/null && \
 		tofu output -raw service_url
