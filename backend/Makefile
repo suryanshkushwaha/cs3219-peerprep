@@ -28,5 +28,6 @@ infra_destroy:
 url:
 	@ . ./source.sh && \
 		cd tf && \
+		tofu init &> /dev/null && \
 		tofu workspace select -or-create $$TERRAFORM_WORKSPACE &> /dev/null && \
 		tofu output -raw service_url
