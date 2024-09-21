@@ -25,7 +25,7 @@ jobs:
       options: --privileged
     concurrency:
       # current branch
-      group: ${{ github.ref_name }}
+      group: ${{ github.head_ref }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
