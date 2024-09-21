@@ -59,8 +59,8 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.rest.git.deleteRef({
+            github.rest.git.deleteRef({ 
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: refs/heads/${{ github.event.pull_request.head.ref }}
+              ref: `heads/${context.payload.pull_request.head.ref}`
             })
