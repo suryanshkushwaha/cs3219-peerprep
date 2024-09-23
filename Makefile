@@ -18,7 +18,7 @@ urls: ## Get the URL endpoints of all deployed resources.
 ##
 
 gcloud_auth: ## Authenticate with gcloud
-	. source.sh && \
+	. ./source.sh && \
 		gcloud auth activate-service-account --key-file=$$GOOGLE_APPLICATION_CREDENTIALS && \
 		gcloud auth configure-docker $$GCLOUD_REGION-docker.pkg.dev --quiet
 
@@ -38,14 +38,14 @@ destroy_all: ## Destroy all infrastructure and code
 ##
 
 deploy_infra: ## Deploy Global OpenTofu/Terraform infrastructure
-	. source.sh && \
+	. ./source.sh && \
 		cd tf && \
 		tofu init && \
 		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
 		tofu apply -auto-approve
 
 destroy_infra: ## Destroy Global OpenTofu/Terraform infrastructure
-	. source.sh && \
+	. ./source.sh && \
 		cd tf && \
 		tofu init && \
 		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
@@ -56,14 +56,14 @@ destroy_infra: ## Destroy Global OpenTofu/Terraform infrastructure
 ##
 
 deploy_tf_backend: ## Deploy the OpenTofu/Terraform backend to GCP
-	. source.sh && \
+	. ./source.sh && \
 		unset TF_WORKSPACE && \
 		cd tf_backend && \
 		tofu init && \
 		tofu apply -auto-approve
 
 destroy_tf_backend: ## Destroy the OpenTofu/Terraform backend on GCP
-	. source.sh && \
+	. ./source.sh && \
 		unset TF_WORKSPACE && \
 		cd tf_backend && \
 		tofu destroy -auto-approve
