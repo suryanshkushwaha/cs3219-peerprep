@@ -12,6 +12,55 @@
 | Make                                             | 4       |
 | Bash                                             | 5       |
 
+## Developer Guide
+
+Here are the scripts relevant in deploying the project.
+
+### Code and Infrastructure Deployment
+
+There are two ways to deploy the project to the cloud.
+
+First, you can simply push to your feature branch, and the CI/CD pipeline will deploy a copy of the infrastructure and the code to the cloud.
+
+To deploy all infrastructure on the command line, you can run the following command:
+```bash
+# You may have to authenticate to gcloud first:
+make gcloud_auth # You need your age key in the sops file, contact Yongbeom for how to do this.
+
+make deploy_all
+
+# This is equivalent to running
+make deploy_infra
+make deploy # in frontend 
+make deploy # in backend
+```
+
+
+### Code Deployment
+
+Once you have deployed the infrastructure, you do not need to do so again, you can simply update our deployment by deploying code.
+
+To deploy the code, you can do:
+```bash
+# deploy frontend code
+make code_deploy # in frontend directory
+
+# deploy backend code
+make code_deploy # in backend directory
+```
+
+### Local Deployment
+
+Alternatively, you can deploy the code locally.
+
+Run the following commands (in separate terminals) to deploy the frontend and backend code locally.
+```bash
+# deploy frontend code
+make local
+
+# deploy backend code
+make local
+```
 
 ## Directory Structure
 All direct subdirectories of the project base directory (with the following exceptions) are microservices.
