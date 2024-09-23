@@ -13,6 +13,12 @@ urls: ## Get the URL endpoints of all deployed resources.
 	@echo "FRONTEND_URL: $$(cd frontend && $(MAKE) url)"
 	@echo "BACKEND_URL: $$(cd backend && $(MAKE) url)"
 
+encrypt: ## Encrypt the secrets file
+	./scripts/secret.sh encrypt
+
+decrypt: ## Decrypt the secrets file
+	./scripts/secret.sh decrypt
+
 ##
 ## Google Cloud CLI
 ##

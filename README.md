@@ -24,8 +24,11 @@ First, you can simply push to your feature branch, and the CI/CD pipeline will d
 
 To deploy all infrastructure on the command line, you can run the following command:
 ```bash
+# Decrypt secrets
+make decrypt # You need your age key in the sops file, contact Yongbeom for how to do this.
+
 # You may have to authenticate to gcloud first:
-make gcloud_auth # You need your age key in the sops file, contact Yongbeom for how to do this.
+make gcloud_auth
 
 make deploy_all
 
