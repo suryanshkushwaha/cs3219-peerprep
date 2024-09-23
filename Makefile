@@ -49,12 +49,10 @@ deploy_tf_backend: ## Deploy the OpenTofu/Terraform backend to GCP
 		unset TF_WORKSPACE && \
 		cd tf_backend && \
 		tofu init && \
-		tofu apply -auto-approve \
-			-var="bucket_name=$$TF_BACKEND_BUCKET_NAME"
+		tofu apply -auto-approve
 
 destroy_tf_backend: ## Destroy the OpenTofu/Terraform backend on GCP
 	. source.sh && \
 		unset TF_WORKSPACE && \
 		cd tf_backend && \
-		tofu destroy -auto-approve \
-			-var="bucket_name=$$TF_BACKEND_BUCKET_NAME"
+		tofu destroy -auto-approve
