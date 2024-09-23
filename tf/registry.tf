@@ -4,7 +4,8 @@ resource "google_artifact_registry_repository" "repo" {
   format        = "DOCKER"
 
   docker_config {
-    immutable_tags = true
+    # immutable_tags = true
+    immutable_tags = false # This sucks, but it fixes some issues with the actions. FIXME: Enable this without triggering errors due to commit hash not being updated with unstaged commits.
   }
 
 }
