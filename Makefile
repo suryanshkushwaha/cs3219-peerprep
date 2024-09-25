@@ -21,33 +21,16 @@ decrypt: ## Decrypt the secrets file
 
 
 ## Repo-wide
-deploy_all: ## Deploy all infrastructure and code
-	$(MAKE) deploy_infra
-	$(MAKE) -C frontend deploy
+deploy: ## Deploy all infrastructure and code
+	$(MAKE) -C docker_registry deploy
 	$(MAKE) -C backend deploy
+	$(MAKE) -C frontend deploy
 
-destroy_all: ## Destroy all infrastructure and code
-	$(MAKE) destroy_infra
-	$(MAKE) -C frontend destroy
+# Recommended to destroy services in the reverse order of deployment.
+destroy: ## Destroy all infrastructure and code
+	$(MAKE) -C frontend destroy 
 	$(MAKE) -C backend destroy
-
-##
-## Global Terraform Infrastructure
-##
-
-deploy_infra: ## Deploy Global OpenTofu/Terraform infrastructure
-	. ./source.sh && \
-		cd tf && \
-		tofu init && \
-		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
-		tofu apply -auto-approve
-
-destroy_infra: ## Destroy Global OpenTofu/Terraform infrastructure
-	. ./source.sh && \
-		cd tf && \
-		tofu init && \
-		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
-		tofu destroy -auto-approve
+	$(MAKE) -C docker_registry destroy
 
 ##
 ## Terraform backend
