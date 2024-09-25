@@ -42,7 +42,7 @@ jobs:
 
       - name: Destroy Global Infrastructure
         shell: bash
-        run: make destroy_infra
+        run: cd docker_registry && make destroy
     
       - name: Destroy Backend
         shell: bash

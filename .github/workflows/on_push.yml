@@ -50,7 +50,7 @@ jobs:
       - name: Deploy Global Infrastructure
         shell: bash
         if: ${{ github.event_name }} == 'create' || ${{ steps.changes.outputs.global_infra }} == 'true'
-        run: make deploy_infra
+        run: cd docker_registry && make deploy
     
       - name: Deploy Backend
         if: ${{ github.event_name }} == 'create' || ${{ steps.changes.outputs.backend }} == 'true'
