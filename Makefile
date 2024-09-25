@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 MAKEFLAGS += --no-print-directory
 
-.PHONY: help gcloud_auth deploy_tf_backend destroy_tf_backend
+.PHONY: help deploy_tf_backend destroy_tf_backend
 
 
 
@@ -19,14 +19,6 @@ encrypt: ## Encrypt the secrets file
 decrypt: ## Decrypt the secrets file
 	./scripts/secret.sh decrypt
 
-##
-## Google Cloud CLI
-##
-
-gcloud_auth: ## Authenticate with gcloud
-	. ./source.sh && \
-		gcloud auth activate-service-account --key-file=$$GOOGLE_APPLICATION_CREDENTIALS && \
-		gcloud auth configure-docker $$GCLOUD_REGION-docker.pkg.dev --quiet
 
 ## Repo-wide
 deploy_all: ## Deploy all infrastructure and code

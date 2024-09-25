@@ -27,9 +27,6 @@ To deploy all infrastructure on the command line, you can run the following comm
 # Decrypt secrets
 make decrypt # You need your age key in the sops file, contact Yongbeom for how to do this.
 
-# You may have to authenticate to gcloud first:
-make gcloud_auth
-
 make deploy_all
 
 # This is equivalent to running

@@ -30,4 +30,8 @@ TERRAFORM_WORKSPACE=$ENV
 
 GCLOUD_REPOSITORY_URL=${GCLOUD_REGION}-docker.pkg.dev/${GCLOUD_PROJECT}/${ENV}
 
+# Authenticate into gcloud
+gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+gcloud auth configure-docker $GCLOUD_REGION-docker.pkg.dev --quiet
+
 set +o allexport
