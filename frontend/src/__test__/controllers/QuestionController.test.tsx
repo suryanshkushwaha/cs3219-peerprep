@@ -1,5 +1,5 @@
 import QuestionController from '../../controllers/QuestionController';
-import * as api from '../../api/QuestionApi';
+import * as api from '../../api/questionApi';
 import { Question } from '../../models/Question';
 
 jest.mock('../../api/questionApi');

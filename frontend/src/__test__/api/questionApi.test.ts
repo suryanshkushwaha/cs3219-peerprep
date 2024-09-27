@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Question } from '../../models/Question';
-import * as api from '../../api/QuestionApi';
+import * as api from '../../api/questionApi';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
