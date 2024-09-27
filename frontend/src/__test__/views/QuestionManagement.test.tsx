@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import QuestionManagement from '../views/QuestionManagement';
-import QuestionController from '../controllers/QuestionController';
+import QuestionManagement from '../../views/QuestionManagement';
+import QuestionController from '../../controllers/QuestionController';
 
 jest.mock('../controllers/QuestionController');
 

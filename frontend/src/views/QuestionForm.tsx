@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Question } from '../models/Question.tsx';
+import { Question } from '../models/Question';
 
 interface QuestionFormProps {
   onSubmit: (formData: Omit<Question, 'id'>) => void;
-  initialData: Question | null;
+  initialData: Partial<Question> | null;
 }
 
 const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) => {
@@ -16,7 +16,12 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
 
   useEffect(() => {
     if (initialData) {
-      setFormData(initialData);
+      setFormData({
+        title: initialData.title || '',
+        description: initialData.description || '',
+        categories: initialData.categories || [],
+        complexity: initialData.complexity || ''
+      });
     }
   }, [initialData]);
 
