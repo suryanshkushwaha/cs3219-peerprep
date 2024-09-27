@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { Question } from '../models/Question';
 
-const API_URL = 'http://your-api-url.com/api/questions';
+const API_URL = 'http://api-url.com/api/questions';
 
 class ApiError extends Error {
   constructor(message: string, public statusCode?: number) {
@@ -25,10 +25,27 @@ const handleApiError = (error: unknown): never => {
   }
 };
 
+const validateQuestionData = (data: any): data is Question => {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    typeof data.id === 'number' &&
+    typeof data.title === 'string' &&
+    typeof data.description === 'string' &&
+    Array.isArray(data.categories) &&
+    data.categories.every((cat: any) => typeof cat === 'string') &&
+    ['easy', 'medium', 'hard'].includes(data.complexity)
+  );
+};
+
 export const fetchQuestions = async (): Promise<Question[]> => {
   try {
-    const response = await axios.get<Question[]>(API_URL);
-    return response.data;
+    const response = await axios.get<any[]>(API_URL);
+    const validQuestions = response.data.filter(validateQuestionData);
+    if (validQuestions.length !== response.data.length) {
+      console.warn(`Received ${response.data.length} questions, but only ${validQuestions.length} are valid.`);
+    }
+    return validQuestions;
   } catch (error) {
     return handleApiError(error);
   }
@@ -36,7 +53,10 @@ export const fetchQuestions = async (): Promise<Question[]> => {
 
 export const createQuestion = async (questionData: Omit<Question, 'id'>): Promise<Question> => {
   try {
-    const response = await axios.post<Question>(API_URL, questionData);
+    const response = await axios.post<any>(API_URL, questionData);
+    if (!validateQuestionData(response.data)) {
+      throw new Error('Invalid question data received from server');
+    }
     return response.data;
   } catch (error) {
     return handleApiError(error);
@@ -45,7 +65,10 @@ export const createQuestion = async (questionData: Omit<Question, 'id'>): Promis
 
 export const updateQuestion = async (id: number, questionData: Omit<Question, 'id'>): Promise<Question> => {
   try {
-    const response = await axios.put<Question>(`${API_URL}/${id}`, questionData);
+    const response = await axios.put<any>(`${API_URL}/${id}`, questionData);
+    if (!validateQuestionData(response.data)) {
+      throw new Error('Invalid question data received from server');
+    }
     return response.data;
   } catch (error) {
     return handleApiError(error);
