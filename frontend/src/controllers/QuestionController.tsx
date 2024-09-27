@@ -1,4 +1,4 @@
-import * as api from '../api/questionApi';
+import * as api from '../api/QuestionApi';
 import { Question } from '../models/Question';
 
 class QuestionController {
