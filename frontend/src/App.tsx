@@ -1,13 +1,21 @@
 import React from 'react';
-import QuestionManagement from './components/QuestionManagement';
+import QuestionManagement from './views/QuestionManagement';
 import './App.css';
 
-function App() {
+const App: React.FC = () => {
   return (
     <div className="App">
-      <QuestionManagement />
+      <header className="App-header">
+        <h1>PeerPrep</h1>
+      </header>
+      <main className="App-main">
+        <QuestionManagement />
+      </main>
+      <footer className="App-footer">
+        <p>© Group X</p>
+      </footer>
     </div>
   );
-}
+};
 
 export default App;

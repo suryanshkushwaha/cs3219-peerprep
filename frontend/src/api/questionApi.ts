@@ -1,13 +1,5 @@
 import axios from 'axios';
-
-// Define the Question interface
-export interface Question {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  complexity: string;
-}
+import { Question } from '../models/Question.tsx';
 
 const API_URL = 'http://your-api-url.com/api/questions';
 
