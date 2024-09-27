@@ -15,8 +15,3 @@ runs:
         mkdir -p ${XDG_CONFIG_HOME:-$HOME/.config}/sops/age
         echo $AGE_SECRET_KEY > ${XDG_CONFIG_HOME:-$HOME/.config}/sops/age/keys.txt
         /bin/bash ./scripts/secret.sh decrypt
-
-    - name: Authenticate to Google Cloud
-      shell: bash
-      run: |
-        make gcloud_auth

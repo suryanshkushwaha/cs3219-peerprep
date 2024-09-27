@@ -28,4 +28,10 @@ fi
 # https://discuss.hashicorp.com/t/help-using-terraform-workspaces-in-an-automation-pipeline-with-tf-workspace-currently-selected-workspace-x-does-not-exist/40676
 TERRAFORM_WORKSPACE=$ENV
 
+GCLOUD_REPOSITORY_URL=${GCLOUD_REGION}-docker.pkg.dev/${GCLOUD_PROJECT}/${ENV}
+
+# Authenticate into gcloud
+gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+gcloud auth configure-docker $GCLOUD_REGION-docker.pkg.dev --quiet
+
 set +o allexport

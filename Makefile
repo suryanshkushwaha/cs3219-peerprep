@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 MAKEFLAGS += --no-print-directory
 
-.PHONY: help gcloud_auth deploy_tf_backend destroy_tf_backend
+.PHONY: help deploy_tf_backend destroy_tf_backend
 
 
 
@@ -13,48 +13,38 @@ urls: ## Get the URL endpoints of all deployed resources.
 	@echo "FRONTEND_URL: $$(cd frontend && $(MAKE) url)"
 	@echo "BACKEND_URL: $$(cd backend && $(MAKE) url)"
 
-##
-## Google Cloud CLI
-##
+encrypt: ## Encrypt the secrets file
+	./scripts/secret.sh encrypt
 
-gcloud_auth: ## Authenticate with gcloud
-	. source.sh && \
-		gcloud auth activate-service-account --key-file=$$GOOGLE_APPLICATION_CREDENTIALS && \
-		gcloud auth configure-docker $$GCLOUD_REGION-docker.pkg.dev --quiet
+decrypt: ## Decrypt the secrets file
+	./scripts/secret.sh decrypt
 
-##
-## Global Terraform Infrastructure
-##
 
-deploy_infra: ## Deploy Global OpenTofu/Terraform infrastructure
-	. source.sh && \
-		cd tf && \
-		tofu init && \
-		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
-		tofu apply -auto-approve
+## Repo-wide
+deploy: ## Deploy all infrastructure and code
+	$(MAKE) -C docker_registry deploy
+	$(MAKE) -C backend deploy
+	$(MAKE) -C frontend deploy
 
-destroy_infra: ## Destroy Global OpenTofu/Terraform infrastructure
-	. source.sh && \
-		cd tf && \
-		tofu init && \
-		tofu workspace select -or-create $$TERRAFORM_WORKSPACE && \
-		tofu destroy -auto-approve
+# Recommended to destroy services in the reverse order of deployment.
+destroy: ## Destroy all infrastructure and code
+	$(MAKE) -C frontend destroy 
+	$(MAKE) -C backend destroy
+	$(MAKE) -C docker_registry destroy
 
 ##
 ## Terraform backend
 ##
 
 deploy_tf_backend: ## Deploy the OpenTofu/Terraform backend to GCP
-	. source.sh && \
+	. ./source.sh && \
 		unset TF_WORKSPACE && \
 		cd tf_backend && \
 		tofu init && \
-		tofu apply -auto-approve \
-			-var="bucket_name=$$TF_BACKEND_BUCKET_NAME"
+		tofu apply -auto-approve
 
 destroy_tf_backend: ## Destroy the OpenTofu/Terraform backend on GCP
-	. source.sh && \
+	. ./source.sh && \
 		unset TF_WORKSPACE && \
 		cd tf_backend && \
-		tofu destroy -auto-approve \
-			-var="bucket_name=$$TF_BACKEND_BUCKET_NAME"
+		tofu destroy -auto-approve
