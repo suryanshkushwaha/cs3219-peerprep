@@ -27,7 +27,7 @@ export const getQuestionById = async (req: Request, res: Response): Promise<void
 
 // Create a new question
 export const createQuestion = async (req: Request, res: Response): Promise<void> => {
-  const { questionId, title, description, category, complexity } = req.body;
+  const { questionId, title, description, categories, complexity } = req.body;
 
   // Check for duplicates
   const existingQuestion = await Question.findOne({ questionId });
@@ -40,7 +40,7 @@ export const createQuestion = async (req: Request, res: Response): Promise<void>
     questionId,
     title,
     description,
-    category,
+    categories: categories.split(','), // Convert comma-separated string to array
     complexity
   });
 
