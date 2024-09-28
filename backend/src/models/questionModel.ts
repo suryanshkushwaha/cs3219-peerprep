@@ -21,3 +21,4 @@ const questionSchema: Schema = new Schema({
 const Question = mongoose.model<IQuestion>('Question', questionSchema);
 
 export default Question;
+export { IQuestion };
