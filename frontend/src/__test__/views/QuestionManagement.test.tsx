@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import QuestionManagement from '../../views/QuestionManagement';
 import QuestionController from '../../controllers/QuestionController';
 
-jest.mock('../controllers/QuestionController');
+jest.mock('../../controllers/QuestionController');
 
 describe('QuestionManagement', () => {
   const mockQuestions = [

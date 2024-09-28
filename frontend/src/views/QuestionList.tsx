@@ -8,6 +8,10 @@ interface QuestionListProps {
 }
 
 const QuestionList: React.FC<QuestionListProps> = ({ questions, onDelete, onEdit }) => {
+  if (questions.length === 0) {
+    return <p>No questions available.</p>;
+  }
+  
   return (
     <table>
       <thead>

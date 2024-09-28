@@ -21,14 +21,7 @@ class QuestionController {
   static async fetchQuestions(): Promise<Question[]> {
     try {
       const questions = await api.fetchQuestions();
-      // Validate each question
-      questions.forEach(question => {
-        const error = this.validateQuestion(question);
-        if (error) {
-          console.warn(`Invalid question data received: ${error}`, question);
-        }
-      });
-      return questions;
+      return questions.filter(question => this.validateQuestion(question) === null);
     } catch (error) {
       console.error('Error fetching questions:', error);
       throw new Error('Failed to fetch questions. Please try again later.');

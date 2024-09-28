@@ -16,12 +16,12 @@ const handleApiError = (error: unknown): never => {
     if (axiosError.response) {
       throw new ApiError(`API error: ${axiosError.response.statusText}`, axiosError.response.status);
     } else if (axiosError.request) {
-      throw new ApiError('No response received from the server');
+      throw new ApiError('API error: No response received from the server');
     } else {
-      throw new ApiError(`Error setting up the request: ${axiosError.message}`);
+      throw new ApiError(`API error: ${axiosError.message}`);
     }
   } else {
-    throw new ApiError('An unexpected error occurred');
+    throw new ApiError('API error: An unexpected error occurred');
   }
 };
 
