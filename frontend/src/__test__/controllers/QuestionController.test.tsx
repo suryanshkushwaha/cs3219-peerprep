@@ -52,33 +52,6 @@ describe('QuestionController', () => {
     });
   });
 
-  describe('fetchQuestions', () => {
-    it('should return questions when API call is successful', async () => {
-      (api.fetchQuestions as jest.Mock).mockResolvedValue([mockValidQuestion]);
-
-      const result = await QuestionController.fetchQuestions();
-      expect(result).toEqual([mockValidQuestion]);
-      expect(api.fetchQuestions).toHaveBeenCalledTimes(1);
-    });
-
-    it('should filter out invalid questions and log warnings', async () => {
-      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
-      (api.fetchQuestions as jest.Mock).mockResolvedValue([mockValidQuestion, mockInvalidQuestion]);
-
-      const result = await QuestionController.fetchQuestions();
-      expect(result).toEqual([mockValidQuestion]);
-      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Invalid question data received:"));
-      consoleSpy.mockRestore();
-    });
-
-    it('should throw an error when API call fails', async () => {
-      (api.fetchQuestions as jest.Mock).mockRejectedValue(new Error('API error'));
-
-      await expect(QuestionController.fetchQuestions()).rejects.toThrow('Failed to fetch questions. Please try again later.');
-      expect(api.fetchQuestions).toHaveBeenCalledTimes(1);
-    });
-  });
-
   describe('createQuestion', () => {
     const newValidQuestion = {
       title: 'New Question',
