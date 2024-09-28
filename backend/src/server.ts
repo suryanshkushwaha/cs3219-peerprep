@@ -3,29 +3,32 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
 import connectDB from '../config/db';
+import questionRoutes from './routes/questionRoutes';
 
-// initialize connection to MongoDB database
-connectDB()
+connectDB(); // Initialize MongoDB connection
 
 const PORT = process.env.PORT ?? 8080;
 
 const app = express();
-app.options(
-  '*',
-  cors({
-    origin: 'http://localhost:3000',
-    optionsSuccessStatus: 200,
-  }), 
-)
 
-app.use(cors());
+// Middleware for handling CORS and JSON parsing
+app.use(cors({
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200,
+}));
+app.use(express.json());
 
-app.listen(PORT, () => {
-    console.log('Server is running on localhost:' + PORT);
-})
+// API routes
+app.use('/api', questionRoutes);
 
+// Health check route
 app.get('/hello', (req, res) => {
-  res.json({ message: 'Hello World' })
+  res.json({ message: 'Hello World' });
 });
 
-module.exports = app
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+export default app;
