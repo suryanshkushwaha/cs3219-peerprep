@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { Question } from '../models/Question';
 
-const API_URL = 'http://api-url.com/api/questions';
+const API_URL = 'http://localhost:8080/api/questions';
 
 class ApiError extends Error {
   constructor(message: string, public statusCode?: number) {

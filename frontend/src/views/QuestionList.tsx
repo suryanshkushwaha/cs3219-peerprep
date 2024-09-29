@@ -1,5 +1,5 @@
 import React from 'react';
-import { Question } from '../models/Question.tsx';
+import { Question } from '../models/Question';
 
 interface QuestionListProps {
   questions: Question[];
@@ -11,9 +11,9 @@ const QuestionList: React.FC<QuestionListProps> = ({ questions, onDelete, onEdit
   if (questions.length === 0) {
     return <p>No questions available.</p>;
   }
-  
+
   return (
-    <table>
+    <table className="question-table">
       <thead>
         <tr>
           <th>Title</th>
@@ -29,8 +29,8 @@ const QuestionList: React.FC<QuestionListProps> = ({ questions, onDelete, onEdit
             <td>{question.categories.join(', ')}</td>
             <td>{question.complexity}</td>
             <td>
-              <button onClick={() => onEdit(question)}>Edit</button>
-              <button onClick={() => onDelete(question.id)}>Delete</button>
+              <button className="edit-btn" onClick={() => onEdit(question)}>Edit</button>
+              <button className="delete-btn" onClick={() => onDelete(question.id)}>Delete</button>
             </td>
           </tr>
         ))}
