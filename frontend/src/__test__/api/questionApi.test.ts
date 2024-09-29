@@ -11,7 +11,7 @@ describe('questionApi', () => {
     title: 'Test Question',
     description: 'This is a test question',
     categories: ['algorithms'],
-    complexity: 'medium'
+    difficulty: 'medium'
   };
 
   const mockInvalidQuestion: any = {
@@ -19,7 +19,7 @@ describe('questionApi', () => {
     title: '',  // Invalid: empty title
     description: 'Invalid question',
     categories: [],  // Invalid: empty categories
-    complexity: 'invalid'  // Invalid: incorrect complexity
+    difficulty: 'invalid'  // Invalid: incorrect difficulty
   };
 
   beforeEach(() => {

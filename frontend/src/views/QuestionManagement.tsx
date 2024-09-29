@@ -10,35 +10,35 @@ const QuestionManagement: React.FC = () => {
       title: 'Binary Search Algorithm',
       description: 'Implement a binary search on a sorted array.',
       categories: ['algorithms'],
-      complexity: 'medium',
+      difficulty: 'medium',
     },
     {
       id: 2,
       title: 'Linked List Reversal',
       description: 'Reverse a singly linked list.',
       categories: ['data-structures'],
-      complexity: 'easy',
+      difficulty: 'easy',
     },
     {
       id: 3,
       title: 'Knapsack Problem',
       description: 'Solve the knapsack problem using dynamic programming.',
       categories: ['dynamic-programming'],
-      complexity: 'hard',
+      difficulty: 'hard',
     },
     {
       id: 4,
       title: 'Graph Traversal',
       description: 'Implement DFS and BFS for graph traversal.',
       categories: ['graphs'],
-      complexity: 'medium',
+      difficulty: 'medium',
     },
     {
       id: 5,
       title: 'String Anagram Check',
       description: 'Write a function to check if two strings are anagrams.',
       categories: ['strings'],
-      complexity: 'easy',
+      difficulty: 'easy',
     },
   ];
 
@@ -60,6 +60,7 @@ const QuestionManagement: React.FC = () => {
       setQuestions([...questions, newQuestion]);
     }
     setEditingQuestion(null);
+    setSelectedQuestion(null);
   };
 
   const handleDelete = (id: number) => {
@@ -101,7 +102,7 @@ const QuestionManagement: React.FC = () => {
             <h3>{selectedQuestion.title}</h3>
             <p>{selectedQuestion.description}</p>
             <p><strong>Categories:</strong> {selectedQuestion.categories.join(', ')}</p>
-            <p><strong>Complexity:</strong> {selectedQuestion.complexity}</p>
+            <p><strong>Difficulty:</strong> {selectedQuestion.difficulty}</p>
           </div>
         ) : (
           <p>Please select a question from the list to view details.</p>
@@ -112,45 +113,6 @@ const QuestionManagement: React.FC = () => {
 };
 
 export default QuestionManagement;
-/*
-  return (
-    <div className="container">
-      <div className="left-panel">
-        <section className="form-section">
-          <h2>{editingQuestion ? 'Edit Question' : 'Add a New Question'}</h2>
-          <QuestionForm onSubmit={handleSubmit} initialData={editingQuestion} />
-        </section>
-
-        <section className="list-section">
-          <h2>Question List</h2>
-          <QuestionList
-            questions={questions}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            onSelect={handleSelect} 
-          />
-        </section>
-      </div>
-
-      <div className="right-panel">
-        <h2>Detailed View</h2>
-        {selectedQuestion ? (
-          <div>
-            <h3>{selectedQuestion.title}</h3>
-            <p>{selectedQuestion.description}</p>
-            <p><strong>Categories:</strong> {selectedQuestion.categories.join(', ')}</p>
-            <p><strong>Complexity:</strong> {selectedQuestion.complexity}</p>
-          </div>
-        ) : (
-          <p>Please select a question from the list to view details.</p>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export default QuestionManagement;
-*/
 
 /*import React, { useState, useEffect } from 'react';
 import QuestionForm from './QuestionForm';
@@ -165,35 +127,35 @@ const QuestionManagement: React.FC = () => {
       title: 'Binary Search Algorithm',
       description: 'Implement a binary search on a sorted array.',
       categories: ['algorithms'],
-      complexity: 'medium',
+      difficulty: 'medium',
     },
     {
       id: 2,
       title: 'Linked List Reversal',
       description: 'Reverse a singly linked list.',
       categories: ['data-structures'],
-      complexity: 'easy',
+      difficulty: 'easy',
     },
     {
       id: 3,
       title: 'Knapsack Problem',
       description: 'Solve the knapsack problem using dynamic programming.',
       categories: ['dynamic-programming'],
-      complexity: 'hard',
+      difficulty: 'hard',
     },
     {
       id: 4,
       title: 'Graph Traversal',
       description: 'Implement DFS and BFS for graph traversal.',
       categories: ['graphs'],
-      complexity: 'medium',
+      difficulty: 'medium',
     },
     {
       id: 5,
       title: 'String Anagram Check',
       description: 'Write a function to check if two strings are anagrams.',
       categories: ['strings'],
-      complexity: 'easy',
+      difficulty: 'easy',
     },
   ];
 

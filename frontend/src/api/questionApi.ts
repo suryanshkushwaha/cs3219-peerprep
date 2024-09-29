@@ -34,7 +34,7 @@ const validateQuestionData = (data: any): data is Question => {
     typeof data.description === 'string' &&
     Array.isArray(data.categories) &&
     data.categories.every((cat: any) => typeof cat === 'string') &&
-    ['easy', 'medium', 'hard'].includes(data.complexity)
+    ['easy', 'medium', 'hard'].includes(data.difficulty)
   );
 };
 

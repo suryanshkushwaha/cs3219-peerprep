@@ -7,34 +7,34 @@ describe('Question Model', () => {
       title: 'Sample Question',
       description: 'This is a sample question',
       categories: ['algorithms', 'data-structures'],
-      complexity: 'medium'
+      difficulty: 'medium'
     };
 
     expect(question).toHaveProperty('id');
     expect(question).toHaveProperty('title');
     expect(question).toHaveProperty('description');
     expect(question).toHaveProperty('categories');
-    expect(question).toHaveProperty('complexity');
+    expect(question).toHaveProperty('difficulty');
 
     expect(typeof question.id).toBe('number');
     expect(typeof question.title).toBe('string');
     expect(typeof question.description).toBe('string');
     expect(Array.isArray(question.categories)).toBeTruthy();
-    expect(typeof question.complexity).toBe('string');
+    expect(typeof question.difficulty).toBe('string');
   });
 
-  test('should accept valid complexity values', () => {
+  test('should accept valid difficulty values', () => {
     const validComplexities = ['easy', 'medium', 'hard'];
     
-    validComplexities.forEach(complexity => {
+    validComplexities.forEach(difficulty => {
       const question: Question = {
         id: 1,
         title: 'Test',
         description: 'Test',
         categories: [],
-        complexity: complexity as 'easy' | 'medium' | 'hard'
+        difficulty: difficulty as 'easy' | 'medium' | 'hard'
       };
-      expect(question.complexity).toBe(complexity);
+      expect(question.difficulty).toBe(difficulty);
     });
   });
 });

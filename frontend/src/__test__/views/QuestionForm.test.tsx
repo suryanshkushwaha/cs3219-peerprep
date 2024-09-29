@@ -28,7 +28,7 @@ describe('QuestionForm', () => {
       title: 'Test Title',
       description: 'Test Description',
       categories: ['graphs'],
-      complexity: 'hard'
+      difficulty: 'hard'
     });
   });
 });

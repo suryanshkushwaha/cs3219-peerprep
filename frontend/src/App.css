@@ -90,8 +90,8 @@ h2 {
 .description-cell {
   min-height: 100%;
   display: -webkit-box;
-  -webkit-line-clamp: 4; /* Limit to 4 lines */
-  line-clamp: 4;
+  -webkit-line-clamp: 3; /* Limit to 4 lines */
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -152,7 +152,7 @@ h2 {
   background-color: #45a049;
 }
 
-/* Error Message (optional, if you handle errors) */
+/* Error Message styling, to be expanded later most likely split into diff types */
 .question-form .error-message {
   color: red;
   font-size: 14px;
@@ -171,6 +171,25 @@ h2 {
 .category-group input {
   margin-right: 5px; 
   vertical-align: middle; /* Align checkbox vertically with the text */
+}
+
+/* Ensure buttons fit nicely inside their cell */
+.edit-btn, .delete-btn {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* Hover effect for buttons */
+.edit-btn:hover, .delete-btn:hover {
+  background-color: #555;
 }
 
 

@@ -7,7 +7,7 @@ jest.mock('../../controllers/QuestionController');
 
 describe('QuestionManagement', () => {
   const mockQuestions = [
-    { id: 1, title: 'Test Question', description: 'Test Description', categories: ['algorithms'], complexity: 'easy' }
+    { id: 1, title: 'Test Question', description: 'Test Description', categories: ['algorithms'], difficulty: 'easy' }
   ];
 
   beforeEach(() => {
@@ -24,7 +24,7 @@ describe('QuestionManagement', () => {
   });
 
   test('handles form submission for new question', async () => {
-    const newQuestion = { id: 2, title: 'New Question', description: 'New Description', categories: ['data-structures'], complexity: 'medium' };
+    const newQuestion = { id: 2, title: 'New Question', description: 'New Description', categories: ['data-structures'], difficulty: 'medium' };
     (QuestionController.createQuestion as jest.Mock).mockResolvedValue(newQuestion);
     
     render(<QuestionManagement />);
@@ -41,7 +41,7 @@ describe('QuestionManagement', () => {
         title: 'New Question',
         description: 'New Description',
         categories: ['data-structures'],
-        complexity: 'medium'
+        difficulty: 'medium'
       });
     });
   });
@@ -78,7 +78,7 @@ describe('QuestionManagement', () => {
         title: 'Updated Question',
         description: 'Test Description',
         categories: ['algorithms'],
-        complexity: 'easy'
+        difficulty: 'easy'
       }));
     });
   });

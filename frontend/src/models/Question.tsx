@@ -3,5 +3,5 @@ export interface Question {
     title: string;
     description: string;
     categories: string[];
-    complexity: string;
+    difficulty: string;
   }

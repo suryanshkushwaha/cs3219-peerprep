@@ -12,8 +12,8 @@ class QuestionController {
     if (!question.categories || question.categories.length === 0) {
       return "At least one category is required.";
     }
-    if (!question.complexity || !['easy', 'medium', 'hard'].includes(question.complexity)) {
-      return "Complexity must be either 'easy', 'medium', or 'hard'.";
+    if (!question.difficulty || !['easy', 'medium', 'hard'].includes(question.difficulty)) {
+      return "Difficulty must be either 'easy', 'medium', or 'hard'.";
     }
     return null;
   }

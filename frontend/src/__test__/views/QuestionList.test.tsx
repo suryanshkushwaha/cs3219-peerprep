@@ -4,8 +4,8 @@ import QuestionList from '../../views/QuestionList';
 
 describe('QuestionList', () => {
   const mockQuestions = [
-    { id: 1, title: 'Question 1', description: 'Description 1', categories: ['algorithms'], complexity: 'easy' },
-    { id: 2, title: 'Question 2', description: 'Description 2', categories: ['data-structures', 'graphs'], complexity: 'medium' },
+    { id: 1, title: 'Question 1', description: 'Description 1', categories: ['algorithms'], difficulty: 'easy' },
+    { id: 2, title: 'Question 2', description: 'Description 2', categories: ['data-structures', 'graphs'], difficulty: 'medium' },
   ];
   const mockOnDelete = jest.fn();
   const mockOnEdit = jest.fn();

@@ -20,7 +20,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ questions, onDelete, onEdit
           <th>Title</th>
           <th>Categories</th>
           <th>Description</th>
-          <th>Complexity</th>
+          <th>Difficulty</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -31,7 +31,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ questions, onDelete, onEdit
             <td>{question.title}</td>
             <td>{question.categories.join(', ')}</td>
             <td className="description-cell">{question.description}</td>
-            <td>{question.complexity}</td>
+            <td>{question.difficulty}</td>
             <td>
               <button className="edit-btn" onClick={() => onEdit(question)}>Edit</button>
               <button className="delete-btn" onClick={() => onDelete(question.id)}>Delete</button>
@@ -69,7 +69,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ questions, onDelete, onEdit
           <th>Title</th>
           <th>Categories</th>
           <th>Description</th>
-          <th>Complexity</th>
+          <th>Difficulty</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -80,7 +80,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ questions, onDelete, onEdit
             <td>{question.title}</td>
             <td>{question.categories.join(', ')}</td>
             <td className="description-cell">{question.description}</td>
-            <td>{question.complexity}</td>
+            <td>{question.difficulty}</td>
             <td>
               <button className="edit-btn" onClick={() => onEdit(question)}>Edit</button>
               <button className="delete-btn" onClick={() => onDelete(question.id)}>Delete</button>

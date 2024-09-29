@@ -10,7 +10,7 @@ describe('QuestionController', () => {
     title: 'Test Question',
     description: 'This is a test question',
     categories: ['algorithms'],
-    complexity: 'medium'
+    difficulty: 'medium'
   };
 
   const mockInvalidQuestion: any = {
@@ -18,7 +18,7 @@ describe('QuestionController', () => {
     title: '',  // Invalid: empty title
     description: 'Invalid question',
     categories: [],  // Invalid: empty categories
-    complexity: 'invalid'  // Invalid: incorrect complexity
+    difficulty: 'invalid'  // Invalid: incorrect difficulty
   };
 
   beforeEach(() => {
@@ -46,9 +46,9 @@ describe('QuestionController', () => {
       expect(result).toBe("At least one category is required.");
     });
 
-    it('should return error message for invalid complexity', () => {
-      const result = QuestionController.validateQuestion({ ...mockValidQuestion, complexity: 'invalid' as any });
-      expect(result).toBe("Complexity must be either 'easy', 'medium', or 'hard'.");
+    it('should return error message for invalid difficulty', () => {
+      const result = QuestionController.validateQuestion({ ...mockValidQuestion, difficulty: 'invalid' as any });
+      expect(result).toBe("Difficulty must be either 'easy', 'medium', or 'hard'.");
     });
   });
 
@@ -57,7 +57,7 @@ describe('QuestionController', () => {
       title: 'New Question',
       description: 'This is a new question',
       categories: ['data-structures'],
-      complexity: 'easy' as const
+      difficulty: 'easy' as const
     };
 
     it('should create a question when data is valid and API call is successful', async () => {
@@ -86,7 +86,7 @@ describe('QuestionController', () => {
       title: 'Updated Question',
       description: 'This is an updated question',
       categories: ['algorithms', 'dynamic-programming'],
-      complexity: 'hard' as const
+      difficulty: 'hard' as const
     };
 
     it('should update a question when data is valid and API call is successful', async () => {

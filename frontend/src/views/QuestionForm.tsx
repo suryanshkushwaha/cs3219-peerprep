@@ -11,7 +11,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
     title: '',
     description: '',
     categories: [],
-    complexity: ''
+    difficulty: ''
   });
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
         title: initialData.title || '',
         description: initialData.description || '',
         categories: initialData.categories || [],
-        complexity: initialData.complexity || ''
+        difficulty: initialData.difficulty || ''
       });
     }
   }, [initialData]);
@@ -43,7 +43,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
-    setFormData({ title: '', description: '', categories: [], complexity: '' });
+    setFormData({ title: '', description: '', categories: [], difficulty: '' });
   };
 
   return (
@@ -87,12 +87,12 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
 
       <div className="form-group">
         <select
-          name="complexity"
-          value={formData.complexity}
+          name="difficulty"
+          value={formData.difficulty}
           onChange={handleInputChange}
           required
         >
-          <option value="">Select Complexity</option>
+          <option value="">Select Difficulty</option>
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>
