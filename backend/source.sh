@@ -13,7 +13,7 @@ CLOUD_RUN_SERVICE_NAME=$(echo ${GCLOUD_PROJECT}-${SERVICE_NAME}-${ENV} | head -c
 TF_VAR_cloud_run_service_name=${CLOUD_RUN_SERVICE_NAME}
 
 # MongoDB URI
-MONGODB_URI='mongodb+srv://common:7hdyD9fClPPeZuNa@cs3219questionservice.qwfia.mongodb.net/?retryWrites=true&w=majority&appName=CS3219QuestionService'
+MONGODB_URI='mongodb+srv://kim:nFrvfIVqBP7WxX@questionservice.true3.mongodb.net/?retryWrites=true&w=majority&appName=QuestionService'
 
 EXPOSED_PORT=8080
 
