@@ -116,13 +116,13 @@ h2 {
 .question-form input,
 .question-form textarea,
 .question-form select {
-  width: 100%; /* Full width of the container */
-  padding: 10px; /* Padding inside the inputs */
+  width: 100%; 
+  padding: 10px; 
   margin-top: 5px; /* Space between input boxes */
   border: 1px solid #ccc; /* Border */
   border-radius: 4px; /* Rounded corners */
-  background-color: #f4f4f4; /* Light background */
-  color: #333; /* Dark text color for contrast */
+  background-color: #f4f4f4; 
+  color: #333; 
   font-size: 16px;
   box-sizing: border-box; /* Ensures padding is included within the width */
 }
@@ -133,6 +133,26 @@ h2 {
 .question-form select:focus {
   outline: none;
   border: 2px solid #4CAF50; /* Green border on focus */
+  background-color: #fff; /* White background on focus */
+}
+
+/* Custom styling for the difficulty select dropdown */
+.question-form select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 2px solid #ccc; /* border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #f9f9f9; 
+  color: #333;
+  font-size: 16px;
+  appearance: none; 
+}
+
+/* Focus state for select dropdown */
+.question-form select:focus {
+  outline: none;
+  border-color: #4CAF50; /* Green border on focus */
   background-color: #fff; /* White background on focus */
 }
 
@@ -173,23 +193,42 @@ h2 {
   vertical-align: middle; /* Align checkbox vertically with the text */
 }
 
-/* Ensure buttons fit nicely inside their cell */
-.edit-btn, .delete-btn {
+/* Style the buttons inside table cells */
+.question-table .edit-btn {
   display: block;
   width: 100%;
   box-sizing: border-box;
   margin-bottom: 5px;
   padding: 8px;
   border-radius: 4px;
-  background-color: #333;
+  background-color: #007bff; /* Blue color for Edit button */
   color: white;
   border: none;
   cursor: pointer;
 }
 
-/* Hover effect for buttons */
-.edit-btn:hover, .delete-btn:hover {
-  background-color: #555;
+/* Red color for Delete button */
+.question-table .delete-btn {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: #dc3545; /* Red color for Delete button */
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* Hover effect for Edit button */
+.question-table .edit-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Hover effect for Delete button */
+.question-table .delete-btn:hover {
+  background-color: #c82333; /* Darker red on hover */
 }
 
 
