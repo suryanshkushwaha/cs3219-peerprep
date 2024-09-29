@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+/*import React, { useState, useEffect } from 'react';
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
 import { Question } from '../models/Question';
@@ -118,8 +118,9 @@ const QuestionManagement: React.FC = () => {
 };
 
 export default QuestionManagement;
+*/
 
-/*import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
 import QuestionController from '../controllers/QuestionController';
@@ -195,4 +196,3 @@ const QuestionManagement: React.FC = () => {
 };
 
 export default QuestionManagement;
-*/
