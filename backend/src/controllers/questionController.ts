@@ -37,11 +37,14 @@ export const createQuestion = async (req: Request, res: Response): Promise<void>
       return;
     }
 
+  const categoriesArray = typeof categories === 'string' && categories.length > 0 
+    ? categories.split(',').map(cat => cat.trim())  // Ensure to trim whitespace
+    : [];
+
   const newQuestion = new Question({
-    questionId,
     title,
     description,
-    categories: categories.split(','), // Convert comma-separated string to array
+    categories: categoriesArray, // Convert comma-separated string to array
     complexity
   });
 
