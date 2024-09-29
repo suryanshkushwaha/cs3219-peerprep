@@ -34,7 +34,7 @@ questionSchema.pre('save', async function (next) {
       // Find and increment the counter value
       const counter = await Counter.findOneAndUpdate(
         {},                         
-        { $inc: { seq: 21 } },        
+        { $inc: { seq: 1 } },        
         { new: true, upsert: true }
       );
   
