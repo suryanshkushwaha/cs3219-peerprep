@@ -34,7 +34,7 @@ h2 {
   display: grid;
   grid-template-rows: auto 1fr; /* Independent sizing for form and list */
   gap: 20px;  /* Add space between form and list */
-  max-width: 65%; /* Custom max width for the left panel */
+  max-width: 65%; /* Custom max width for the left panel, 65% is around 2-thrids*/
   padding: 20px;
 }
 
@@ -62,7 +62,7 @@ h2 {
 
 /* List section can expand independently of the form-section */
 .list-section {
-  max-width: 100%; /* Customize this to control the width of the list */
+  max-width: 100%;
 }
 
 
@@ -75,11 +75,11 @@ h2 {
 
 /* Ensure all table cells have consistent borders */
 .question-table th, .question-table td {
-  border: 1px solid #ccc; /* Single border for all table cells */
+  border: 1px solid #ccc; 
   padding: 8px;
   vertical-align: top;
   text-align: left;
-  box-sizing: border-box; /* Ensures padding is included in width/height */
+  box-sizing: border-box;
 }
 
 .question-table tr:hover {
@@ -90,21 +90,21 @@ h2 {
 .description-cell {
   min-height: 100%;
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Limit to 4 lines */
+  -webkit-line-clamp: 3; /* Limit to 3 lines, afterwhich text will truncate */
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
-  border: none; /* Ensure no additional borders are applied */
+  border: none;
   box-sizing: border-box;
-  padding: 8px; /* Make sure padding is consistent with other cells */
+  padding: 8px;
 }
 
 /* General Form Styles */
 .question-form {
-  padding: 20px; /* Ensure padding inside the form */
-  max-width: 100%; /* Adjust form width */
+  padding: 20px;
+  max-width: 100%;
   margin: 0 auto; /* Center the form */
   border: 2px solid #ccc; /* form border */
   border-radius: 10px; /* Rounded corners for the form */
