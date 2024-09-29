@@ -47,23 +47,29 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        name="title"
-        value={formData.title}
-        onChange={handleInputChange}
-        placeholder="Question Title"
-        required
-      />
-      <textarea
-        name="description"
-        value={formData.description}
-        onChange={handleInputChange}
-        placeholder="Question Description"
-        required
-      />
-      <div>
+    <form onSubmit={handleSubmit} className="question-form">
+      <div className="form-group">
+        <input
+          type="text"
+          name="title"
+          value={formData.title}
+          onChange={handleInputChange}
+          placeholder="Question Title"
+          required
+        />
+      </div>
+
+      <div className="form-group">
+        <textarea
+          name="description"
+          value={formData.description}
+          onChange={handleInputChange}
+          placeholder="Question Description"
+          required
+        />
+      </div>
+
+      <div className="form-group category-group">
         <label>Categories:</label>
         {['algorithms', 'data-structures', 'dynamic-programming', 'graphs', 'strings'].map(category => (
           <label key={category}>
@@ -78,7 +84,9 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
           </label>
         ))}
       </div>
-      <select
+
+      <div className="form-group">
+        <select
           name="complexity"
           value={formData.complexity}
           onChange={handleInputChange}
@@ -89,7 +97,9 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>
         </select>
-      <button type="submit">{initialData ? 'Update' : 'Submit'}</button>
+      </div>
+
+      <button type="submit" className="submit-btn">{initialData ? 'Update' : 'Submit'}</button>
     </form>
   );
 };
