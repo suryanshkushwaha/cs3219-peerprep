@@ -174,7 +174,7 @@ const QuestionManagement: React.FC = () => {
 
   return (
     <div className="question-management">
-      <h1>Question Management</h1>
+      <h2>Question Management</h2>
       
       {error && <div className="error-message">{error}</div>}
 
