@@ -16,8 +16,10 @@ const QuestionList: React.FC<QuestionListProps> = ({ questions, onDelete, onEdit
     <table className="question-table">
       <thead>
         <tr>
+          <th>ID</th>
           <th>Title</th>
           <th>Categories</th>
+          <th>Description</th>
           <th>Complexity</th>
           <th>Actions</th>
         </tr>
@@ -25,8 +27,10 @@ const QuestionList: React.FC<QuestionListProps> = ({ questions, onDelete, onEdit
       <tbody>
         {questions.map((question) => (
           <tr key={question.id}>
+            <td>{question.id}</td>
             <td>{question.title}</td>
             <td>{question.categories.join(', ')}</td>
+            <td className="description-cell">{question.description}</td>
             <td>{question.complexity}</td>
             <td>
               <button className="edit-btn" onClick={() => onEdit(question)}>Edit</button>

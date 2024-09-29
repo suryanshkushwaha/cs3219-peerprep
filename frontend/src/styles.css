@@ -1,0 +1,74 @@
+/* General Form Styles */
+.question-form input, 
+.question-form textarea, 
+.question-form select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f4f4f4; /* Light background */
+  color: #333; /* Dark text color for contrast */
+  font-size: 16px;
+}
+
+/* Input Fields Focus State */
+.question-form input:focus, 
+.question-form textarea:focus, 
+.question-form select:focus {
+  outline: none;
+  border: 2px solid #4CAF50; /* Green border on focus */
+  background-color: #fff; /* White background on focus */
+}
+
+/* Submit Button */
+button.submit-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+button.submit-btn:hover {
+  background-color: #45a049;
+}
+
+/* Error Message */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Table Styles */
+.question-table th, 
+.question-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.question-table th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.question-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Reduce spacing between category checkboxes */
+.category-group label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px; /* Adjust this value fr vertical spacing */
+  }
+  
+  .category-group input {
+    margin-right: 1px; /* Space between checkbox and text */
+  }
