@@ -7,7 +7,7 @@ help: ## Show this help
 
 local: code_build ## Run the code locally
 	. ./source.sh && \
-		docker run -it \
+		docker run -i \
 			-p $$EXPOSED_PORT:$$EXPOSED_PORT \
 			-e MONGODB_URI=$$MONGODB_URI \
 			$$DOCKER_IMAGE_NAME
