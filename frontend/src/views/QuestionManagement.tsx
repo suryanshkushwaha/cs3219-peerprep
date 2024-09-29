@@ -48,8 +48,8 @@ const QuestionManagement: React.FC = () => {
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-   //---- Uncomment this block to fetch questions from the API ---- 
-  const [questions, setQuestions] = useState<Question[]>([]);
+  //---- Uncomment this block to fetch questions from the API ---- 
+  /*const [questions, setQuestions] = useState<Question[]>([]);
   useEffect(() => {
     fetchQuestions();
   }, []);
@@ -78,10 +78,20 @@ const QuestionManagement: React.FC = () => {
       setError('Failed to save question. Please try again.');
     }
   };
+
+  const handleDelete = async (id: number) => {
+    try {
+      await QuestionController.deleteQuestion(id);
+      fetchQuestions();
+    } catch (err) {
+      setError('Failed to delete question. Please try again.');
+    }
+  };*/
+  //---- Uncomment this block above to fetch questions from the API ---- 
   
 
   /* ---- Comment out this below block if you are fetching questions from the API ---- */
-  /*const [questions, setQuestions] = useState<Question[]>(sampleQuestions);
+  const [questions, setQuestions] = useState<Question[]>(sampleQuestions);
   const handleSubmit = (formData: Omit<Question, 'id'>) => {
     if (editingQuestion) {
       const updatedQuestions = questions.map((q) =>
@@ -97,18 +107,13 @@ const QuestionManagement: React.FC = () => {
     }
     setEditingQuestion(null);
     setSelectedQuestion(null);
-  };*/
-  /* ---- Comment out this above block if you are fetching questions from the API ---- */
-
-
-  const handleDelete = async (id: number) => {
-    try {
-      await QuestionController.deleteQuestion(id);
-      fetchQuestions();
-    } catch (err) {
-      setError('Failed to delete question. Please try again.');
-    }
   };
+
+  const handleDelete = (id: number) => {
+    const filteredQuestions = questions.filter((q) => q.id !== id);
+    setQuestions(filteredQuestions);
+  };
+  /* ---- Comment out this above block if you are fetching questions from the API ---- */
 
   const handleEdit = (question: Question) => {
     setEditingQuestion(question);
