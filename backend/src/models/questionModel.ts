@@ -7,7 +7,7 @@ interface IQuestion extends Document {
     title: string;
     description: string;
     categories: string[];
-    complexity: string;
+    difficulty: string;
 }
 
 // Mongoose schema for the Question model
@@ -16,13 +16,13 @@ const questionSchema: Schema = new Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     categories: { type: [String], required: true },  // Array for multiple categories
-    complexity: { type: String, required: true }
+    difficulty: { type: String, required: true }
 });
 
 // Indexing for effecient search
-questionSchema.index({ complexity: 1 });               // Single index for complexity
+questionSchema.index({ difficulty: 1 });               // Single index for difficulty
 questionSchema.index({ categories: 1 });               // Single index for categories
-questionSchema.index({ categories: 1, complexity: 1 }); // Compound index for both
+questionSchema.index({ categories: 1, difficulty: 1 }); // Compound index for both
 
 // Middleware to auto-increment questionId before saving
 questionSchema.pre('save', async function (next) {
@@ -55,7 +55,7 @@ questionSchema.post('find', function(docs: IQuestion[], next) {
   
     // Sort the documents in-memory based on the difficultyMap
     docs.sort((a, b) => {
-      return difficultyMap[a.complexity] - difficultyMap[b.complexity];
+      return difficultyMap[a.difficulty] - difficultyMap[b.difficulty];
     });
   
     next();
