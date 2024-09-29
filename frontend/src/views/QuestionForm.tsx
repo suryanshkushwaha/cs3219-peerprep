@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Question } from '../models/Question';
 
 interface QuestionFormProps {
-  onSubmit: (formData: Omit<Question, 'id'>) => void;
+  onSubmit: (formData: Omit<Question, '_id'>) => void;
   initialData: Partial<Question> | null;
 }
 
 const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) => {
-  const [formData, setFormData] = useState<Omit<Question, 'id'>>({
+  const [formData, setFormData] = useState<Omit<Question, '_id'>>({
     title: '',
     description: '',
     categories: [],

@@ -2,27 +2,31 @@ import * as api from '../api/questionApi';
 import { Question } from '../models/Question';
 
 class QuestionController {
-  static validateQuestion(question: Partial<Question>): string | null {
+
+  static validateQuestion = (question: Omit<Question, '_id'> & Partial<Pick<Question, '_id'>>): Error | null => { // FIXME: why are there two 'validateQuestion' functions?
     if (!question.title || question.title.trim().length === 0) {
-      return "Title is required and cannot be empty.";
+      return new Error("Title is required and cannot be empty.");
     }
     if (!question.description || question.description.trim().length === 0) {
-      return "Description is required and cannot be empty.";
+      return new Error("Description is required and cannot be empty.");
     }
     if (!question.categories || question.categories.length === 0) {
-      return "At least one category is required.";
+      return new Error("At least one category is required.");
+    }
+    if (typeof question.categories !== 'object') {
+      return new Error("Categories must be an array. (Must be a plain array, not an Array-like object)");
     }
     if (!question.difficulty || !['easy', 'medium', 'hard'].includes(question.difficulty)) {
-      return "Difficulty must be either 'easy', 'medium', or 'hard'.";
+      return new Error("Difficulty must be either 'easy', 'medium', or 'hard'.");
     }
     return null;
-  }
+  };
 
   static async fetchQuestions(): Promise<Question[]> {
     try {
       const questions = await api.fetchQuestions();
       return questions.filter(question => {
-        const validationResult = this.validateQuestion(question);
+        const validationResult = QuestionController.validateQuestion(question);
         if (validationResult !== null) {
           console.warn(`Invalid question data received: ${validationResult}`, question);
           return false;
@@ -35,8 +39,9 @@ class QuestionController {
     }
   }
 
-  static async createQuestion(questionData: Omit<Question, 'id'>): Promise<Question> {
-    const error = this.validateQuestion(questionData);
+  static async createQuestion(questionData: Omit<Question, '_id'>): Promise<Question> {
+    console.log('Creating question:', questionData);
+    const error = QuestionController.validateQuestion(questionData);
     if (error) {
       throw new Error(`Invalid question data: ${error}`);
     }
@@ -48,11 +53,11 @@ class QuestionController {
     }
   }
 
-  static async updateQuestion(id: number, questionData: Omit<Question, 'id'>): Promise<Question> {
-    if (!id || typeof id !== 'number' || id <= 0) {
+  static async updateQuestion(id: string, questionData: Omit<Question, '_id'>): Promise<Question> {
+    if (!id || typeof id !== 'string') {
       throw new Error('Invalid question ID.');
     }
-    const error = this.validateQuestion(questionData);
+    const error = QuestionController.validateQuestion(questionData);
     if (error) {
       throw new Error(`Invalid question data: ${error}`);
     }
@@ -64,8 +69,8 @@ class QuestionController {
     }
   }
 
-  static async deleteQuestion(id: number): Promise<void> {
-    if (!id || typeof id !== 'number' || id <= 0) {
+  static async deleteQuestion(id: string): Promise<void> {
+    if (!id || typeof id !== 'string') {
       throw new Error('Invalid question ID.');
     }
     try {

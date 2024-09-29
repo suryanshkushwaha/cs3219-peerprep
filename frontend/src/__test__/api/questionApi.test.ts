@@ -7,15 +7,15 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('questionApi', () => {
   const mockValidQuestion: Question = {
-    id: 1,
+    _id: '1',
     title: 'Test Question',
     description: 'This is a test question',
     categories: ['algorithms'],
     difficulty: 'medium'
   };
 
-  const mockInvalidQuestion: any = {
-    id: 2,
+  const mockInvalidQuestion: Question = {
+    _id: '2',
     title: '',  // Invalid: empty title
     description: 'Invalid question',
     categories: [],  // Invalid: empty categories

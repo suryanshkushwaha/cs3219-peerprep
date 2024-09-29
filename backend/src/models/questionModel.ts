@@ -48,9 +48,9 @@ questionSchema.pre('save', async function (next) {
 // Index by difficulty by default (custom comparator logic implemented)
 questionSchema.post('find', function(docs: IQuestion[], next) {
     const difficultyMap: Record<string, number> = {
-      Easy: 1,
-      Medium: 2,
-      Hard: 3
+      easy: 1,
+      medium: 2,
+      hard: 3
     };
   
     // Sort the documents in-memory based on the difficultyMap

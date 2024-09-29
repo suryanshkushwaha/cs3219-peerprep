@@ -3,7 +3,7 @@ import { Question } from '../models/Question';
 
 interface QuestionListProps {
   questions: Question[];
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
   onEdit: (question: Question) => void;
   onSelect: (question: Question) => void;
 }
@@ -27,15 +27,15 @@ const QuestionList: React.FC<QuestionListProps> = ({ questions, onDelete, onEdit
       </thead>
       <tbody>
         {questions.map((question) => (
-          <tr key={question.id} onClick={() => onSelect(question)}>
-            <td>{question.id}</td>
+          <tr key={question._id} onClick={() => onSelect(question)}>
+            <td>{question._id}</td>
             <td>{question.title}</td>
             <td>{question.categories.join(', ')}</td>
             <td className="description-cell">{question.description}</td>
             <td>{question.difficulty}</td>
             <td>
               <button className="edit-btn" onClick={() => onEdit(question)}>Edit</button>
-              <button className="delete-btn" onClick={() => onDelete(question.id)}>Delete</button>
+              <button className="delete-btn" onClick={() => onDelete(question._id)}>Delete</button>
             </td>
           </tr>
         ))}

@@ -7,7 +7,7 @@ jest.mock('../../controllers/QuestionController');
 
 describe('QuestionManagement', () => {
   const mockQuestions = [
-    { id: 1, title: 'Test Question', description: 'Test Description', categories: ['algorithms'], difficulty: 'easy' }
+    { _id: 1, title: 'Test Question', description: 'Test Description', categories: ['algorithms'], difficulty: 'easy' }
   ];
 
   beforeEach(() => {

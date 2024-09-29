@@ -21,7 +21,7 @@ const handleApiError = (error: unknown): never => {
       throw new ApiError(`API error: ${axiosError.message}`);
     }
   } else {
-    throw new ApiError('API error: An unexpected error occurred');
+    throw new ApiError(`API error: An unexpected error occurred ${error}`);
   }
 };
 
@@ -29,7 +29,7 @@ const validateQuestionData = (data: any): data is Question => {
   return (
     typeof data === 'object' &&
     data !== null &&
-    typeof data.id === 'number' &&
+    typeof data._id === 'string' &&
     typeof data.title === 'string' &&
     typeof data.description === 'string' &&
     Array.isArray(data.categories) &&
@@ -41,6 +41,7 @@ const validateQuestionData = (data: any): data is Question => {
 export const fetchQuestions = async (): Promise<Question[]> => {
   try {
     const response = await axios.get<any[]>(API_URL);
+    console.log(response.data);
     const validQuestions = response.data.filter(validateQuestionData);
     if (validQuestions.length !== response.data.length) {
       console.warn(`Received ${response.data.length} questions, but only ${validQuestions.length} are valid.`);
@@ -51,7 +52,7 @@ export const fetchQuestions = async (): Promise<Question[]> => {
   }
 };
 
-export const createQuestion = async (questionData: Omit<Question, 'id'>): Promise<Question> => {
+export const createQuestion = async (questionData: Omit<Question, '_id'>): Promise<Question> => {
   try {
     const response = await axios.post<any>(API_URL, questionData);
     if (!validateQuestionData(response.data)) {
@@ -63,7 +64,7 @@ export const createQuestion = async (questionData: Omit<Question, 'id'>): Promis
   }
 };
 
-export const updateQuestion = async (id: number, questionData: Omit<Question, 'id'>): Promise<Question> => {
+export const updateQuestion = async (id: number, questionData: Omit<Question, '_id'>): Promise<Question> => {
   try {
     const response = await axios.put<any>(`${API_URL}/${id}`, questionData);
     if (!validateQuestionData(response.data)) {

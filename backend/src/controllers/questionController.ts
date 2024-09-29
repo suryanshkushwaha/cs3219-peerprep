@@ -28,7 +28,7 @@ export const getQuestionById = async (req: Request, res: Response): Promise<void
 // Create a new question
 export const createQuestion = async (req: Request, res: Response): Promise<void> => {
   const { title, description, categories, difficulty } = req.body;
-
+  console.log(req.body);
   try {
     // Check if a question with the same title already exists
     const existingQuestion = await Question.findOne({ title });
@@ -37,17 +37,13 @@ export const createQuestion = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-  const categoriesArray = typeof categories === 'string' && categories.length > 0 
-    ? categories.split(',').map(cat => cat.trim())  // Ensure to trim whitespace
-    : [];
-
   const newQuestion = new Question({
     title,
     description,
-    categories: categoriesArray, // Convert comma-separated string to array
+    categories,
     difficulty
   });
-
+  console.log(newQuestion);
     // Save the new question, questionId will be auto-assigned
     const savedQuestion = await newQuestion.save();
     res.status(201).json(savedQuestion);

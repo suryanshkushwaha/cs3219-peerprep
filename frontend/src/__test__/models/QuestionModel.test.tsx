@@ -3,20 +3,20 @@ import { Question } from '../../models/Question';
 describe('Question Model', () => {
   test('should have the correct structure', () => {
     const question: Question = {
-      id: 1,
+      _id: '1',
       title: 'Sample Question',
       description: 'This is a sample question',
       categories: ['algorithms', 'data-structures'],
       difficulty: 'medium'
     };
 
-    expect(question).toHaveProperty('id');
+    expect(question).toHaveProperty('_id');
     expect(question).toHaveProperty('title');
     expect(question).toHaveProperty('description');
     expect(question).toHaveProperty('categories');
     expect(question).toHaveProperty('difficulty');
 
-    expect(typeof question.id).toBe('number');
+    expect(typeof question._id).toBe('string');
     expect(typeof question.title).toBe('string');
     expect(typeof question.description).toBe('string');
     expect(Array.isArray(question.categories)).toBeTruthy();
@@ -28,7 +28,7 @@ describe('Question Model', () => {
     
     validComplexities.forEach(difficulty => {
       const question: Question = {
-        id: 1,
+        _id: '1',
         title: 'Test',
         description: 'Test',
         categories: [],

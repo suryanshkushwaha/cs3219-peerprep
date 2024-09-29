@@ -7,35 +7,35 @@ import { Question } from '../models/Question';
 const QuestionManagement: React.FC = () => {
   const sampleQuestions: Question[] = [
     {
-      id: 1,
+      _id: '1',
       title: 'Binary Search Algorithm',
       description: 'Implement a binary search on a sorted array.',
       categories: ['algorithms'],
       difficulty: 'medium',
     },
     {
-      id: 2,
+      _id: '2',
       title: 'Linked List Reversal',
       description: 'Reverse a singly linked list.',
       categories: ['data-structures'],
       difficulty: 'easy',
     },
     {
-      id: 3,
+      _id: '3',
       title: 'Knapsack Problem',
       description: 'Solve the knapsack problem using dynamic programming.',
       categories: ['dynamic-programming'],
       difficulty: 'hard',
     },
     {
-      id: 4,
+      _id: '4',
       title: 'Graph Traversal',
       description: 'Implement DFS and BFS for graph traversal.',
       categories: ['graphs'],
       difficulty: 'medium',
     },
     {
-      id: 5,
+      _id: '5',
       title: 'String Anagram Check',
       description: 'Write a function to check if two strings are anagrams.',
       categories: ['strings'],
@@ -63,10 +63,10 @@ const QuestionManagement: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (formData: Omit<Question, 'id'>) => {
+  const handleSubmit = async (formData: Omit<Question, '_id'>) => {
     try {
       if (editingQuestion) {
-        await QuestionController.updateQuestion(editingQuestion.id, formData);
+        await QuestionController.updateQuestion(editingQuestion._id, formData);
       } else {
         await QuestionController.createQuestion(formData);
       }
@@ -79,7 +79,7 @@ const QuestionManagement: React.FC = () => {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     try {
       await QuestionController.deleteQuestion(id);
       fetchQuestions();
@@ -92,15 +92,15 @@ const QuestionManagement: React.FC = () => {
 
   /* ---- Comment out this below block if you are fetching questions from the API ---- */
   /*const [questions, setQuestions] = useState<Question[]>(sampleQuestions);
-  const handleSubmit = (formData: Omit<Question, 'id'>) => {
+  const handleSubmit = (formData: Omit<Question, '_id'>) => {
     if (editingQuestion) {
       const updatedQuestions = questions.map((q) =>
-        q.id === editingQuestion.id ? { ...editingQuestion, ...formData } : q
+        q._id === editingQuestion._id ? { ...editingQuestion, ...formData } : q
       );
       setQuestions(updatedQuestions);
     } else {
       const newQuestion: Question = {
-        id: questions.length + 1,
+        _id: questions.length + 1,
         ...formData,
       };
       setQuestions([...questions, newQuestion]);
@@ -110,7 +110,7 @@ const QuestionManagement: React.FC = () => {
   };
 
   const handleDelete = (id: number) => {
-    const filteredQuestions = questions.filter((q) => q.id !== id);
+    const filteredQuestions = questions.filter((q) => q._id !== id);
     setQuestions(filteredQuestions);
   };*/
   /* ---- Comment out this above block if you are fetching questions from the API ---- */
