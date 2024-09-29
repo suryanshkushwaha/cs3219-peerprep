@@ -37,13 +37,13 @@ export const createQuestion = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    // Create a new question object
-    const newQuestion = new Question({
-      title,
-      description,
-      categories: categories.split(','), // Convert comma-separated string to array
-      complexity
-    });
+  const newQuestion = new Question({
+    questionId,
+    title,
+    description,
+    categories: categories.split(','), // Convert comma-separated string to array
+    complexity
+  });
 
     // Save the new question, questionId will be auto-assigned
     const savedQuestion = await newQuestion.save();
