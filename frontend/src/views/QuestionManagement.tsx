@@ -43,13 +43,13 @@ const QuestionManagement: React.FC = () => {
     },
   ];
 
-  // const [questions, setQuestions] = useState<Question[]>(sampleQuestions);
-  // Use the sampleQuestions array above to test the UI if the API is not available
-  const [questions, setQuestions] = useState<Question[]>([]);
+
   const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  /* ---- Uncomment this block to fetch questions from the API ---- 
+  const [questions, setQuestions] = useState<Question[]>([]);
   useEffect(() => {
     fetchQuestions();
   }, []);
@@ -78,6 +78,28 @@ const QuestionManagement: React.FC = () => {
       setError('Failed to save question. Please try again.');
     }
   };
+  */
+
+  /* ---- Comment out this below block if you are fetching questions from the API ---- */
+  const [questions, setQuestions] = useState<Question[]>(sampleQuestions);
+  const handleSubmit = (formData: Omit<Question, 'id'>) => {
+    if (editingQuestion) {
+      const updatedQuestions = questions.map((q) =>
+        q.id === editingQuestion.id ? { ...editingQuestion, ...formData } : q
+      );
+      setQuestions(updatedQuestions);
+    } else {
+      const newQuestion: Question = {
+        id: questions.length + 1,
+        ...formData,
+      };
+      setQuestions([...questions, newQuestion]);
+    }
+    setEditingQuestion(null);
+    setSelectedQuestion(null);
+  };
+  /* ---- Comment out this above block if you are fetching questions from the API ---- */
+
 
   const handleDelete = async (id: number) => {
     try {
