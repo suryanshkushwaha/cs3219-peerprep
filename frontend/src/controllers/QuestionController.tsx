@@ -54,6 +54,7 @@ class QuestionController {
   }
 
   static async updateQuestion(id: string, questionData: Omit<Question, '_id'>): Promise<Question> {
+    console.log('Updating question:', id, questionData);
     if (!id || typeof id !== 'string') {
       throw new Error('Invalid question ID.');
     }

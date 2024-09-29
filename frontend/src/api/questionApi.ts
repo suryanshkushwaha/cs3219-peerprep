@@ -41,7 +41,6 @@ const validateQuestionData = (data: any): data is Question => {
 export const fetchQuestions = async (): Promise<Question[]> => {
   try {
     const response = await axios.get<any[]>(API_URL);
-    console.log(response.data);
     const validQuestions = response.data.filter(validateQuestionData);
     if (validQuestions.length !== response.data.length) {
       console.warn(`Received ${response.data.length} questions, but only ${validQuestions.length} are valid.`);
