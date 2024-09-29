@@ -14,7 +14,7 @@ declare global {
 const connectDB = async (): Promise<void> => {
   try {
     // Explicitly assert that MONGODB_URI is a string
-    const con = await mongoose.connect("mongodb+srv://common:7hdyD9fClPPeZuNa@cs3219questionservice.qwfia.mongodb.net/?retryWrites=true&w=majority&appName=CS3219QuestionService" as string);
+    const con = await mongoose.connect(process.env.MONGODB_URI);
     console.log(`MongoDB Connected: ${con.connection.host}`);
   } catch (error) {
     // Log error and exit process with non-zero code

@@ -7,7 +7,10 @@ help: ## Show this help
 
 local: code_build ## Run the code locally
 	. ./source.sh && \
-		docker run -p $$EXPOSED_PORT:$$EXPOSED_PORT $$DOCKER_IMAGE_NAME
+		docker run -i \
+			-p $$EXPOSED_PORT:$$EXPOSED_PORT \
+			-e MONGODB_URI=$$MONGODB_URI \
+			$$DOCKER_IMAGE_NAME
 	echo "Service is running on http://localhost:$$EXPOSED_PORT"
 
 deploy: infra_deploy code_deploy ## Deploy the code and infrastructure
