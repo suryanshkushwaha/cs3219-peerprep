@@ -28,7 +28,7 @@ const QuestionList: React.FC<QuestionListProps> = ({ questions, onDelete, onEdit
       <tbody>
         {questions.map((question) => (
           <tr key={question._id} onClick={() => onSelect(question)}>
-            <td>{question._id}</td>
+            <td>{question.questionId}</td>
             <td>{question.title}</td>
             <td>{question.categories.join(', ')}</td>
             <td className="description-cell">{question.description}</td>
