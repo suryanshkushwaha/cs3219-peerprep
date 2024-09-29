@@ -21,7 +21,13 @@ const app = express();
 
 // Middleware for handling CORS and JSON parsing
 app.use(cors({
-  origin: 'http://localhost:*',
+  origin: (origin, callback) => {
+    if (origin?.startsWith('http://localhost:')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   optionsSuccessStatus: 200,
 }));
 app.use(express.json());
