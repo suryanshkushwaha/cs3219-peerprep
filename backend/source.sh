@@ -4,6 +4,8 @@ source ../source.sh
 
 set -o allexport
 
+source .env
+
 SERVICE_NAME=backend
 
 TF_VAR_service_name=${SERVICE_NAME}
