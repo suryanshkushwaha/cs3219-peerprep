@@ -4,9 +4,9 @@ PWD="$(git rev-parse --show-toplevel)"
 set -o allexport
 
 # Get the environment variables from the .env file in the root directory
-source $PWD/.env
+source "$PWD/.env"
 
-GOOGLE_APPLICATION_CREDENTIALS=$(realpath $PWD/$GOOGLE_APPLICATION_CREDENTIALS)
+GOOGLE_APPLICATION_CREDENTIALS=$(realpath "$PWD/$GOOGLE_APPLICATION_CREDENTIALS")
 
 # Environment varaibles for terraform input variables
 TF_VAR_backend_gcs_bucket=$TF_BACKEND_BUCKET_NAME
