@@ -1,0 +1,95 @@
+/* General Form Styles */
+.question-form input, 
+.question-form textarea, 
+.question-form select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f4f4f4; /* Light background */
+  color: #333; /* Dark text color for contrast */
+  font-size: 16px;
+}
+
+/* Input Fields Focus State */
+.question-form input:focus, 
+.question-form textarea:focus, 
+.question-form select:focus {
+  outline: none;
+  border: 2px solid #4CAF50; /* Green border on focus */
+  background-color: #fff; /* White background on focus */
+}
+
+/* Submit Button */
+button.submit-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+button.submit-btn:hover {
+  background-color: #45a049;
+}
+
+/* Error Message */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Table Styles */
+.question-table th, 
+.question-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.question-table th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.question-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Reduce spacing between category checkboxes */
+.category-group label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px; /* Adjust this value fr vertical spacing */
+  }
+  
+  .category-group input {
+    margin-right: 1px; /* Space between checkbox and text */
+  }
+
+  .form-section {
+    max-width: 100%; /* Control the width of the form */
+    text-align: center; /* Center the content inside */
+    margin: 0 auto; /* Center the form horizontally */
+    padding: 20px; /* Add padding inside the border */
+    border: 2px solid #ccc; /* Add a solid border with a light grey color */
+    border-radius: 10px; /* Optional: Rounded corners */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow for better visibility */
+    background-color: white; /* Optional: Ensure the background is white */
+  }
+
+  /* Right panel for detailed view */
+.right-panel {
+  flex: 1;
+  max-width: 35%; /* Custom max width */
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-left: 1px solid #ddd;
+}
+  

@@ -1,3 +1,157 @@
+import React, { useState } from 'react';
+import QuestionForm from './QuestionForm';
+import QuestionList from './QuestionList';
+import { Question } from '../models/Question';
+
+const QuestionManagement: React.FC = () => {
+  const sampleQuestions: Question[] = [
+    {
+      id: 1,
+      title: 'Binary Search Algorithm',
+      description: 'Implement a binary search on a sorted array.',
+      categories: ['algorithms'],
+      complexity: 'medium',
+    },
+    {
+      id: 2,
+      title: 'Linked List Reversal',
+      description: 'Reverse a singly linked list.',
+      categories: ['data-structures'],
+      complexity: 'easy',
+    },
+    {
+      id: 3,
+      title: 'Knapsack Problem',
+      description: 'Solve the knapsack problem using dynamic programming.',
+      categories: ['dynamic-programming'],
+      complexity: 'hard',
+    },
+    {
+      id: 4,
+      title: 'Graph Traversal',
+      description: 'Implement DFS and BFS for graph traversal.',
+      categories: ['graphs'],
+      complexity: 'medium',
+    },
+    {
+      id: 5,
+      title: 'String Anagram Check',
+      description: 'Write a function to check if two strings are anagrams.',
+      categories: ['strings'],
+      complexity: 'easy',
+    },
+  ];
+
+  const [questions, setQuestions] = useState<Question[]>(sampleQuestions);
+  const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
+  const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
+
+  const handleSubmit = (formData: Omit<Question, 'id'>) => {
+    if (editingQuestion) {
+      const updatedQuestions = questions.map((q) =>
+        q.id === editingQuestion.id ? { ...editingQuestion, ...formData } : q
+      );
+      setQuestions(updatedQuestions);
+    } else {
+      const newQuestion: Question = {
+        id: questions.length + 1,
+        ...formData,
+      };
+      setQuestions([...questions, newQuestion]);
+    }
+    setEditingQuestion(null);
+  };
+
+  const handleDelete = (id: number) => {
+    const filteredQuestions = questions.filter((q) => q.id !== id);
+    setQuestions(filteredQuestions);
+  };
+
+  const handleEdit = (question: Question) => {
+    setEditingQuestion(question);
+  };
+
+  const handleSelect = (question: Question) => {
+    setSelectedQuestion(question);
+  };
+
+  return (
+    <div className="container">
+      <div className="left-panel">
+        <section className="form-section">
+          <h2>{editingQuestion ? 'Edit Question' : 'Add a New Question'}</h2>
+          <QuestionForm onSubmit={handleSubmit} initialData={editingQuestion} />
+        </section>
+
+        <section className="list-section">
+          <h2>Question List</h2>
+          <QuestionList
+            questions={questions}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            onSelect={handleSelect}  // Pass the select handler
+          />
+        </section>
+      </div>
+
+      <div className="right-panel">
+        <h2>Detailed View</h2>
+        {selectedQuestion ? (
+          <div>
+            <h3>{selectedQuestion.title}</h3>
+            <p>{selectedQuestion.description}</p>
+            <p><strong>Categories:</strong> {selectedQuestion.categories.join(', ')}</p>
+            <p><strong>Complexity:</strong> {selectedQuestion.complexity}</p>
+          </div>
+        ) : (
+          <p>Please select a question from the list to view details.</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default QuestionManagement;
+/*
+  return (
+    <div className="container">
+      <div className="left-panel">
+        <section className="form-section">
+          <h2>{editingQuestion ? 'Edit Question' : 'Add a New Question'}</h2>
+          <QuestionForm onSubmit={handleSubmit} initialData={editingQuestion} />
+        </section>
+
+        <section className="list-section">
+          <h2>Question List</h2>
+          <QuestionList
+            questions={questions}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            onSelect={handleSelect} 
+          />
+        </section>
+      </div>
+
+      <div className="right-panel">
+        <h2>Detailed View</h2>
+        {selectedQuestion ? (
+          <div>
+            <h3>{selectedQuestion.title}</h3>
+            <p>{selectedQuestion.description}</p>
+            <p><strong>Categories:</strong> {selectedQuestion.categories.join(', ')}</p>
+            <p><strong>Complexity:</strong> {selectedQuestion.complexity}</p>
+          </div>
+        ) : (
+          <p>Please select a question from the list to view details.</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default QuestionManagement;
+*/
+
 /*import React, { useState, useEffect } from 'react';
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
@@ -117,10 +271,10 @@ const QuestionManagement: React.FC = () => {
   );
 };
 
-export default QuestionManagement;
-*/
+export default QuestionManagement;*/
 
-import React, { useState, useEffect } from 'react';
+
+/*import React, { useState, useEffect } from 'react';
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
 import QuestionController from '../controllers/QuestionController';
@@ -196,3 +350,4 @@ const QuestionManagement: React.FC = () => {
 };
 
 export default QuestionManagement;
+*/
