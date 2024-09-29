@@ -36,11 +36,16 @@ export const createQuestion = async (req: Request, res: Response): Promise<void>
     return;
   }
 
+  // Ensure categories is a string before calling split, or assign an empty array if categories is not provided.
+  const categoriesArray = typeof categories === 'string' && categories.length > 0 
+    ? categories.split(',').map(cat => cat.trim())  // Ensure to trim whitespace
+    : [];
+
   const newQuestion = new Question({
     questionId,
     title,
     description,
-    categories: categories.split(','), // Convert comma-separated string to array
+    categories: categoriesArray,
     complexity
   });
 
