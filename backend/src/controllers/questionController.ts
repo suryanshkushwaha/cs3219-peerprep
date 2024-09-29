@@ -27,27 +27,29 @@ export const getQuestionById = async (req: Request, res: Response): Promise<void
 
 // Create a new question
 export const createQuestion = async (req: Request, res: Response): Promise<void> => {
-  const { questionId, title, description, categories, complexity } = req.body;
-
-  // Check for duplicates
-  const existingQuestion = await Question.findOne({ questionId });
-  if (existingQuestion) {
-    res.status(400).json({ message: 'Question with this ID already exists' });
-    return;
-  }
-
-  const newQuestion = new Question({
-    questionId,
-    title,
-    description,
-    categories: categories.split(','), // Convert comma-separated string to array
-    complexity
-  });
+  const { title, description, categories, complexity } = req.body;
 
   try {
+    // Check if a question with the same title already exists
+    const existingQuestion = await Question.findOne({ title });
+    if (existingQuestion) {
+      res.status(400).json({ message: 'A question with this title already exists' });
+      return;
+    }
+
+    // Create a new question object
+    const newQuestion = new Question({
+      title,
+      description,
+      categories: categories.split(','), // Convert comma-separated string to array
+      complexity
+    });
+
+    // Save the new question, questionId will be auto-assigned
     const savedQuestion = await newQuestion.save();
     res.status(201).json(savedQuestion);
   } catch (error) {
+    console.error("Error creating question:", error); // Log the actual error for debugging
     res.status(500).json({ message: 'Error creating question', error });
   }
 };
