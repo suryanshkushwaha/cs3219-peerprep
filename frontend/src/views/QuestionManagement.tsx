@@ -95,7 +95,7 @@ const QuestionManagement: React.FC = () => {
       </div>
 
       <div className="right-panel">
-        <h2>Detailed View</h2>
+        <h2>Question Details</h2>
         {selectedQuestion ? (
           <div>
             <h3>{selectedQuestion.title}</h3>

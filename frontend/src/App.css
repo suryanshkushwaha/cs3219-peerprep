@@ -47,7 +47,7 @@ h2 {
   border: 2px solid #ccc; /* Add a light grey border */
   border-radius: 10px; /* Rounded corners */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  margin-left: 20px; /* Optional: Add some space between left and right panels */
+  margin-left: 20px; /* Add some space between left and right panels */
 }
 
 .form-section {
@@ -65,6 +65,7 @@ h2 {
   max-width: 100%; /* Customize this to control the width of the list */
 }
 
+
 /* Adjust the table layout */
 .question-table {
   width: 100%;
@@ -72,11 +73,13 @@ h2 {
   border-collapse: collapse;
 }
 
+/* Ensure all table cells have consistent borders */
 .question-table th, .question-table td {
-  border: 1px solid #ccc;
+  border: 1px solid #ccc; /* Single border for all table cells */
   padding: 8px;
   vertical-align: top;
   text-align: left;
+  box-sizing: border-box; /* Ensures padding is included in width/height */
 }
 
 .question-table tr:hover {
@@ -85,14 +88,17 @@ h2 {
 
 /* Limit the description cell height in the table */
 .description-cell {
+  min-height: 100%;
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Limit to 3 lines */
-  line-clamp: 3;
+  -webkit-line-clamp: 4; /* Limit to 3 lines */
+  line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
-  border: none;
+  border: none; /* Ensure no additional borders are applied */
+  box-sizing: border-box; /* Include padding within the border-box model */
+  padding: 8px; /* Make sure padding is consistent with other cells */
 }
 
 /* General Form Styles */
@@ -104,8 +110,8 @@ h2 {
   border-radius: 10px; /* Rounded corners for the form */
   background-color: white; /* White background for the form */
   border: 2px solid #ccc; /* Add a solid border with a light grey color */
-  border-radius: 10px; /* Optional: Rounded corners */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow for better visibility */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for better visibility */
 }
 
 /* Styles for inputs, textarea, and select within .question-form */
@@ -168,3 +174,5 @@ h2 {
   margin-right: 5px; /* Space between checkbox and category text */
   vertical-align: middle; /* Align checkbox vertically with the text */
 }
+
+
