@@ -1,42 +1,133 @@
 #root {
-  max-width: 1280px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 5rem;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Global Styling */
+body {
+  background-color: white;
+  color: black;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+h1 {
+  font-size: 32px;
+  color: black;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+h2 {
+  font-size: 24px;
+  color: black;
 }
 
-.card {
-  padding: 2em;
+
+/* General Form Styles */
+.question-form input,
+.question-form textarea,
+.question-form select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f4f4f4;
+  /* Light background */
+  color: #333;
+  /* Dark text color for contrast */
+  font-size: 16px;
 }
 
-.read-the-docs {
-  color: #888;
+
+
+/* Input Fields Focus State */
+.question-form input:focus,
+.question-form textarea:focus,
+.question-form select:focus {
+  outline: none;
+  border: 2px solid #4CAF50;
+  /* Green border on focus */
+  background-color: #fff;
+  /* White background on focus */
+}
+
+/* Submit Button */
+button.submit-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+button.submit-btn:hover {
+  background-color: #45a049;
+}
+
+/* Error Message */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Table Styles */
+.question-table th,
+.question-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.question-table th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.question-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Force the table to have fixed layout */
+.question-table {
+  width: 100%;
+  table-layout: fixed;  /* Equal width and height for table cells */
+  border-collapse: collapse; /* no gaps between table cells */
+}
+
+/* Style table cells */
+.question-table th, .question-table td {
+  border: 1px solid #ccc; /* Apply border to all cells */
+  padding: 8px; /* Add padding for better readability */
+  vertical-align: top; /* Ensure  text starts at the top of each cell */
+  text-align: left; /* Align text to the left for better readability */
+}
+
+/* Description cell clipping */
+.description-cell {
+  display: -webkit-box;
+  -webkit-line-clamp: 10; /* Limit description to 10 lines */
+  line-clamp: 10; /* Standard property for compatibility */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  border: none;
+}
+
+/* Adjust spacing and alignment for category checkboxes */
+.category-group label {
+  display: inline-block; /* label and input stay on same line */
+  margin-right: 15px; /* spacing between each checkbox and label */
+  margin-bottom: 5px; /* Control vertical spacing */
+  font-size: 16px; /* Adjust font size to match rest of the form */
+}
+
+.category-group input {
+  margin-right: 5px; /* Space between checkbox and category text */
+  vertical-align: middle; /* Align checkbox vertically with the text */
 }
