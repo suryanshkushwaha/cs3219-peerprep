@@ -41,32 +41,32 @@ h2 {
 /* Right panel for detailed view */
 .right-panel {
   flex: 1;
-  max-width: 35%; /* Custom max width */
+  max-width: 35%;
   padding: 20px;
-  background-color: white; /* Ensure background is white */
-  border: 2px solid #ccc; /* Add a light grey border */
+  background-color: white;
+  border: 2px solid #ccc; /* light grey border */
   border-radius: 10px; /* Rounded corners */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* shadow */
   margin-left: 20px; /* Add some space between left and right panels */
 }
 
 .form-section {
-  max-width: 90%; /* Adjust width of the form */
+  max-width: 90%; /* Adjust width of the form, set smaller than 100 for aesthetics */
   text-align: center; /* Center the content inside */
   margin: 0 auto; /* Center the form horizontally */
-  padding: 0; /* Reduce padding or keep it minimal */
-  border: none; /* Remove the border */
-  background-color: transparent; /* Remove background */
-  box-shadow: none; /* Remove shadow if applied */
+  padding: 0;
+  border: none; 
+  background-color: transparent;
+  box-shadow: none;
 }
 
-/* List section can expand independently */
+/* List section can expand independently of the form-section */
 .list-section {
   max-width: 100%; /* Customize this to control the width of the list */
 }
 
 
-/* Adjust the table layout */
+/* Adjust questions table layout */
 .question-table {
   width: 100%;
   table-layout: fixed;
@@ -90,28 +90,26 @@ h2 {
 .description-cell {
   min-height: 100%;
   display: -webkit-box;
-  -webkit-line-clamp: 4; /* Limit to 3 lines */
+  -webkit-line-clamp: 4; /* Limit to 4 lines */
   line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
   border: none; /* Ensure no additional borders are applied */
-  box-sizing: border-box; /* Include padding within the border-box model */
+  box-sizing: border-box;
   padding: 8px; /* Make sure padding is consistent with other cells */
 }
 
 /* General Form Styles */
 .question-form {
   padding: 20px; /* Ensure padding inside the form */
-  max-width: 100%; /* Adjust width of the form */
+  max-width: 100%; /* Adjust form width */
   margin: 0 auto; /* Center the form */
-  border: 2px solid #ccc; /* Add a border around the form */
+  border: 2px solid #ccc; /* form border */
   border-radius: 10px; /* Rounded corners for the form */
-  background-color: white; /* White background for the form */
-  border: 2px solid #ccc; /* Add a solid border with a light grey color */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for better visibility */
+  background-color: white; 
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* shadow */
 }
 
 /* Styles for inputs, textarea, and select within .question-form */
@@ -120,10 +118,10 @@ h2 {
 .question-form select {
   width: 100%; /* Full width of the container */
   padding: 10px; /* Padding inside the inputs */
-  margin-top: 5px; /* Space between inputs */
-  border: 1px solid #ccc; /* Border for inputs */
-  border-radius: 4px; /* Rounded corners for inputs */
-  background-color: #f4f4f4; /* Light background for inputs */
+  margin-top: 5px; /* Space between input boxes */
+  border: 1px solid #ccc; /* Border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #f4f4f4; /* Light background */
   color: #333; /* Dark text color for contrast */
   font-size: 16px;
   box-sizing: border-box; /* Ensures padding is included within the width */
@@ -171,7 +169,7 @@ h2 {
 }
 
 .category-group input {
-  margin-right: 5px; /* Space between checkbox and category text */
+  margin-right: 5px; 
   vertical-align: middle; /* Align checkbox vertically with the text */
 }
 
