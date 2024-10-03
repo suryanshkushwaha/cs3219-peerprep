@@ -4,7 +4,7 @@ source ../source.sh
 
 set -o allexport
 
-. ./env
+. ./.env
 
 SERVICE_NAME=backend
 
