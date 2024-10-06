@@ -8,12 +8,12 @@ services:
     env_file:
       - ./user-service/.env
 
-  # backend-service:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   env_file:
-  #     - ./backend/.env
+  backend-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./backend/.env
 
