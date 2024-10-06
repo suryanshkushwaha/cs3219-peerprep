@@ -52,6 +52,10 @@ const Login = () => {
         <p>
           Don't have an account? <Link to="/signup">Sign up here</Link>
         </p>
+        {/* Add button to navigate to the Question Management service */}
+        <p>
+          <button onClick={() => navigate("/questions")}>Go to Question Management</button> {/* Navigate to /questions */}
+        </p>
       </div>
     );
 };

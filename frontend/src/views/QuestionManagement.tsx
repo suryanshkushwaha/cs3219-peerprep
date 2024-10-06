@@ -128,9 +128,8 @@ const QuestionManagement: React.FC = () => {
     <div className="container">
       {/* Add a link to the login page at the top or in a suitable location */}
       <div className="nav">
-        <Link to="/login">Go to Login</Link> {/* Link to login page */}
+        <Link to="/">Go to Login</Link> {/* Link to login page */}
       </div>
-
       <div className="left-panel">
         <section className="form-section">
           <h2>{editingQuestion ? "Edit Question" : "Add a New Question"}</h2>

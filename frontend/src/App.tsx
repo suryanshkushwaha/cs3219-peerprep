@@ -27,6 +27,7 @@ import Profile from './Profile';
 import AdminDashboard from './AdminDashBoard';
 import PrivateRoute from './PrivateRoute'; // Assuming you have a PrivateRoute component
 import SignUp from './SignUp'; // Import the new SignUp component
+import QuestionService from './views/QuestionManagement';
 
 const App: React.FC = () => {
   return (
@@ -34,6 +35,9 @@ const App: React.FC = () => {
       <Routes>
         {/* Public Route for Login */}
         <Route path="/" element={<Login />} />
+
+        {/* Public Route for Question Management */}
+        <Route path="/questions" element={<QuestionService />} />
 
         {/* Public Route for Sign-Up */}
         <Route path="/signup" element={<SignUp />} /> {/* New Sign-Up Route */}
