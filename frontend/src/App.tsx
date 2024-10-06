@@ -1,7 +1,7 @@
 import React from 'react';
 import QuestionManagement from './views/QuestionManagement';
 import './App.css';
-
+/*
 const App: React.FC = () => {
   return (
     <div className="App">
@@ -19,3 +19,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+*/

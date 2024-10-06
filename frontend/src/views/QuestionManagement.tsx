@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom"; // Import Link for navigation
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
 import QuestionController from '../controllers/QuestionController';
 import { Question } from '../models/Question';
 
 const QuestionManagement: React.FC = () => {
-  const sampleQuestions: Question[] = [
+  /*const sampleQuestions: Question[] = [
     {
       _id: '1',
       title: 'Binary Search Algorithm',
@@ -41,7 +42,7 @@ const QuestionManagement: React.FC = () => {
       categories: ['strings'],
       difficulty: 'easy',
     },
-  ];
+  ];*/
 
 
   const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
@@ -125,9 +126,14 @@ const QuestionManagement: React.FC = () => {
 
   return (
     <div className="container">
+      {/* Add a link to the login page at the top or in a suitable location */}
+      <div className="nav">
+        <Link to="/login">Go to Login</Link> {/* Link to login page */}
+      </div>
+
       <div className="left-panel">
         <section className="form-section">
-          <h2>{editingQuestion ? 'Edit Question' : 'Add a New Question'}</h2>
+          <h2>{editingQuestion ? "Edit Question" : "Add a New Question"}</h2>
           <QuestionForm onSubmit={handleSubmit} initialData={editingQuestion} />
         </section>
         {error && <div className="error-message">{error}</div>}
@@ -148,8 +154,12 @@ const QuestionManagement: React.FC = () => {
           <div>
             <h3>{selectedQuestion.title}</h3>
             <p>{selectedQuestion.description}</p>
-            <p><strong>Categories:</strong> {selectedQuestion.categories.join(', ')}</p>
-            <p><strong>Difficulty:</strong> {selectedQuestion.difficulty}</p>
+            <p>
+              <strong>Categories:</strong> {selectedQuestion.categories.join(", ")}
+            </p>
+            <p>
+              <strong>Difficulty:</strong> {selectedQuestion.difficulty}
+            </p>
           </div>
         ) : (
           <p>Please select a question from the list to view details.</p>
