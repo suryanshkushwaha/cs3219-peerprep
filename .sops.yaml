@@ -1,0 +1,11 @@
+## KEYS:
+# Yongbeom: age1c0fqjnprp4pzk8kx5y23mlkreu5z34v3tkrrwrcmf56cmu3zaf0q30sqfv
+# Bhanuka: age1kdym6a2z8trwn3efwj4kw2eypsh2pucl4vk3faqmqglhgx4ek47s3mt3kk
+# GH Actions Runner: age1g2yz8vzyyzmdsht3398da6nu3pgl54rkw5wuveqh5wfn23r2hy0qu6d4dw
+
+creation_rules:
+    # Note: must be comma separated
+    - age: >-
+        age1c0fqjnprp4pzk8kx5y23mlkreu5z34v3tkrrwrcmf56cmu3zaf0q30sqfv,
+        age1g2yz8vzyyzmdsht3398da6nu3pgl54rkw5wuveqh5wfn23r2hy0qu6d4dw,
+        age1kdym6a2z8trwn3efwj4kw2eypsh2pucl4vk3faqmqglhgx4ek47s3mt3kk
