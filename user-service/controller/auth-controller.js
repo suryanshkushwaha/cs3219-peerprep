@@ -1,4 +1,4 @@
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { findUserByEmail as _findUserByEmail } from "../model/repository.js";
 import { formatUserResponse } from "./user-controller.js";
