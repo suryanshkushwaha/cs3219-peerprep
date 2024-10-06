@@ -63,7 +63,7 @@ export const createQuestion = async (questionData: Omit<Question, '_id'>): Promi
   }
 };
 
-export const updateQuestion = async (id: string, questionData: Omit<Question, '_id'>): Promise<Question> => {
+export const updateQuestion = async (id: number, questionData: Omit<Question, '_id'>): Promise<Question> => {
   try {
     const response = await axios.put<any>(`${API_URL}/${id}`, questionData);
     if (!validateQuestionData(response.data)) {
@@ -75,7 +75,7 @@ export const updateQuestion = async (id: string, questionData: Omit<Question, '_
   }
 };
 
-export const deleteQuestion = async (id: string): Promise<void> => {
+export const deleteQuestion = async (id: number): Promise<void> => {
   try {
     await axios.delete(`${API_URL}/${id}`);
   } catch (error) {
