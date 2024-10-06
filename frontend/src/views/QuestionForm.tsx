@@ -11,7 +11,8 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
     title: '',
     description: '',
     categories: [],
-    difficulty: ''
+    difficulty: '',
+    questionId: 0
   });
 
   useEffect(() => {
@@ -20,7 +21,8 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
         title: initialData.title || '',
         description: initialData.description || '',
         categories: initialData.categories || [],
-        difficulty: initialData.difficulty || ''
+        difficulty: initialData.difficulty || '',
+        questionId: initialData.questionId || 0
       });
     }
   }, [initialData]);
@@ -43,7 +45,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
-    setFormData({ title: '', description: '', categories: [], difficulty: '' });
+    setFormData({ title: '', description: '', categories: [], difficulty: '', questionId: 0 });
   };
 
   return (
