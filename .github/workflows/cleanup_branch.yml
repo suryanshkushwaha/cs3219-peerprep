@@ -1,0 +1,53 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Branch Cleanup
+
+# Controls when the workflow will run
+on:
+  # On push @ branch
+  pull_request:
+    types: [closed]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  cleanup_infra:
+    # Run only if PR is merged
+    if: github.event.pull_request.merged == true
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    container:
+      image: kimyongbeom/peerprep-actions-runner:latest
+      env:
+        AGE_SECRET_KEY: ${{ secrets.AGE_SECRET_KEY }}
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+      options: --privileged
+
+    concurrency:
+      # current branch
+      group: ${{ github.event.pull_request.head.ref }}
+
+    permissions: write-all
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: ./.github/actions/container_setup
+
+      - name: Destroy Global Infrastructure
+        shell: bash
+        run: cd docker_registry && make destroy
+    
+      - name: Destroy Backend
+        shell: bash
+        run: cd backend && make destroy
+    
+      - name: Destroy Frontend
+        shell: bash
+        run: . $NVM_DIR/nvm.sh && cd frontend && make destroy

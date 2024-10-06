@@ -1,0 +1,17 @@
+name: Setup Action
+description: Set up environment, authenticate, and configure git for workflows under the kimyongbeom/peerprep-actions-runner container.
+
+runs:
+  using: composite
+  steps:
+    - name: Configure Git
+      shell: bash
+      run: |
+        git config --global --add safe.directory "$PWD"
+
+    - name: Decrypt Secret Files
+      shell: bash
+      run: |
+        mkdir -p ${XDG_CONFIG_HOME:-$HOME/.config}/sops/age
+        echo $AGE_SECRET_KEY > ${XDG_CONFIG_HOME:-$HOME/.config}/sops/age/keys.txt
+        /bin/bash ./scripts/secret.sh decrypt
