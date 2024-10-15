@@ -1,6 +1,5 @@
-// src/Profile.tsx
 import React, { useEffect, useState } from 'react';
-import { getUserProfile, updateUser } from './api/usersApi'; // Import the getUserProfile and updateUser functions
+import { getUserProfile, updateUser, deleteUser } from './api/usersApi'; // Import the deleteUser function
 import { useParams } from 'react-router-dom'; // Import useParams to get userId from the URL
 import { User } from './models/User'; // Import the User model
 
@@ -10,6 +9,8 @@ const Profile = () => {
   const [loading, setLoading] = useState<boolean>(true); // State for loading indicator
   const [error, setError] = useState<string | null>(null); // State for handling errors
   const [isEditing, setIsEditing] = useState(false); // State to toggle editing mode
+  const [isDeleting, setIsDeleting] = useState(false); // State for showing deletion confirmation
+  const [confirmationUsername, setConfirmationUsername] = useState<string>(''); // State to store the entered username for deletion confirmation
 
   // Form state for updating user details
   const [formData, setFormData] = useState({
@@ -53,7 +54,7 @@ const Profile = () => {
     });
   };
 
-  // Handle form submission
+  // Handle form submission for profile update
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('token'); // Get token from localStorage
@@ -75,6 +76,25 @@ const Profile = () => {
       } catch (error) {
         console.error('Failed to update user', error);
         setError('Failed to update profile. Please try again later.');
+      }
+    }
+  };
+
+  // Handle profile deletion
+  const handleDelete = async () => {
+    const token = localStorage.getItem('token'); // Get token from localStorage
+    if (token && userId && user) {
+      if (confirmationUsername === user.username) {
+        try {
+          await deleteUser(userId, token); // Call the deleteUser API
+          alert('Profile deleted successfully!');
+          window.location.href = '/'; // Redirect to the default home page after deletion
+        } catch (error) {
+          console.error('Failed to delete user', error);
+          setError('Failed to delete profile. Please try again later.');
+        }
+      } else {
+        alert('Username does not match. Please try again.');
       }
     }
   };
@@ -130,6 +150,24 @@ const Profile = () => {
             </form>
           ) : (
             <button onClick={() => setIsEditing(true)}>Edit Profile</button>
+          )}
+
+          {/* Delete Profile Section */}
+          {isDeleting ? (
+            <>
+              <h3>Are you sure you want to delete your profile? This action cannot be undone.</h3>
+              <p>Please type your username ({user.username}) to confirm:</p>
+              <input
+                type="text"
+                placeholder="Enter your username"
+                value={confirmationUsername}
+                onChange={(e) => setConfirmationUsername(e.target.value)}
+              />
+              <button onClick={handleDelete}>Confirm Delete</button>
+              <button onClick={() => setIsDeleting(false)}>Cancel</button>
+            </>
+          ) : (
+            <button onClick={() => setIsDeleting(true)}>Delete Profile</button>
           )}
         </>
       ) : (
