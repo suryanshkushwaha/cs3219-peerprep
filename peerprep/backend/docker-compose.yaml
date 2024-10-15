@@ -8,12 +8,12 @@ services:
     env_file:
       - ./user-service/.env
 
-  backend-service:
+  question-service:
     build:
-      context: ./backend
+      context: ./question-service
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
     env_file:
-      - ./backend/.env
+      - ./question-service/.env
 
