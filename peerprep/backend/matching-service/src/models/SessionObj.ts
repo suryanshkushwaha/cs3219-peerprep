@@ -1,4 +1,4 @@
-import connectRedis from '../../config/redis';
+import redisUtils from '../utils/redisUtils';
 
 class SessionObj {
     private sessionId: string;
@@ -15,20 +15,31 @@ class SessionObj {
         this.createdAt = new Date();
     }
 
+    // Getters for private properties
+    get getStatus(): string {
+        return this.status;
+    }
+
+    get getUserId1(): string {
+        return this.userId1;
+    }
+
+    get getUserId2(): string | null {
+        return this.userId2;
+    }
+
     async save(): Promise<void> {
-        const redisClient = await connectRedis(); // Connect to Redis
         const sessionData = JSON.stringify({
             userId1: this.userId1,
             userId2: this.userId2,
             status: this.status,
             createdAt: this.createdAt.toISOString(),
         });
-        await redisClient.set(this.sessionId, sessionData);
+        await redisUtils.set(this.sessionId, sessionData);
     }
 
     static async find(sessionId: string): Promise<SessionObj | null> {
-        const redisClient = await connectRedis(); // Connect to Redis
-        const sessionData = await redisClient.get(sessionId);
+        const sessionData = await redisUtils.get(sessionId);
         if (!sessionData) {
             return null;
         }
@@ -55,3 +66,4 @@ class SessionObj {
 }
 
 export default SessionObj;
+

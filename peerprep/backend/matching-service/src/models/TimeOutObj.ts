@@ -1,4 +1,4 @@
-import connectRedis from '../../config/redis';
+import redisUtils from '../utils/redisUtils';
 
 class TimeOutObj {
     private sessionId: string;
@@ -9,25 +9,23 @@ class TimeOutObj {
         this.timeoutDuration = timeoutDuration;
     }
 
-    // Start the timeout for the session
+    // Start the timeout for the session, store with an expiration in Redis
     async startTimeout(): Promise<void> {
-        const redisClient = await connectRedis(); // Establish Redis connection
-        await redisClient.setex(this.sessionId, this.timeoutDuration, 'waiting'); // 'waiting' status during timeout
+        await redisUtils.set(this.sessionId, 'waiting', this.timeoutDuration);
     }
 
-    // Check if a session has expired (i.e., if it's no longer in Redis)
+    // Check if a session has expired by checking if the session exists in Redis
     static async isExpired(sessionId: string): Promise<boolean> {
-        const redisClient = await connectRedis(); // Establish Redis connection
-        const status = await redisClient.get(sessionId);
-        return status === null; // Return true if session data no longer exists
+        const status = await redisUtils.get(sessionId);
+        return status === null; // If the key doesn't exist, it has expired
     }
 
     // Cancel the timeout (delete the session entry from Redis)
     static async cancelTimeout(sessionId: string): Promise<void> {
-        const redisClient = await connectRedis(); // Establish Redis connection
-        await redisClient.del(sessionId); // Remove session from Redis
+        await redisUtils.del(sessionId);
     }
 }
 
 export default TimeOutObj;
+
 
