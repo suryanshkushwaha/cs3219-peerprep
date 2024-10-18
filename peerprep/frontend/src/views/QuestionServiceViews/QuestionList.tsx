@@ -1,5 +1,5 @@
 import React from 'react';
-import { Question } from '../models/Question';
+import { Question } from '../../models/Question';
 
 interface QuestionListProps {
   questions: Question[];

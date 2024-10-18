@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Question } from '../models/Question';
+import { Question } from '../../models/Question';
 
 interface QuestionFormProps {
   onSubmit: (formData: Omit<Question, '_id'>) => void;

@@ -232,3 +232,119 @@ h2 {
 }
 
 
+/* MATCHING FORM VIEWS */
+
+/* Container to center the form */
+.matching-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  padding: 20px;
+}
+
+.matching-form {
+  padding: 20px;
+  max-width: 100%;
+  margin: 0 auto; /* Center the form */
+  border: 2px solid #ccc; /* form border */
+  border-radius: 10px; /* Rounded corners for the form */
+  background-color: white; 
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* shadow */
+}
+
+/* Styles for inputs, textarea, and select within .question-form */
+.matching-form input,
+.matching-form textarea,
+.matching-form select {
+  width: 100%; 
+  padding: 10px; 
+  margin-top: 5px; /* Space between input boxes */
+  border: 1px solid #ccc; /* Border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #f4f4f4; 
+  color: #333; 
+  font-size: 16px;
+  box-sizing: border-box; /* Ensures padding is included within the width */
+}
+
+/* Input Fields Focus State */
+.matching-form input:focus,
+.matching-form textarea:focus,
+.matching-form select:focus {
+  outline: none;
+  border: 2px solid #4CAF50; /* Green border on focus */
+  background-color: #fff; /* White background on focus */
+}
+
+/* Custom styling for the difficulty select dropdown */
+.matching-form select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 2px solid #ccc; /* border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #f9f9f9; 
+  color: #333;
+  font-size: 16px;
+  appearance: none; 
+}
+
+/* Focus state for select dropdown */
+.matching-form select:focus {
+  outline: none;
+  border-color: #4CAF50; /* Green border on focus */
+  background-color: #fff; /* White background on focus */
+}
+
+/* Submit Button */
+.matching-form button.submit-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.matching-form button.submit-btn:hover {
+  background-color: #45a049;
+}
+
+/* Error Message styling, to be expanded later most likely split into diff types */
+.matching-form .error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Position the link in the top right corner */
+.top-left-link {
+  position: absolute;
+  top: 20px;
+  left: 100px;
+  text-decoration: none;
+  color: #4CAF50; /* Green color */
+  font-weight: bold;
+}
+
+.top-left-link:hover {
+  color: #45a049; /* Slightly darker green on hover */
+}
+
+/* Position the link in the top right corner */
+.top-right-link {
+  position: absolute;
+  top: 20px;
+  right: 100px;
+  text-decoration: none;
+  color: #4CAF50; /* Green color */
+  font-weight: bold;
+}
+
+.top-right-link:hover {
+  color: #45a049; /* Slightly darker green on hover */
+}
