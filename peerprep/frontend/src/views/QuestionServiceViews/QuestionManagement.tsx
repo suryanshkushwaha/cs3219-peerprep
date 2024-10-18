@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom"; // Import Link for navigation
 import QuestionForm from './QuestionForm';
 import QuestionList from './QuestionList';
-import QuestionController from '../controllers/QuestionController';
-import { Question } from '../models/Question';
+import QuestionController from '../../controllers/QuestionController';
+import { Question } from '../../models/Question';
 
 const QuestionManagement: React.FC = () => {
   /*const sampleQuestions: Question[] = [
@@ -128,7 +128,8 @@ const QuestionManagement: React.FC = () => {
     <div className="container">
       {/* Add a link to the login page at the top or in a suitable location */}
       <div className="nav">
-        <Link to="/">Go to Login</Link> {/* Link to login page */}
+        <Link to="/" className="top-left-link">Go to Login</Link> 
+        <Link to="/matching" className="top-right-link">Go to Matching Service</Link>
       </div>
       <div className="left-panel">
         <section className="form-section">

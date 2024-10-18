@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { getUserProfile, updateUser, deleteUser } from './api/usersApi'; // Import the deleteUser function
+import { getUserProfile, updateUser, deleteUser } from '../../api/usersApi'; // Import the deleteUser function
 import { useParams } from 'react-router-dom'; // Import useParams to get userId from the URL
-import { User } from './models/User'; // Import the User model
+import { User } from '../../models/User'; // Import the User model
 
 const Profile = () => {
   const { userId } = useParams<{ userId: string }>(); // Get userId from the URL
