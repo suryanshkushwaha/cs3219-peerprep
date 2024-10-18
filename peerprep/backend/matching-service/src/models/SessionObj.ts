@@ -1,23 +1,38 @@
 import redisUtils from '../utils/redisUtils';
 
-class SessionObj {
+export interface SessionObj {
+    userId1: string;
+    userId2: string;
+    topic: string;
+    difficulty: string;
+    sessionId: string;
+    startedAt: Date;
+}
+
+class Session {
     private sessionId: string;
     private userId1: string;
     private userId2: string | null;
-    private status: string;
-    private createdAt: Date;
+    private topic: string;
+    private difficulty: string;
+    private startedAt: Date;
 
-    constructor(sessionId: string, userId1: string) {
+    constructor(sessionId: string, userId1: string, topic: string, difficulty: string) {
         this.sessionId = sessionId;
         this.userId1 = userId1;
         this.userId2 = null;
-        this.status = 'waiting'; // Can be 'waiting', 'matched', 'expired'
-        this.createdAt = new Date();
+        this.topic = topic;
+        this.difficulty = difficulty;
+        this.startedAt = new Date(); // Set the current time for session start
     }
 
-    // Getters for private properties
+    // Getters for session properties
+    get getSessionId(): string {
+        return this.sessionId;
+    }
+
     get getStatus(): string {
-        return this.status;
+        return this.userId2 ? 'matched' : 'waiting';
     }
 
     get getUserId1(): string {
@@ -28,42 +43,44 @@ class SessionObj {
         return this.userId2;
     }
 
+    get getTopic(): string {
+        return this.topic;
+    }
+
+    get getDifficulty(): string {
+        return this.difficulty;
+    }
+
     async save(): Promise<void> {
         const sessionData = JSON.stringify({
             userId1: this.userId1,
             userId2: this.userId2,
-            status: this.status,
-            createdAt: this.createdAt.toISOString(),
+            topic: this.topic,
+            difficulty: this.difficulty,
+            sessionId: this.sessionId,
+            startedAt: this.startedAt.toISOString(),
         });
         await redisUtils.set(this.sessionId, sessionData);
     }
 
-    static async find(sessionId: string): Promise<SessionObj | null> {
+    static async find(sessionId: string): Promise<Session | null> {
         const sessionData = await redisUtils.get(sessionId);
         if (!sessionData) {
             return null;
         }
 
         const data = JSON.parse(sessionData);
-        const session = new SessionObj(sessionId, data.userId1);
+        const session = new Session(sessionId, data.userId1, data.topic, data.difficulty);
         session.userId2 = data.userId2;
-        session.status = data.status;
-        session.createdAt = new Date(data.createdAt);
+        session.startedAt = new Date(data.startedAt);
 
         return session;
     }
 
-    async updateStatus(status: string): Promise<void> {
-        this.status = status;
-        await this.save();
-    }
-
     async addUser(userId2: string): Promise<void> {
         this.userId2 = userId2;
-        this.status = 'matched';
         await this.save();
     }
 }
 
-export default SessionObj;
-
+export default Session;
