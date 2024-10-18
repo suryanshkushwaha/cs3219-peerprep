@@ -33,7 +33,7 @@ const MatchingServiceMainView: React.FC = () => {
       <div className="matching-form">
         <h2>Select a Topic and Difficulty</h2>
         <form onSubmit={handleSubmit}>
-          <div className="form-group category-group">
+          <div className="form-section category-group">
             <select
               name="topic"
               value={topic}
@@ -49,7 +49,7 @@ const MatchingServiceMainView: React.FC = () => {
             </select>
           </div>
 
-          <div className="form-group">
+          <div className="form-section">
             <select
               name="difficulty"
               value={difficulty}

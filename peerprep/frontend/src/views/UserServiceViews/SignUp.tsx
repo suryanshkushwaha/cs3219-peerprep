@@ -48,43 +48,71 @@ const SignUp = () => {
   };
 
   return (
-    <div>
-      <h2>Sign Up</h2>
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Confirm Password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-      />
+    <div className="container">
+      <div className="login-form">
+        <h2>Sign Up</h2>
 
-      <button onClick={handleSignUp}>Sign Up</button>
-      
-      {error && <p>{error}</p>} {/* Display error message */}
-      
-      {/* Display success message and login link after successful sign-up */}
-      {success && (
-        <div>
-          <p>Account created successfully! You can now <Link to="/">log in</Link>.</p>
+        <div className="form-section">
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
         </div>
-      )}
+
+        <div className="form-section">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-section">
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-section">
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <button 
+            onClick={handleSignUp}
+            className="submit-btn">Sign Up</button>
+        <button
+            onClick={() => navigate("/")}
+            className="alt-btn"
+          >
+            Return to Login
+        </button>
+
+        {error && <p className="error-message">{error}</p>}
+
+        {success && (
+          <div className="success-message">
+            <p>
+              Account created successfully! You can now{' '}
+              <Link to="/" className="link">log in</Link>.
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
