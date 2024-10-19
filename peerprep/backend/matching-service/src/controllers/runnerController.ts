@@ -155,10 +155,10 @@ export const cancelSession = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { sessionId } = req.body;
+    const { userId } = req.body;
 
     // Cancel the timeout and remove session from Redis
-    await redis.delSession(sessionId);
+    await redis.delSessionByUser(userId);
 
     res.status(200).json({ message: "Session timeout cancelled." });
   } catch (error) {

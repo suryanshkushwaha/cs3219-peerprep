@@ -335,6 +335,14 @@ export const delSession = async (sessionId: string): Promise<void> => {
   } 
 };
 
+export const delSessionByUser = async (userId: string): Promise<void> => {
+  const session = await findSessionByUser(userId);
+  if (!session) {
+    throw new Error("User is not in a session");
+  }
+  await delSession(session.sessionId);
+}
+
 export const findSession = async (
   sessionId: string
 ): Promise<Session | null> => {
