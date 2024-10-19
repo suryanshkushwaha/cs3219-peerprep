@@ -24,7 +24,7 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
     const startTime = Date.now();
 
     while (!matchedUser && Date.now() - startTime < timeout) {
-        matchedUser = await findMatchInQueue(topic);
+        matchedUser = await findMatchInQueue(userId);
 
         if (matchedUser) {
             break;
