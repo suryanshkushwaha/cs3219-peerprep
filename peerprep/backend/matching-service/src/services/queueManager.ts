@@ -1,15 +1,10 @@
 import { ChainableCommander } from 'ioredis';
 import * as redis from '../utils/redisUtils';
 
-const QUEUE_TIMEOUT = 30000; // ms
-
-// After this timeout, allow the user to be matched with a different difficulty level
-const QUEUE_TOPIC_TIMEOUT = 15000; // ms
-
 // Push user
-export const addToQueue = async (userId: string, topic: string, difficulty: string) => {
+export const addToQueue = async (userId: string, topic: string, difficulty: string, timeoutSeconds: number) => {
   try {
-    await redis.enqueueUser(userId, topic, difficulty, QUEUE_TIMEOUT/1000);
+    await redis.enqueueUser(userId, topic, difficulty, timeoutSeconds);
   } catch (error) {
     console.error('Error in addToQueue:', error);
     throw error;
@@ -17,7 +12,9 @@ export const addToQueue = async (userId: string, topic: string, difficulty: stri
 };
 
 // Find user match
-export const findMatchInQueue = async (userId: string) => {
+export const findMatchInQueue = async (userId: string, timeoutSeconds: number) => {
+  // After this time, the user will be matched with any other user (same topic, different difficulty)
+  const topicTimeoutSeconds = timeoutSeconds / 2; 
   try {
     const match = await redis.findMatchInQueueByTopicAndDifficulty(userId);
     if (match) {
@@ -26,7 +23,7 @@ export const findMatchInQueue = async (userId: string) => {
     
     const queueDuration = await redis.getQueueDurationSeconds(userId);
 
-    if (queueDuration !== null && queueDuration > QUEUE_TOPIC_TIMEOUT) {
+    if (queueDuration !== null && queueDuration > topicTimeoutSeconds) {
       return redis.findMatchInQueueByTopic(userId);
     }
 

@@ -1,5 +1,6 @@
 import { ChainableCommander } from "ioredis";
 import connectRedis from "../../config/redis";
+import { Session } from "../models/Session";
 
 /**
  * Sets a key-value pair in Redis with an optional expiration time (in seconds).
@@ -99,10 +100,15 @@ export const clearExpiredQueue = async (
   try {
     const queueKey = `queue:${topic}:${difficulty}`;
     redisClient.zremrangebyscore(
-      queueKey,
+      'queue:users',
       0,
       currentTime - queue_timeout_seconds
     )
+    redisClient.zremrangebyscore(
+      queueKey,
+      0,
+      currentTime - queue_timeout_seconds
+    );
   } catch (error) {
     console.error("Error in clearExpiredQueue:", error);
     throw error;
@@ -121,8 +127,15 @@ export const enqueueUser = async (
   const timeStamp = Date.now();
   let multi: ChainableCommander | null = null;
   try {
+    if (await checkIfUserInQueue(userId)) {
+      throw new Error("User is already in queue");
+    }
+    if (await findSessionByUser(userId)) {
+      throw new Error("User is already in a session");
+    }
     clearExpiredQueue(topic, difficulty, queue_timeout_seconds);
     multi = await redisClient.multi();
+    await multi.zadd("queue:users", userId, timeStamp);  
     await multi!.hset(`queue:timestamp`, { userId: timeStamp });
     await multi!.hset(`queue:topic`, { userId: topic });
     await multi!.hset(`queue:difficulty`, { userId: difficulty });
@@ -253,3 +266,107 @@ export const findMatchInQueueByDifficulty = async (
     redisClient.disconnect();
   }
 };
+
+export const checkIfUserInQueue = async (userId: string): Promise<boolean> => {
+  const redisClient = await connectRedis();
+  try {
+    const exists = await redisClient.zrank("queue:users", userId);
+    return exists != null;
+  } catch (error) {
+    console.error("Error in checkIfUserInQueue:", error);
+    throw error;
+  } finally {
+    redisClient.disconnect();
+  }
+}
+
+export const saveSession = async (session: Session): Promise<void> => {
+  const redisClient = await connectRedis();
+  const {userId1, userId2, sessionId} = session;
+  if (!await checkIfUserInQueue(userId1)) {
+    throw new Error("User 1 is not in queue");
+  }
+  if (!await checkIfUserInQueue(userId2)) {
+    throw new Error("User 2 is not in queue");
+  }
+  if (await findSessionByUser(userId1)) {
+    throw new Error("User 1 is already in a session");
+  }
+  if (await findSessionByUser(userId2)) {
+    throw new Error("User 2 is already in a session");
+  }
+  try {
+    const multi = redisClient.multi();
+    await multi.hset(
+      `session:sessionId`,
+      ...[`${sessionId}`, JSON.stringify(session)],
+    );
+    await multi.hset(
+      `session:userId`,
+      ...[session.userId1, sessionId],
+      ...[session.userId2, sessionId]
+    )
+    await multi.exec();
+  } catch (error) {
+    console.error("Error in saveSession:", error);
+    throw error;
+  } finally {
+    redisClient.disconnect();
+  }
+};
+
+export const delSession = async (sessionId: string): Promise<void> => {
+  const redisClient = await connectRedis();
+  try {
+    const session = await findSession(sessionId);
+    if (!session) {
+      return;
+    }
+    const multi = redisClient.multi();
+    await multi.hdel(`session:userId`, session.userId1);
+    await multi.hdel(`session:userId`, session.userId2);
+    await multi.hdel(`session:sessionId`, sessionId);
+    await multi.exec();
+  } catch (error) {
+    console.error("Error in delSession:", error);
+    throw error;
+  } finally {
+    redisClient.disconnect();
+  } 
+};
+
+export const findSession = async (
+  sessionId: string
+): Promise<Session | null> => {
+  const redisClient = await connectRedis();
+  try {
+    const sessionString = await redisClient.hget(`session:sessionId`, sessionId);
+    if (!sessionString) {
+      return null;
+    }
+    return JSON.parse(sessionString);
+  } catch (error) {
+    console.error("Error in findSession:", error);
+    throw error;
+  } finally {
+    redisClient.disconnect();
+  }
+};
+
+export const findSessionByUser = async (
+  userId: string
+): Promise<Session | null> => {
+  const redisClient = await connectRedis();
+  try {
+    const sessionId = await redisClient.hget(`session:userId`, userId);
+    if (!sessionId) {
+      return null;
+    }
+    return findSession(sessionId);
+  } catch (error) {
+    console.error("Error in findSessionByUser:", error);
+    throw error;
+  } finally {
+    redisClient.disconnect();
+  }
+}
