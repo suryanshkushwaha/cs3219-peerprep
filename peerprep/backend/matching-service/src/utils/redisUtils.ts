@@ -1,87 +1,42 @@
 import connectRedis from '../../config/redis';
 
 const redisUtils = {
-    /**
-     * Sets a key-value pair in Redis with an optional expiration time (in seconds).
-     * @param key - The key to store the data.
-     * @param value - The value to be stored.
-     * @param expirationInSeconds - Optional expiration time for the key.
-     */
-    async set(key: string, value: string, expirationInSeconds?: number): Promise<void> {
+    // Set session in Redis with session ID as the key
+    async setSession(sessionId: string, sessionData: any): Promise<void> {
         const redisClient = await connectRedis();
-
-        if (expirationInSeconds) {
-            await redisClient.setex(key, expirationInSeconds, value);
-        } else {
-            await redisClient.set(key, value);
-        }
+        await redisClient.set(sessionId, JSON.stringify(sessionData));
     },
 
-    /**
-     * Retrieves a value by key from Redis.
-     * @param key - The key for the data to retrieve.
-     * @returns - The stored value or null if the key does not exist.
-     */
-    async get(key: string): Promise<string | null> {
+    // Get session from Redis by session ID
+    async getSession(sessionId: string): Promise<any | null> {
         const redisClient = await connectRedis();
-        const value = await redisClient.get(key);
-        return value;
+        const sessionData = await redisClient.get(sessionId);
+        return sessionData ? JSON.parse(sessionData) : null;
     },
 
-    /**
-     * Deletes a key from Redis.
-     * @param key - The key to delete.
-     * @returns - The number of keys that were removed.
-     */
-    async del(key: string): Promise<number> {
+    // Delete session from Redis by session ID
+    async deleteSession(sessionId: string): Promise<void> {
         const redisClient = await connectRedis();
-        const result = await redisClient.del(key);
-        return result;
+        await redisClient.del(sessionId);
     },
 
-    /**
-     * Checks if a key exists in Redis.
-     * @param key - The key to check.
-     * @returns - 1 if the key exists, 0 if the key does not exist.
-     */
-    async exists(key: string): Promise<number> {
+    // Set timeout in Redis with expiration
+    async setTimeout(sessionId: string, timeoutData: any, expirationInSeconds: number): Promise<void> {
         const redisClient = await connectRedis();
-        const exists = await redisClient.exists(key);
-        return exists;
+        await redisClient.setex(sessionId, expirationInSeconds, JSON.stringify(timeoutData));
     },
 
-    /**
-     * Sets a key-value pair in Redis only if the key does not already exist.
-     * @param key - The key to store the data.
-     * @param value - The value to store.
-     * @returns - True if the key was set, false if it already exists.
-     */
-    async setnx(key: string, value: string): Promise<boolean> {
+    // Get timeout from Redis by session ID
+    async getTimeout(sessionId: string): Promise<any | null> {
         const redisClient = await connectRedis();
-        const result = await redisClient.setnx(key, value);
-        return result === 1; // Redis returns 1 if the key was set, 0 if it was not.
+        const timeoutData = await redisClient.get(sessionId);
+        return timeoutData ? JSON.parse(timeoutData) : null;
     },
 
-    /**
-     * Increments a value stored at a key.
-     * @param key - The key whose value will be incremented.
-     * @returns - The new value after incrementing.
-     */
-    async incr(key: string): Promise<number> {
+    // Delete timeout from Redis by session ID
+    async deleteTimeout(sessionId: string): Promise<void> {
         const redisClient = await connectRedis();
-        const newValue = await redisClient.incr(key);
-        return newValue;
-    },
-
-    /**
-     * Decrements a value stored at a key.
-     * @param key - The key whose value will be decremented.
-     * @returns - The new value after decrementing.
-     */
-    async decr(key: string): Promise<number> {
-        const redisClient = await connectRedis();
-        const newValue = await redisClient.decr(key);
-        return newValue;
+        await redisClient.del(sessionId);
     }
 };
 

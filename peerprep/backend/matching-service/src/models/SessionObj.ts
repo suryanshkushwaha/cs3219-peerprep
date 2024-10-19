@@ -23,7 +23,7 @@ class Session {
         this.userId2 = null;
         this.topic = topic;
         this.difficulty = difficulty;
-        this.startedAt = new Date(); // Set the current time for session start
+        this.startedAt = new Date();
     }
 
     // Getters for session properties
@@ -51,35 +51,42 @@ class Session {
         return this.difficulty;
     }
 
+    // Save the session to Redis, abstracting away the Redis key management
     async save(): Promise<void> {
-        const sessionData = JSON.stringify({
+        const sessionData = {
             userId1: this.userId1,
             userId2: this.userId2,
             topic: this.topic,
             difficulty: this.difficulty,
             sessionId: this.sessionId,
             startedAt: this.startedAt.toISOString(),
-        });
-        await redisUtils.set(this.sessionId, sessionData);
+        };
+        await redisUtils.setSession(this.sessionId, sessionData); // Abstracted Redis key management
     }
 
+    // Find a session by sessionId, abstracting away Redis key retrieval
     static async find(sessionId: string): Promise<Session | null> {
-        const sessionData = await redisUtils.get(sessionId);
+        const sessionData = await redisUtils.getSession(sessionId);
         if (!sessionData) {
             return null;
         }
 
-        const data = JSON.parse(sessionData);
-        const session = new Session(sessionId, data.userId1, data.topic, data.difficulty);
-        session.userId2 = data.userId2;
-        session.startedAt = new Date(data.startedAt);
+        const session = new Session(sessionId, sessionData.userId1, sessionData.topic, sessionData.difficulty);
+        session.userId2 = sessionData.userId2;
+        session.startedAt = new Date(sessionData.startedAt);
 
         return session;
     }
 
+    // Add a second user to the session and save to Redis
     async addUser(userId2: string): Promise<void> {
         this.userId2 = userId2;
         await this.save();
+    }
+
+    // Delete the session from Redis
+    static async delete(sessionId: string): Promise<void> {
+        await redisUtils.deleteSession(sessionId);
     }
 }
 

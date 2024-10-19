@@ -7,33 +7,31 @@ export interface TimeOutObj {
 
 class Timeout {
     private sessionId: string;
-    private timeoutDuration: number; // in seconds
     private expiresAt: Date;
 
-    constructor(sessionId: string, userId: string, timeoutDuration: number) {
+    constructor(sessionId: string, timeoutDuration: number) {
         this.sessionId = sessionId;
-        this.timeoutDuration = timeoutDuration;
-        this.expiresAt = new Date(Date.now() + timeoutDuration * 1000); // Calculate expiration date
+        this.expiresAt = new Date(Date.now() + timeoutDuration * 1000); // Calculate expiration time
     }
 
-    // Start the timeout for the session, store with an expiration in Redis
+    // Start the timeout for a session, saving the timeout to Redis
     async startTimeout(): Promise<void> {
         const timeoutData: TimeOutObj = {
-            userId: this.sessionId,
+            userId: this.sessionId, // Assuming sessionId acts as userId for simplicity
             expiresAt: this.expiresAt
         };
-        await redisUtils.set(this.sessionId, JSON.stringify(timeoutData), this.timeoutDuration);
+        await redisUtils.setTimeout(this.sessionId, timeoutData, Math.floor((this.expiresAt.getTime() - Date.now()) / 1000)); // Redis handles expiration
     }
 
-    // Check if a session has expired by checking if the session exists in Redis
+    // Check if a session has expired by checking Redis
     static async isExpired(sessionId: string): Promise<boolean> {
-        const timeoutData = await redisUtils.get(sessionId);
-        return timeoutData === null; // If the key doesn't exist, it has expired
+        const timeoutData = await redisUtils.getTimeout(sessionId);
+        return timeoutData === null; // Expired if no data in Redis
     }
 
     // Cancel the timeout (delete the session entry from Redis)
     static async cancelTimeout(sessionId: string): Promise<void> {
-        await redisUtils.del(sessionId);
+        await redisUtils.deleteTimeout(sessionId);
     }
 }
 

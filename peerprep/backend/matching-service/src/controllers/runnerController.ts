@@ -7,12 +7,12 @@ class RunnerController {
     async startSession(req: Request, res: Response): Promise<void> {
         const { sessionId, userId1, topic, difficulty, timeoutDuration } = req.body;
 
-        // Create new session
+        // Create and save new session
         const session = new Session(sessionId, userId1, topic, difficulty);
         await session.save();
 
-        // Set a timeout for this session
-        const timeout = new Timeout(sessionId, userId1, timeoutDuration);
+        // Start timeout for session
+        const timeout = new Timeout(sessionId, timeoutDuration);
         await timeout.startTimeout();
 
         res.status(200).json({ message: 'Session started and timeout set.' });
@@ -36,7 +36,7 @@ class RunnerController {
             return;
         }
 
-        // Add second user to the session and update the status
+        // Add second user to the session and update
         await session.addUser(userId2);
 
         // Cancel the timeout since we have a match
@@ -67,7 +67,7 @@ class RunnerController {
         });
     }
 
-    // Cancel a session timeout and delete the session
+    // Cancel a session timeout
     async cancelSession(req: Request, res: Response): Promise<void> {
         const { sessionId } = req.body;
 
