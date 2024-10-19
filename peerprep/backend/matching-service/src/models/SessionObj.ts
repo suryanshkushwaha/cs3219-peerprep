@@ -1,3 +1,5 @@
+import redisUtils from "../utils/redisUtils";
+
 class Session {
     private sessionId: string;
     private userId1: string;

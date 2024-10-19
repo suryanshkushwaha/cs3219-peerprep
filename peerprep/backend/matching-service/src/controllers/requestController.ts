@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-// import { addToQueue, findMatchInQueue } from '../services/queueManager';
-// import { redisDelete } from '../utils/redisUtils';
+import { addToQueue, findMatchInQueue } from '../services/queueManager';
+import { redisDelete } from '../utils/redisUtils';
 import ReqObj from '../models/ReqObj';
 
 // new request

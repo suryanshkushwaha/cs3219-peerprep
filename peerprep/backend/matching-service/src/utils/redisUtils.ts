@@ -15,7 +15,7 @@ const redisUtils = {
         } else {
             await redisClient.set(key, value);
         }
-    },
+    }
 
     /**
      * Retrieves a value by key from Redis.
