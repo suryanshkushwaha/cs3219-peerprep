@@ -178,3 +178,9 @@ const Profile = () => {
 };
 
 export default Profile;
+
+// In this updated Profile component, we need to determine if admin accessed or user accessed
+// Admin should not be allowed to edit the password
+// Currently in frontend, admin can edit the password of any user, but it doesnt not update the password in the database
+// THus a frontend only change to reflect this behaviour is to hide the password field when admin is editing a user profile
+// This can be done by checking if the user is an admin and conditionally rendering the password field in the form
