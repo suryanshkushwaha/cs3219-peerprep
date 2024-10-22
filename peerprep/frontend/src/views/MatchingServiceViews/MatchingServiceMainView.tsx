@@ -7,6 +7,8 @@ const MatchingServiceMainView: React.FC = () => {
   const [topic, setTopic] = useState<string>('');
   const [difficulty, setDifficulty] = useState<string>('');
 
+  const userId = localStorage.getItem('userId'); // Retrieve token from localStorage
+
   // Handle input changes
   const handleTopicChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setTopic(e.target.value);
@@ -20,7 +22,12 @@ const MatchingServiceMainView: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Replace placeholder alert with actual matching logic
-    alert(`Matching for Topic: ${topic}, Difficulty: ${difficulty}`);
+    alert(`Matching for Topic: ${topic},
+        Difficulty: ${difficulty}, User ${userId}`);
+    
+    // Write (topic, difficulty, userId)
+
+
     // Reset state
     setTopic('');
     setDifficulty('');
