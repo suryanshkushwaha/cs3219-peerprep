@@ -1,7 +1,6 @@
-/*
 import { Request, Response } from 'express';
 import { addToQueue, findMatchInQueue } from '../services/queueManager';
-import { redisDelete } from '../utils/redisUtils';
+//import { redisDelete } from '../utils/redisUtils';
 import ReqObj from '../models/ReqObj';
 
 // new request
@@ -37,11 +36,11 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
     if (matchedUser) {
         res.status(200).json({ message: 'Match found', data: matchedUser });
     } else {
-        await redisDelete(newRequest.userId); // Remove request if no match
+        //await redisDelete(newRequest.userId); // Remove request if no match
         res.status(408).json({ message: 'No match found, request timed out' });
     }
 };
-*/
+/*
 import { Request, Response } from 'express';
 import { addToQueue } from '../services/queueManager';
 import ReqObj from '../models/ReqObj';
@@ -72,4 +71,5 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+*/
         
