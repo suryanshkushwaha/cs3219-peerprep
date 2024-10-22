@@ -1,3 +1,4 @@
+/*
 import { Request, Response } from 'express';
 import { addToQueue, findMatchInQueue } from '../services/queueManager';
 import { redisDelete } from '../utils/redisUtils';
@@ -29,7 +30,7 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
         if (matchedUser) {
             break;
         }
-
+        // Wait one second before checking againe
         await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
@@ -38,6 +39,33 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
     } else {
         await redisDelete(newRequest.userId); // Remove request if no match
         res.status(408).json({ message: 'No match found, request timed out' });
+    }
+};
+*/
+import { Request, Response } from 'express';
+import { addToQueue } from '../services/queueManager';
+import ReqObj from '../models/ReqObj';
+
+// Create a new matching request
+export const createRequest = async (req: Request, res: Response): Promise<void> => {
+    const { userId, topic, difficulty } = req.body;
+
+    // Construct request object
+    const newRequest: ReqObj = {
+        userId,
+        topic,
+        difficulty,
+        status: 'pending',
+        createdAt: new Date(),
+    };
+
+    // Add the user to the queue
+    try {
+        await addToQueue(userId, topic, difficulty);
+        res.status(201).json({ message: 'Match request created successfully', data: newRequest });
+    } catch (error) {
+        console.error('Error adding to queue:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 };
         
