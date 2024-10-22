@@ -1,3 +1,4 @@
+/*
 import { Request, Response } from "express";
 import { Session } from "../models/Session";
 import { addToQueue, findMatchInQueue } from "../services/queueManager";
@@ -166,3 +167,4 @@ export const cancelSession = async (
     res.status(500).json({ message: "Internal server error" });
   }
 };
+*/
