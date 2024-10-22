@@ -1,5 +1,9 @@
 import { useNavigate, Link } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
+import { Request } from "../../models/Request";
+import { getMatchStatus } from "../../api/matchingApi.ts";
+import { createMatchingRequest } from "../../api/matchingApi.ts";
+import { MatchingRequestResponse } from "../../api/matchingApi.ts";
 
 
 const MatchingServiceMainView: React.FC = () => {
@@ -18,11 +22,25 @@ const MatchingServiceMainView: React.FC = () => {
     setDifficulty(e.target.value);
   };
 
+  /*
+    export interface Request {
+        userId: string;
+        topic: string;
+        difficulty: string;
+        status: 'pending' | 'matched';
+        createdAt: Date;
+  }
+  */
+
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Replace placeholder alert with actual matching logic
-    alert(`Matching for Topic: ${topic}, Difficulty: ${difficulty}, User: ${userId}`);
+    //alert(`Matching for Topic: ${topic}, Difficulty: ${difficulty}, User: ${userId}`);
+    const res: MatchingRequestResponse = createMatchingRequest(userId, topic, difficulty);
+    console.log("-------- DATA RECEIVED -----")
+    console.log(res.data);
+    alert(res);
     // Reset state
     setTopic('');
     setDifficulty('');
