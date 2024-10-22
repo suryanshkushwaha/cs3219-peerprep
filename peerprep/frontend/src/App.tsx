@@ -1,6 +1,5 @@
 import React from 'react';
-import QuestionManagement from './views/QuestionManagement';
-import './App.css';
+import './styles/App.css';
 /*
 const App: React.FC = () => {
   return (
@@ -22,12 +21,13 @@ export default App;
 */
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './Login';
-import Profile from './Profile';
-import AdminDashboard from './AdminDashBoard';
-import PrivateRoute from './PrivateRoute'; // Assuming you have a PrivateRoute component
-import SignUp from './SignUp'; // Import the new SignUp component
-import QuestionService from './views/QuestionManagement';
+import Login from './views/UserServiceViews/Login';
+import Profile from './views/UserServiceViews/Profile';
+import AdminDashboard from './views/UserServiceViews/AdminDashBoard';
+import PrivateRoute from './views/UserServiceViews/PrivateRoute'; // Assuming you have a PrivateRoute component
+import SignUp from './views/UserServiceViews/SignUp'; // Import the new SignUp component
+import QuestionService from './views/QuestionServiceViews/QuestionManagement';
+import MatchingService from './views/MatchingServiceViews/MatchingServiceMainView';
 
 const App: React.FC = () => {
   return (
@@ -38,6 +38,9 @@ const App: React.FC = () => {
 
         {/* Public Route for Question Management */}
         <Route path="/questions" element={<QuestionService />} />
+
+        {/* Public Route for Question Management */}
+        <Route path="/matching" element={<MatchingService />} />
 
         {/* Public Route for Sign-Up */}
         <Route path="/signup" element={<SignUp />} /> {/* New Sign-Up Route */}

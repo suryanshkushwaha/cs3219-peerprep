@@ -1,8 +1,8 @@
 // src/AdminDashboard.tsx
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom for navigation
-import { getAllUsers } from './api/usersApi'; // API function to fetch users
-import { User } from './models/User'; // Import the User model
+import { getAllUsers } from '../../api/usersApi'; // API function to fetch users
+import { User } from '../../models/User'; // Import the User model
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState<User[]>([]); // State to store user data

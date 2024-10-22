@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Question } from '../models/Question';
+import { Question } from '../../models/Question';
 
 interface QuestionFormProps {
   onSubmit: (formData: Omit<Question, '_id'>) => void;
@@ -50,7 +50,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
 
   return (
     <form onSubmit={handleSubmit} className="question-form">
-      <div className="form-group">
+      <div className="form-section">
         <input
           type="text"
           name="title"
@@ -61,7 +61,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
         />
       </div>
 
-      <div className="form-group">
+      <div className="form-section">
         <textarea
           name="description"
           value={formData.description}
@@ -71,7 +71,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
         />
       </div>
 
-      <div className="form-group category-group">
+      <div className="form-section category-group">
         <label>Categories:</label>
         {['algorithms', 'data-structures', 'dynamic-programming', 'graphs', 'strings'].map(category => (
           <label key={category}>
@@ -87,7 +87,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
         ))}
       </div>
 
-      <div className="form-group">
+      <div className="form-section">
         <select
           name="difficulty"
           value={formData.difficulty}
