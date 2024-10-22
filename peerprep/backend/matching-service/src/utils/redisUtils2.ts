@@ -118,6 +118,10 @@ export const enqueueUser = async (
   try {
     await clearExpiredQueue(topic, difficulty, queue_timeout_seconds);
 
+    console.log("USER ID IS" + userId);
+    console.log("TOPIC IS" + topic);
+    console.log("DIFFICULTY IS" + difficulty);
+
     if (await checkIfUserInQueue(userId)) {
       throw new Error("User is already in queue");
     }
@@ -135,9 +139,12 @@ export const enqueueUser = async (
     multi.expire(`queue:topic`, queue_timeout_seconds);
     multi.expire(`queue:difficulty`, queue_timeout_seconds);
 
+    // Ensure topic and difficulty based queues are defined
+    //if (topic && difficulty) {
     multi.zadd(`queue:${topic}:${difficulty}`, timeStamp, userId);
     multi.zadd(`queue:${topic}`, timeStamp, userId);
     multi.zadd(`queue:${difficulty}`, timeStamp, userId);
+    //}
 
     await multi.exec();
   } catch (error) {

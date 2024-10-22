@@ -1,5 +1,5 @@
 import { ChainableCommander } from 'ioredis';
-import * as redis from '../utils/redisUtils';
+import * as redis from '../utils/redisUtils2';
 
 // Declare global timeout for matching
 const MATCH_TIMEOUT_SECONDS = 30;
@@ -11,6 +11,9 @@ const MATCH_TIMEOUT_SECONDS = 30;
  * @param difficulty - The difficulty preference for the match.
  */
 export const addToQueue = async (userId: string, topic: string, difficulty: string) => {
+  console.log("FROM Queue: USER ID IS" + userId);
+  console.log("FROM Queue: TOPIC IS" + topic);
+  console.log("FROM Queue: DIFFICULTY IS" + difficulty);
   try {
     // Use the utility function to enqueue the user
     await redis.enqueueUser(userId, topic, difficulty, MATCH_TIMEOUT_SECONDS);
@@ -52,7 +55,6 @@ export const findMatchInQueue = async (userId: string) => {
  * Delete a user's match request from the queue.
  * @param userId - The ID of the user to remove.
  */
-/*
 export const deleteRequest = async (userId: string) => {
   try {
     await redis.deleteKeys(userId);
@@ -62,7 +64,6 @@ export const deleteRequest = async (userId: string) => {
     throw error;
   }
 };
-*/
 
 /**
  * Save a matched session between two users.

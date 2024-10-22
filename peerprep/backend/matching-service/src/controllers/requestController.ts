@@ -59,6 +59,10 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
         createdAt: new Date(),
     };
 
+    console.log("FROM CONTROLLER: USER ID IS" + userId);
+    console.log("FROM CONTROLLER: TOPIC IS" + topic);
+    console.log("FROM CONTROLLER: DIFFICULTY IS" + difficulty);
+
     // Add the user to the queue
     try {
         await addToQueue(userId, topic, difficulty);
