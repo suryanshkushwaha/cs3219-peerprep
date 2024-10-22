@@ -27,7 +27,7 @@ const handleApiError = (error: unknown): never => {
 };
 
 // Matching Response
-interface MatchingRequestResponse {
+export interface MatchingRequestResponse {
     message: string;
     data: {
       userId: string;
