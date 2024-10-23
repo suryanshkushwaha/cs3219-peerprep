@@ -1,4 +1,3 @@
-/*
 import { Request, Response } from "express";
 import { Session } from "../models/Session";
 import { addToQueue, findMatchInQueue } from "../services/queueManager";
@@ -6,7 +5,7 @@ import * as redis from "../utils/redisUtils";
 
 // Start a new session with a timeout for matching
 export const startSession = async (
-  req: Request,
+  req: Request, 
   res: Response
 ): Promise<void> => {
   const {
@@ -74,7 +73,7 @@ const enqueueUser = async (
   timeoutSeconds: number
 ): Promise<void> => {
   try {
-    await addToQueue(userId, topic, difficulty, timeoutSeconds);
+    await addToQueue(userId, topic, difficulty);
   } catch (error) {
     console.error("Error in enqueueUser:", error);
     throw error;
@@ -85,7 +84,7 @@ const waitAndMatch = async (userId: string, timeoutSeconds: number) => {
   try {
     const timestamp = Date.now();
     while (Date.now() - timestamp < timeoutSeconds * 1000) {
-      const match = await findMatchInQueue(userId, timeoutSeconds);
+      const match = await findMatchInQueue(userId);
       if (match) {
         return match;
       }
@@ -167,4 +166,3 @@ export const cancelSession = async (
     res.status(500).json({ message: "Internal server error" });
   }
 };
-*/

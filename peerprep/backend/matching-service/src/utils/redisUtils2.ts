@@ -156,6 +156,7 @@ export const enqueueUser = async (
   }
 };
 
+// Finds time remaining in queue for a user from the queue:timestamp hash
 export const getQueueDurationSeconds = async (
   userId: string
 ): Promise<number | null> => {
