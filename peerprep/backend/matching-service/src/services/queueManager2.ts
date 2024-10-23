@@ -67,8 +67,9 @@ export const getSessionStatus = async (userId: string) => {
 
 export const getStatus = async (userId: string) => {
     try {
-      if (await getSessionStatus(userId ) !== null) {
-        return "matched";
+      const sessionID = await getSessionStatus(userId);
+      if (sessionID !== null) {
+        return "matched on Session ID: " + sessionID;
       } else {
         const requestStatus = await getRequestStatus(userId);
         if (requestStatus !== null) {

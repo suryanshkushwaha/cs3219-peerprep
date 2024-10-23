@@ -26,13 +26,11 @@ export const enqueueUser = async (
         error.name = "UserInQueueError";
         throw error;
       }
-      /*
       if (await findSessionByUser(userId)) {
         const error = new Error("User is already in a session");
         error.name = "UserInSessionError";
         throw error;
       }
-      */
       
   
       multi.zadd("queue:users", expiryTime, userId);
@@ -131,7 +129,7 @@ export const checkIfUserInQueue = async (userId: string): Promise<boolean> => {
 
 export const findMatchInQueueByTopicAndDifficulty = async (
   userId: string
-): Promise<string | null> => {
+): Promise<String | null> => {
   const redisClient: Redis = app.locals.redisClient;
   try {
     const topic = await redisClient.hget("user-topic", userId);
@@ -146,12 +144,43 @@ export const findMatchInQueueByTopicAndDifficulty = async (
     ) {
       return null;
     }
-    return matchedUsers[0] === userId ? matchedUsers[1] : matchedUsers[0];
+    //return matchedUsers[0] === userId ? matchedUsers[1] : matchedUsers[0];
+    // Create session object
+    try {
+      const sessionId = createSession(userId, matchedUsers[0], topic, difficulty);
+      return sessionId;
+    } catch (error) {
+        console.error("Error in createSession:", error);
+        throw error;
+    }
   } catch (error) {
     console.error("Error in findMatchInQueueByTopicAndDifficulty:", error);
     throw error;
   }
 };
+
+const createSession = async (
+    userId1: string,
+    userId2: string,
+    topic: string,
+    difficulty: string,
+  ): Promise<String> =>{
+    try {
+      const session: Session = {
+        sessionId: `${userId1}-${userId2}-${Date.now()}`,
+        userId1,
+        userId2,
+        topic,
+        difficulty,
+        timestamp: Date.now(),
+      };
+      await saveSession(session);
+      return session.sessionId;
+    } catch (error) {
+      console.error("Error in createSession:", error);
+      throw error;
+    }
+  };
 
 export const findMatchInQueueByTopic = async (
   userId: string
