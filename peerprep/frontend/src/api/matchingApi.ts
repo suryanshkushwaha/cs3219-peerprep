@@ -58,6 +58,33 @@ export const getMatchStatus = async (userId: string): Promise<MatchingRequestRes
     }
 }
 
+export const listenToMatchStatus = (userId: string, onUpdate: (data: MatchingRequestResponse) => void, onError: (error: any) => void) => {
+    const eventSource = new EventSource(`${API_URL}/${userId}`);
+
+    // Listen for incoming events from the server
+    eventSource.onmessage = (event) => {
+        try {
+            const data: MatchingRequestResponse = JSON.parse(event.data);
+            onUpdate(data); // Call the update handler with the received data
+        } catch (error) {
+            console.error("Error parsing SSE data:", error);
+            onError(error);
+        }
+    };
+
+    // Handle connection errors
+    eventSource.onerror = (error) => {
+        console.error("Error in SSE connection:", error);
+        eventSource.close(); // Close the connection on error
+        onError(error);
+    };
+
+    // Return a function to allow stopping the event listener
+    return () => {
+        eventSource.close(); // Close the connection when no longer needed
+    };
+};
+
 // Method to delete matching request
 export const deleteMatchingRequest = async (userId: string): Promise<void> => {
     try {

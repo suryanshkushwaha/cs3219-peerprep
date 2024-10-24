@@ -1,16 +1,13 @@
 import { useNavigate, Link } from "react-router-dom";
-import React, { useState, useEffect } from 'react';
-import { Request } from "../../models/Request";
-import { getMatchStatus } from "../../api/matchingApi.ts";
+import React, { useState } from 'react';
 import { createMatchingRequest } from "../../api/matchingApi.ts";
-import { MatchingRequestResponse } from "../../api/matchingApi.ts";
+import { listenToMatchStatus } from "../../api/matchingApi.ts"; // Make sure this is correctly implemented for SSE
 
 const MatchingServiceMainView: React.FC = () => {
   // State for topic and difficulty
   const [topic, setTopic] = useState<string>('');
   const [difficulty, setDifficulty] = useState<string>('');
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
-  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const userId = localStorage.getItem('userId'); // Retrieve token from localStorage
 
@@ -24,65 +21,31 @@ const MatchingServiceMainView: React.FC = () => {
   };
 
   // Handle form submission
-  /*const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Replace placeholder alert with actual matching logic
-    //alert(`Matching for Topic: ${topic}, Difficulty: ${difficulty}, User: ${userId}`);
-    const res: MatchingRequestResponse = createMatchingRequest(userId, topic, difficulty);
-    console.log("-------- DATA RECEIVED -----")
-    console.log(res.data);
-    alert(res);
-    // Reset state
-    setTopic('');
-    setDifficulty('');
-  };*/
-
-   // Timer logic: Update time remaining every second
-   useEffect(() => {
-    if (timeRemaining !== null && timeRemaining > 0) {
-      const timer = setInterval(() => {
-        setTimeRemaining((prev) => (prev ? prev - 1 : 0));
-      }, 1000);
-      return () => clearInterval(timer); // Cleanup timer
-    }
-  }, [timeRemaining]);
-
-  // Polling backend for match status
-  const checkMatchStatus = async () => {
-    try {
-      const response: MatchingRequestResponse = await getMatchStatus(userId!);
-      if (response.data.status === "matched") {
-        setStatusMessage("Success! Match found.");
-        setLoading(false); // Stop loading
-        return true;
-      }
-    } catch (error) {
-      setStatusMessage("Error: Unable to fetch match status.");
-    }
-    return false;
-  };
-
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeRemaining(30); // Set 30 seconds countdown
     setStatusMessage("Waiting for a match...");
 
     try {
+      // Create a new matching request
       await createMatchingRequest(userId, topic, difficulty);
 
-      // Poll for match status every 3 seconds
-      const interval = setInterval(async () => {
-        const matched = await checkMatchStatus();
-        if (matched || timeRemaining === 0) {
-          clearInterval(interval); // Stop polling
-          if (timeRemaining === 0) setStatusMessage("Failure: No match found. Try again.");
+      // Use server-sent events to listen for match status updates
+      const stopListening = listenToMatchStatus(
+        userId!,
+        (data) => {
+          setStatusMessage(data.message);
+        },
+        (error) => {
+          setStatusMessage("Error: Unable to fetch match status.");
+          setLoading(false);
+          stopListening(); // Stop listening on error
         }
-      }, 3000);
+      );
+
     } catch (error) {
       setStatusMessage("Error: Failed to create match request.");
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
 
     // Reset form state
@@ -127,13 +90,12 @@ const MatchingServiceMainView: React.FC = () => {
             </select>
           </div>
 
-          <button type="submit" className="submit-btn">
-            Submit
+          <button type="submit" className="submit-btn" disabled={loading}>
+            {loading ? "Matching..." : "Submit"}
           </button>
         </form>
-        {/* Display status message and timer */}
+        {/* Display status message */}
         {statusMessage && <p>{statusMessage}</p>}
-        {timeRemaining !== null && <p>Time Remaining: {timeRemaining}s</p>}
       </div>
     </div>
   );
