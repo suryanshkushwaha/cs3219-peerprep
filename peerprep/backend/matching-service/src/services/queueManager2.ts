@@ -22,7 +22,7 @@ export const addToQueue = async (userId: string, topic: string, difficulty: stri
 };
 
 
-export const findMatchInQueue = async (userId: string) => {
+export const findMatchInQueue = async (userId: string)  => {
     const topicTimeoutSeconds = MATCH_TIMEOUT_SECONDS / 2;
     try {
       const match = await redis.findMatchInQueueByTopicAndDifficulty(userId);
@@ -31,8 +31,10 @@ export const findMatchInQueue = async (userId: string) => {
       }
   
       const queueDuration = await redis.getQueueDurationSeconds(userId);
+      //console.log("Queue Duration: " + queueDuration);
+      //console.log("Topic Timeout: " + topicTimeoutSeconds);
   
-      if (queueDuration !== null && queueDuration > topicTimeoutSeconds) {
+      if (queueDuration !== null && queueDuration < topicTimeoutSeconds - 1) {
         return redis.findMatchInQueueByTopic(userId);
       }
   
@@ -57,7 +59,8 @@ export const getRequestStatus = async (userId: string) => {
 
 export const getSessionStatus = async (userId: string) => {
     try {
-      return await redis.findSessionByUser(userId);
+      const session = await redis.findSessionByUser(userId);
+      return session ? session.sessionId : null;
     } 
     catch (error) {
       console.error('Error in getSessionStatus:', error);

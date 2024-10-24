@@ -33,7 +33,7 @@ export const enqueueUser = async (
       }
       
   
-      multi.zadd("queue:users", expiryTime, userId);
+      multi.zadd("queue2:users", expiryTime, userId);
       multi.hset(`user-timestamp`, userId, expiryTime);
       multi.hset(`user-topic`, userId, topic);
       multi.hset(`user-difficulty`, userId, difficulty);
@@ -42,9 +42,9 @@ export const enqueueUser = async (
       multi.expire(`user-topic`, queue_timeout_seconds);
       multi.expire(`user-difficulty`, queue_timeout_seconds);
   
-      multi.zadd(`queue:${topic}:${difficulty}`, expiryTime, userId);
-      multi.zadd(`queue:${topic}`, expiryTime, userId);
-      multi.zadd(`queue:${difficulty}`, expiryTime, userId);
+      multi.zadd(`queue1:${topic}:${difficulty}`, expiryTime, userId);
+      //multi.zadd(`queue2:${topic}`, expiryTime, userId);
+      //multi.zadd(`queue2:${difficulty}`, expiryTime, userId);
   
       await multi.exec();
     } catch (error) {
@@ -57,12 +57,87 @@ export const enqueueUser = async (
 };
 
 export const clearExpiredQueue = async () => {
+  const redisClient: Redis = app.locals.redisClient;
+  const expiredTime = Date.now();
+  const expiredTime15 = Date.now() + 15 * 1000;
+
+  try {
+      // Define the patterns to match keys
+      const patternQueue1 = "queue1:*";
+      const patternQueue2 = "queue2:*";
+      let cursor = "0"; // Initialize the cursor for SCAN
+
+      do {
+        // Use SCAN to find keys matching the patterns
+        const scanResult1 = await redisClient.scan(cursor, "MATCH", patternQueue1, "COUNT", 100);
+        cursor = scanResult1[0]; // Update cursor position
+        const queue1Keys = scanResult1[1]; // List of queue1 keys
+    
+        // Check for expired entries and move them to queue2
+        for (const key of queue1Keys) {
+            const topicAndDifficulty = key.split(":").slice(1); // Extract topic and difficulty
+            const [topic] = topicAndDifficulty; // Extract only the topic part
+    
+            // Get expired entries from queue1 key
+            //const expiredEntries = await redisClient.zrangebyscore(key, 0, expiredTime15);
+            const expiredEntries = await redisClient.zrangebyscore(key, 0, expiredTime15, "WITHSCORES");
+    
+            if (expiredEntries.length > 0) {
+                /*
+                // Remove expired entries from queue1 key
+                const removedCount = await redisClient.zremrangebyscore(key, 0, expiredTime15);
+                console.log(`Removed ${removedCount} expired entries from ${key}`);
+    
+                // Add expired entries to queue2
+                const newKey = `queue2:${topic}`;
+                for (const entry of expiredEntries) {
+                    await redisClient.zadd(newKey, expiredTime, entry);
+                    console.log(`Added expired entry ${entry} to ${newKey}`);
+                }
+                */
+              // Remove expired entries from queue1 key
+              const removedCount = await redisClient.zremrangebyscore(key, 0, expiredTime15);
+              console.log(`Removed ${removedCount} expired entries from ${key}`);
+
+              // Add expired entries to queue2, preserving their expiry time
+              const newKey = `queue2:${topic}`;
+              for (let i = 0; i < expiredEntries.length; i += 2) {
+                const userId = expiredEntries[i];
+                const originalExpiryTime = expiredEntries[i + 1];
+                await redisClient.zadd(newKey, originalExpiryTime, userId);
+                console.log(`Added expired entry ${userId} to ${newKey} with expiry time ${originalExpiryTime}`);
+              }
+            }
+        }
+
+        // Repeat similar scanning for queue2 keys but without moving them
+        const scanResult2 = await redisClient.scan(cursor, "MATCH", patternQueue2, "COUNT", 100);
+        cursor = scanResult2[0]; // Update cursor position
+        const queue2Keys = scanResult2[1]; // List of queue2 keys
+    
+        // Just remove expired entries from queue2 keys
+        for (const key of queue2Keys) {
+            const removedCount = await redisClient.zremrangebyscore(key, 0, expiredTime);
+            if (removedCount > 0) {
+                console.log(`Removed ${removedCount} expired entries from ${key}`);
+            }
+        }
+    
+      } while (cursor !== "0"); // Continue until cursor returns to "0"
+  } catch (error) {
+      console.error("Error in clearExpiredQueue:", error);
+      throw error;
+  }
+};
+
+/*
+export const clearExpiredQueue = async () => {
     const redisClient: Redis = app.locals.redisClient;
     const expiredTime = Date.now();
 
     try {
         // Define the pattern to match all potential queue keys
-        const pattern = "queue:*";
+        const pattern = "queue1:*";
         let cursor = "0"; // Initialize the cursor for SCAN
 
         do {
@@ -84,6 +159,7 @@ export const clearExpiredQueue = async () => {
         throw error;
     }
 };
+*/
   
 /*
 export const clearExpiredQueue = async (
@@ -119,12 +195,70 @@ export const checkIfUserInQueue = async (userId: string): Promise<boolean> => {
     const redisClient: Redis = app.locals.redisClient;
     try {
       // Check if the user exists in the sorted set "queue:users"
-      const rank = await redisClient.zrank("queue:users", userId);
+      const rank = await redisClient.zrank("queue2:users", userId);
       return rank !== null;
     } catch (error) {
       console.error("Error in checkIfUserInQueue:", error);
       throw new Error("Failed to check if user is in the queue");
     }
+};
+
+export const findMatchInQueue = async (
+  userId: string
+): Promise<String | null> => {
+  const redisClient: Redis = app.locals.redisClient;
+  try {
+    const topic = await redisClient.hget("user-topic", userId);
+    const difficulty = await redisClient.hget("user-difficulty", userId);
+    const time = await redisClient.hget("user-timestamp", userId);
+    // Convert linux time to seconds to find time remeaining
+    if (!time) {
+      return null;
+    }
+    const timeRemaining = (Number.parseInt(time) - Date.now()) / 1000;
+
+    if (!topic || !difficulty) {
+      return null;
+    }
+    if (timeRemaining > 16) {
+      const matchedUsers = await redisClient.zrange(`queue1:${topic}:${difficulty}`, 0, 2);
+      if (
+        matchedUsers.length === 0 ||
+        (matchedUsers.length === 1 && matchedUsers[0] === userId)
+      ) {
+        return null;
+      }
+      //return matchedUsers[0] === userId ? matchedUsers[1] : matchedUsers[0];
+      // Create session object
+      try {
+        const sessionId = createSession(userId, matchedUsers[0], topic, difficulty);
+        return sessionId;
+      } catch (error) {
+          console.error("Error in createSession:", error);
+          throw error;
+      }
+    }
+    if (timeRemaining < 14) {
+      const matchedUsers = await redisClient.zrange(`queue2:${topic}`, 0, 2);
+      if (
+        matchedUsers.length === 0 ||
+        (matchedUsers.length === 1 && matchedUsers[0] === userId)
+      ) {
+        return null;
+      }
+      try {
+        const sessionId = createSession(userId, matchedUsers[0], topic, difficulty);
+        return sessionId;
+      } catch (error) {
+          console.error("Error in createSession:", error);
+          throw error;
+      }
+    }
+    return null;
+  } catch (error) {
+    console.error("Error in findMatchInQueueByTopicAndDifficulty:", error);
+    throw error;
+  }
 };
 
 export const findMatchInQueueByTopicAndDifficulty = async (
@@ -137,7 +271,7 @@ export const findMatchInQueueByTopicAndDifficulty = async (
     if (!topic || !difficulty) {
       return null;
     }
-    const matchedUsers = await redisClient.zrange(`queue:${topic}:${difficulty}`, 0, 2);
+    const matchedUsers = await redisClient.zrange(`queue1:${topic}:${difficulty}`, 0, 2);
     if (
       matchedUsers.length === 0 ||
       (matchedUsers.length === 1 && matchedUsers[0] === userId)
@@ -164,10 +298,12 @@ const createSession = async (
     userId2: string,
     topic: string,
     difficulty: string,
-  ): Promise<String> =>{
+  ): Promise<string> =>{
+    const sessionId = "lol";
     try {
+      const sessionId = `${userId1}-${userId2}-${Date.now()}`;
       const session: Session = {
-        sessionId: `${userId1}-${userId2}-${Date.now()}`,
+        sessionId: sessionId,
         userId1,
         userId2,
         topic,
@@ -175,7 +311,9 @@ const createSession = async (
         timestamp: Date.now(),
       };
       await saveSession(session);
-      return session.sessionId;
+      // return sessionId as string
+      // convert to string to match the return type
+      return sessionId;
     } catch (error) {
       console.error("Error in createSession:", error);
       throw error;
@@ -184,21 +322,28 @@ const createSession = async (
 
 export const findMatchInQueueByTopic = async (
   userId: string
-): Promise<string | null> => {
+): Promise<String | null> => {
   const redisClient: Redis = app.locals.redisClient;
   try {
-    const topic = await redisClient.hget("queue:topic", userId);
-    if (!topic) {
+    const topic = await redisClient.hget("user-topic", userId);
+    const difficulty = await redisClient.hget("user-difficulty", userId);
+    if (!topic || !difficulty) {
       return null;
     }
-    const matchedUsers = await redisClient.zrange(`queue:${topic}`, 0, 2);
+    const matchedUsers = await redisClient.zrange(`queue2:${topic}`, 0, 2);
     if (
-      matchedUsers.length === 0 ||
+      matchedUsers.length === 0 || 
       (matchedUsers.length === 1 && matchedUsers[0] === userId)
     ) {
       return null;
     }
-    return matchedUsers[0] === userId ? matchedUsers[1] : matchedUsers[0];
+    try {
+      const sessionId = createSession(matchedUsers[1], matchedUsers[0], topic, difficulty);
+      return sessionId;
+    } catch (error) {
+        console.error("Error in createSession:", error);
+        throw error;
+    }
   } catch (error) {
     console.error("Error in findMatchInQueueByTopic:", error);
     throw error;
@@ -210,11 +355,11 @@ export const findMatchInQueueByDifficulty = async (
 ): Promise<string | null> => {
   const redisClient: Redis = app.locals.redisClient;
   try {
-    const difficulty = await redisClient.hget("queue:difficulty", userId);
+    const difficulty = await redisClient.hget("user-difficulty", userId);
     if (!difficulty) {
       return null;
     }
-    const matchedUsers = await redisClient.zrange(`queue:${difficulty}`, 0, 2);
+    const matchedUsers = await redisClient.zrange(`queue2:${difficulty}`, 0, 2);
     if (
       matchedUsers.length === 0 ||
       (matchedUsers.length === 1 && matchedUsers[0] === userId)

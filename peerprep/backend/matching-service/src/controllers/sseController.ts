@@ -83,10 +83,10 @@ export const matchStatusStream = (req: Request, res: Response) => {
             sendEvent({ status: 'update', message: statusMessage });
 
             // Check if the request no longer exists (e.g., it's completed or timed out)
-            //if (statusMessage.includes("not in queue")) {
-            //    clearInterval(interval);
-            //    res.end(); // Close the connection
-            //}
+            if (statusMessage.includes("not in queue")) {
+                clearInterval(interval);
+                res.end(); // Close the connection
+            }
         } catch (error) {
             console.error('Error in SSE:', error);
             clearInterval(interval);
