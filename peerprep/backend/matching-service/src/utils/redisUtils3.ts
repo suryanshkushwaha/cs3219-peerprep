@@ -416,6 +416,19 @@ export const saveSession = async (session: Session): Promise<void> => {
     multi.hset(`session:sessionId`, sessionId, JSON.stringify(session));
     multi.hset(`session:userId`, userId1, sessionId);
     multi.hset(`session:userId`, userId2, sessionId);
+    // remove corresponding users from queue
+    const topic = session.topic;
+    const difficulty = session.difficulty;
+    multi.zrem(`queue2:users`, userId1);
+    multi.zrem(`queue2:users`, userId2);
+    // NOTE: Zrem exectes without errors even if the user is not in the queue
+    multi.zrem(`queue1:${topic}:${difficulty}`, userId1);
+    multi.zrem(`queue1:${topic}:${difficulty}`, userId2);
+    // NOTE: We only check session topic and difficulty
+    // If users were amtched based on topic (with different difficulties), we remove them from ONLY the topic queue
+    // as they have already been deleted from the topic+difficulty queue
+    multi.zrem(`queue2:${topic}`, userId1);
+    multi.zrem(`queue2:${topic}`, userId2);
     await multi.exec();
   } catch (error) {
     console.error("Error in saveSession:", error);
