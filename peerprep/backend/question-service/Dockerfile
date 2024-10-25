@@ -1,13 +1,8 @@
 FROM node:22-alpine
-ARG PORT
-ENV PORT=$PORT
 
-COPY --link package.json yarn.lock ./
+COPY package.json yarn.lock ./
+RUN yarn install
 
-RUN yarn
+COPY . .
 
-COPY --link . .
-
-EXPOSE ${PORT}
-
-CMD ["yarn", "run", "start"]
+CMD ["yarn", "start"]
