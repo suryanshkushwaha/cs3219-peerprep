@@ -17,9 +17,9 @@ export const enqueueUser = async (
     try {
       await clearExpiredQueue();
   
-      console.log("USER ID IS " + userId);
-      console.log("TOPIC IS " + topic);
-      console.log("DIFFICULTY IS " + difficulty);
+      //console.log("USER ID IS " + userId);
+      //console.log("TOPIC IS " + topic);
+      //console.log("DIFFICULTY IS " + difficulty);
   
       if (await checkIfUserInQueue(userId)) {
         const error = new Error("User is already in queue");
@@ -229,8 +229,8 @@ export const findMatchInQueue = async (
         return null;
       }
       const userId2 = (matchedUsers[0] === userId ? matchedUsers[1] : matchedUsers[0]);
-      console.log("USER ID 1 IS " + userId);
-      console.log("USER ID 2 IS " + userId2);
+      //console.log("USER ID 1 IS " + userId);
+      //console.log("USER ID 2 IS " + userId2);
       try {
         const sessionId = createSession(userId, userId2, topic, difficulty);
         return sessionId;
@@ -248,8 +248,8 @@ export const findMatchInQueue = async (
         return null;
       }
       const userId2 = (matchedUsers[0] === userId ? matchedUsers[1] : matchedUsers[0]);
-      console.log("USER ID 1 IS " + userId);
-      console.log("USER ID 2 IS " + userId2);
+      //console.log("USER ID 1 IS " + userId);
+      //console.log("USER ID 2 IS " + userId2);
       try {
         const sessionId = createSession(userId, userId2, topic, difficulty);
         return sessionId;
@@ -355,6 +355,7 @@ export const findMatchInQueueByTopic = async (
   }
 };
 
+/*
 export const findMatchInQueueByDifficulty = async (
   userId: string
 ): Promise<string | null> => {
@@ -378,6 +379,7 @@ export const findMatchInQueueByDifficulty = async (
     throw error;
   }
 };
+*/
 
 export const getQueueDurationSeconds = async (
     userId: string
@@ -400,7 +402,7 @@ export const getRequestStatus = async (userId: string): Promise<string> => {
     try {
       clearExpiredQueue();
       const status = await checkIfUserInQueue(userId);
-      console.log("Status is: " + status);
+      console.log("User " + userId + " is in queue: " + status);
       const duration = await getQueueDurationSeconds(userId);
       if (status) {
         return "Matching request pending: " + Math.trunc(duration!) + " seconds remaining";
@@ -416,6 +418,32 @@ export const getRequestStatus = async (userId: string): Promise<string> => {
 export const saveSession = async (session: Session): Promise<void> => {
   const redisClient: Redis = app.locals.redisClient;
   const { userId1, userId2, sessionId } = session;
+
+  //
+  // Log State of all queues before a match
+  //
+  console.log("\n" + "Queues before match attempt");
+  const queues = await redisClient.keys("queue*");
+  for (const queue of queues) {
+    const queueType = await redisClient.type(queue);
+    if (queueType === "zset") {
+      const members = await redisClient.zrange(queue, 0, -1, "WITHSCORES");
+      console.log("\n" + `Queue ${queue} before match:`);
+      // Print all memebers and their index in queue
+      for (let i = 0; i < members.length; i += 2) {
+        console.log(`User ${members[i]} at index ${i / 2}`);
+      }
+    }
+  }
+
+  console.log("\n" + "Sessions before match attempt");
+  const sessions = await redisClient.keys("session*");
+  for (const session of sessions) {
+    const sessionData = await redisClient.hgetall(session);
+    console.log("\n" + `Session ${session}:`);
+    console.log(`${JSON.stringify(sessionData)}`)
+  }
+
   try {
     const multi = redisClient.multi();
     multi.hset(`session:sessionId`, sessionId, JSON.stringify(session));
@@ -435,10 +463,35 @@ export const saveSession = async (session: Session): Promise<void> => {
     multi.zrem(`queue2:${topic}`, userId1);
     multi.zrem(`queue2:${topic}`, userId2);
     await multi.exec();
-  } catch (error) {
-    console.error("Error in saveSession:", error);
-    throw error;
-  }
+
+    //
+    // Log State of all queues after a match
+    //
+    console.log("\n" + "Queues after match");
+    const queues = await redisClient.keys("queue*");
+    for (const queue of queues) {
+      const queueType = await redisClient.type(queue);
+      if (queueType === "zset") {
+        const members = await redisClient.zrange(queue, 0, -1, "WITHSCORES");
+        console.log("\n" + `Queue ${queue} after match:`);
+        // Print all memebers and their index in queue
+        for (let i = 0; i < members.length; i += 2) {
+          console.log(`User ${members[i]} at index ${i / 2}`);
+        }
+      }
+    }
+
+    console.log("\n" + "Sessions after match");
+    const sessions = await redisClient.keys("session*");
+    for (const session of sessions) {
+      const sessionData = await redisClient.hgetall(session);
+      console.log("\n" + `Session ${session}:`);
+      console.log(`${JSON.stringify(sessionData)}`)
+    }
+    } catch (error) {
+      console.error("Error in saveSession:", error);
+      throw error;
+    }
 };
 
 export const findSession = async (
