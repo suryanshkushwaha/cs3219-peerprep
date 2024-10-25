@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const SessionStubView: React.FC = () => {
   const location = useLocation();
@@ -7,12 +8,13 @@ const SessionStubView: React.FC = () => {
 
   return (
     <div>
+      <Link to="/matching" className="top-left-link">Go to Login</Link>
+      <Link to="/questions" className="top-right-link">Go to Questions</Link>
       <h2>Session Details</h2>
       <p>Session ID: {sessionId}</p>
       <p>Topic: {topic}</p>
       <p>Difficulty: {difficulty}</p>
-      <p>User 1: {userId1}</p>
-      <p>User 2: {userId2}</p>
+      <p>User ID: {userId1}</p>
     </div>
   );
 };
