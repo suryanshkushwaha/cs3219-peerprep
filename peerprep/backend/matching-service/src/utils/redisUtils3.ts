@@ -273,8 +273,8 @@ export const findMatchInQueueByTopicAndDifficulty = async (
     }
     const matchedUsers = await redisClient.zrange(`queue1:${topic}:${difficulty}`, 0, 2);
     if (
-      matchedUsers.length === 0 ||
-      (matchedUsers.length === 1 && matchedUsers[0] === userId)
+      matchedUsers.length === 0 || matchedUsers.length === 1 ||
+      (matchedUsers.length === 2 && matchedUsers[0] === userId && matchedUsers[1] === userId)
     ) {
       return null;
     }
@@ -332,8 +332,8 @@ export const findMatchInQueueByTopic = async (
     }
     const matchedUsers = await redisClient.zrange(`queue2:${topic}`, 0, 2);
     if (
-      matchedUsers.length === 0 || 
-      (matchedUsers.length === 1 && matchedUsers[0] === userId)
+      matchedUsers.length === 0 || matchedUsers.length === 2 ||
+      (matchedUsers.length === 2 && matchedUsers[0] === userId && matchedUsers[1] === userId)
     ) {
       return null;
     }
