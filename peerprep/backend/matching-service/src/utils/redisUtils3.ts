@@ -278,10 +278,9 @@ export const findMatchInQueueByTopicAndDifficulty = async (
     ) {
       return null;
     }
-    //return matchedUsers[0] === userId ? matchedUsers[1] : matchedUsers[0];
-    // Create session object
+    const userId2 = matchedUsers[0] === userId ? matchedUsers[1] : matchedUsers[0];
     try {
-      const sessionId = createSession(userId, matchedUsers[0], topic, difficulty);
+      const sessionId = createSession(userId, userId2, topic, difficulty);
       return sessionId;
     } catch (error) {
         console.error("Error in createSession:", error);
@@ -337,8 +336,9 @@ export const findMatchInQueueByTopic = async (
     ) {
       return null;
     }
+    const userId2 = matchedUsers[0] === userId ? matchedUsers[1] : matchedUsers[0];
     try {
-      const sessionId = createSession(matchedUsers[1], matchedUsers[0], topic, difficulty);
+      const sessionId = createSession(userId, userId2, topic, difficulty);
       return sessionId;
     } catch (error) {
         console.error("Error in createSession:", error);
