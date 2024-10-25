@@ -12,9 +12,9 @@ const SessionStubView: React.FC = () => {
       <Link to="/matching" className="top-right-link">Go to Matching</Link>
       <h2>Session Details</h2>
       <p> Current Session: {sessionId}</p>
+      <p>Current User ID: {userId1}</p>
       <p>Topic: {topic}</p>
       <p>Difficulty: {difficulty}</p>
-      <p>Current User ID: {userId1}</p>
     </div>
   );
 };
