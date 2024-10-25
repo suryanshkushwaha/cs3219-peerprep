@@ -273,15 +273,14 @@ export const findMatchInQueueByTopicAndDifficulty = async (
     }
     const matchedUsers = await redisClient.zrange(`queue1:${topic}:${difficulty}`, 0, 2);
     if (
-      matchedUsers.length === 0 ||
-      (matchedUsers.length === 1 && matchedUsers[0] === userId)
+      matchedUsers.length === 0 || matchedUsers.length === 1 ||
+      (matchedUsers.length === 2 && matchedUsers[0] === userId && matchedUsers[1] === userId)
     ) {
       return null;
     }
-    //return matchedUsers[0] === userId ? matchedUsers[1] : matchedUsers[0];
-    // Create session object
+    const userId2 = matchedUsers[0] === userId ? matchedUsers[1] : matchedUsers[0];
     try {
-      const sessionId = createSession(userId, matchedUsers[0], topic, difficulty);
+      const sessionId = createSession(userId, userId2, topic, difficulty);
       return sessionId;
     } catch (error) {
         console.error("Error in createSession:", error);
@@ -332,13 +331,14 @@ export const findMatchInQueueByTopic = async (
     }
     const matchedUsers = await redisClient.zrange(`queue2:${topic}`, 0, 2);
     if (
-      matchedUsers.length === 0 || 
-      (matchedUsers.length === 1 && matchedUsers[0] === userId)
+      matchedUsers.length === 0 || matchedUsers.length === 2 ||
+      (matchedUsers.length === 2 && matchedUsers[0] === userId && matchedUsers[1] === userId)
     ) {
       return null;
     }
+    const userId2 = matchedUsers[0] === userId ? matchedUsers[1] : matchedUsers[0];
     try {
-      const sessionId = createSession(matchedUsers[1], matchedUsers[0], topic, difficulty);
+      const sessionId = createSession(userId, userId2, topic, difficulty);
       return sessionId;
     } catch (error) {
         console.error("Error in createSession:", error);
