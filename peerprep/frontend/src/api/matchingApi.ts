@@ -4,11 +4,15 @@ import { Request } from '../models/Request';
 // Set up axios instance with base URL
 const API_URL = "http://localhost:3000/matchingrequest";
 
-class ApiError extends Error {
+export class ApiError extends Error {
     constructor(message: string, public statusCode?: number) {
       super(message);
       this.name = 'ApiError';
     }
+}
+
+interface ErrorResponseData {
+    message: string;
 }
 
 const handleApiError = (error: unknown): never => {
@@ -23,6 +27,32 @@ const handleApiError = (error: unknown): never => {
       }
     } else {
       throw new ApiError(`API error: An unexpected error occurred ${error}`);
+    }
+};
+
+const handleRequestApiError = (error: unknown): never => {
+    if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        if (axiosError.response) {
+            const { status, data } = axiosError.response;
+
+            // Check for specific status and messages
+            if (status === 409 && data && typeof data === 'object' && 'message' in data) {
+                if (data.message === 'User is already in the queue') {
+                    throw new ApiError('You are already looking for a match in the matching queue', status);
+                } else if (data.message === 'User is already in an active session') {
+                    throw new ApiError('You are already in an active session', status);
+                }
+            }
+
+            throw new ApiError(`API error: ${axiosError.response.statusText}`, status);
+        } else if (axiosError.request) {
+            throw new ApiError('API error: No response received from the server');
+        } else {
+            throw new ApiError(`API error: ${axiosError.message}`);
+        }
+    } else {
+        throw new ApiError(`API error: An unexpected error occurred ${error}`);
     }
 };
 
@@ -44,7 +74,7 @@ export const createMatchingRequest = async (userId: string | null, topic: string
         const response = await axios.post(API_URL, {userId, topic, difficulty});
         return response.data;
     } catch (error) {
-        return handleApiError(error);
+        return handleRequestApiError(error);
     }
 }
 

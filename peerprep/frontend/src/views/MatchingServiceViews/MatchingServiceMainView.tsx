@@ -1,6 +1,7 @@
 import { useNavigate, Link } from "react-router-dom";
 import React, { useState, useEffect, useRef } from 'react';
 import { createMatchingRequest, listenToMatchStatus } from "../../api/matchingApi.ts";
+import { ApiError } from "../../api/matchingApi";
 
 const MatchingServiceMainView: React.FC = () => {
   const [topic, setTopic] = useState<string>('');
@@ -76,7 +77,11 @@ const MatchingServiceMainView: React.FC = () => {
         }
       );
     } catch (error) {
-      setStatusMessage("Error: Failed to create match request.");
+      if (error instanceof ApiError) {
+        setStatusMessage(error.message); // Use specific error message
+      } else {
+        setStatusMessage("Error: Failed to create match request.");
+      }
       setLoading(false);
       stopProgressBar();
     }
