@@ -1,0 +1,28 @@
+{
+  "name": "matching-service",
+  "version": "1.0.0",
+  "description": "Matching service for PeerPrep",
+  "main": "./src/server.ts",
+  "scripts": {
+    "start": "ts-node ./src/server.ts",
+    "dev": "nodemon --watch src --ext ts --exec \"ts-node --transpile-only ./src/server.ts\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "ioredis": "^5.4.1",
+    "redis": "^4.7.0",
+    "typescript": "^5.6.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/ioredis": "^4.28.10",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.0.0"
+  }
+}

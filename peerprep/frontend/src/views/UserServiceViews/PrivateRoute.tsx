@@ -8,8 +8,8 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children, requiredAdmin = false }) => {
-  const token = localStorage.getItem('token');
-  const isAdmin = JSON.parse(localStorage.getItem('isAdmin') || 'false'); // Admin status stored in localStorage
+  const token = sessionStorage.getItem('token');
+  const isAdmin = JSON.parse(sessionStorage.getItem('isAdmin') || 'false'); // Admin status stored in sessionStorage
 
   if (!token) {
     // Redirect to login if no token is found

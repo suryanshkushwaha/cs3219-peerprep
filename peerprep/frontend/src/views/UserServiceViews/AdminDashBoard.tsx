@@ -12,7 +12,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem('token'); // Get token from localStorage
+        const token = sessionStorage.getItem('token'); // Get token from sessionStorage
         if (token) {
           const userData = await getAllUsers(token); // Fetch users from the API
           setUsers(userData); // Set the user data in state

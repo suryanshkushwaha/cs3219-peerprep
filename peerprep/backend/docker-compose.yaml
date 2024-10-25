@@ -17,3 +17,11 @@ services:
     env_file:
       - ./question-service/.env
 
+  matching-service:
+    build:
+      context: ./matching-service
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./matching-service/.env

@@ -1,7 +1,7 @@
 // src/Profile.tsx
 import React, { useEffect, useState } from 'react';
 import { getUserProfile } from '../../api/usersApi'; // Import the getUserProfile function
-import { useParams } from 'react-router-dom'; // Import useParams to get userId from the URL
+import { useParams, Link } from 'react-router-dom'; // Import useParams to get userId from the URL
 import { User } from '../../models/User'; // Import the User model
 
 const Profile = () => {
@@ -13,7 +13,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem('token'); // Get token from localStorage
+        const token = sessionStorage.getItem('token'); // Get token from sessionStorage
 
         if (token && userId) {
           const userData = await getUserProfile(userId, token); // Fetch the user profile data
@@ -37,6 +37,7 @@ const Profile = () => {
 
   return (
     <div>
+      <Link to="/matching" className="top-right-link">Go to Matching Service</Link>
       {user ? (
         <>
           <h2>Profile: {user.username}</h2>
