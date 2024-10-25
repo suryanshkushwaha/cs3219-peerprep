@@ -1,0 +1,493 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 5rem;
+  text-align: center;
+}
+
+/* Global Styling */
+body {
+  background-color: white;
+  color: black;
+}
+
+h1 {
+  font-size: 32px;
+  color: black;
+}
+
+h2 {
+  font-size: 24px;
+  color: black;
+}
+
+
+/* Container uses flexbox for split layout */
+.container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;  /* Add a gap between the left and right panels */
+}
+
+/* Left panel for form and question list, using grid */
+.left-panel {
+  display: grid;
+  grid-template-rows: auto 1fr; /* Independent sizing for form and list */
+  gap: 20px;  /* Add space between form and list */
+  max-width: 65%; /* Custom max width for the left panel, 65% is around 2-thrids*/
+  padding: 20px;
+}
+
+/* Right panel for detailed view */
+.right-panel {
+  flex: 1;
+  max-width: 35%;
+  padding: 20px;
+  background-color: white;
+  border: 2px solid #ccc; /* light grey border */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* shadow */
+  margin-left: 20px; /* Add some space between left and right panels */
+}
+
+.form-section {
+  max-width: 100%; /* Adjust width of the form, set smaller than 100 for aesthetics */
+  text-align: center; /* Center the content inside */
+  margin: 0 auto; /* Center the form horizontally */
+  padding: 0;
+  border: none; 
+  background-color: transparent;
+  box-shadow: none;
+}
+
+/* List section can expand independently of the form-section */
+.list-section {
+  max-width: 100%;
+}
+
+
+/* Adjust questions table layout */
+.question-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+/* Ensure all table cells have consistent borders */
+.question-table th, .question-table td {
+  border: 1px solid #ccc; 
+  padding: 8px;
+  vertical-align: top;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.question-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Limit the description cell height in the table */
+.description-cell {
+  min-height: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limit to 3 lines, afterwhich text will truncate */
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  border: none;
+  box-sizing: border-box;
+  padding: 8px;
+}
+
+/* General Form Styles */
+.question-form {
+  padding: 20px;
+  max-width: 100%;
+  margin: 0 auto; /* Center the form */
+  border: 2px solid #ccc; /* form border */
+  border-radius: 10px; /* Rounded corners for the form */
+  background-color: white; 
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* shadow */
+}
+
+/* Styles for inputs, textarea, and select within .question-form */
+.question-form input,
+.question-form textarea,
+.question-form select {
+  width: 100%; 
+  padding: 10px; 
+  margin-top: 5px; /* Space between input boxes */
+  border: 1px solid #ccc; /* Border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #f4f4f4; 
+  color: #333; 
+  font-size: 16px;
+  box-sizing: border-box; /* Ensures padding is included within the width */
+}
+
+/* Input Fields Focus State */
+.question-form input:focus,
+.question-form textarea:focus,
+.question-form select:focus {
+  outline: none;
+  border: 2px solid #4CAF50; /* Green border on focus */
+  background-color: #fff; /* White background on focus */
+}
+
+/* Custom styling for the difficulty select dropdown */
+.question-form select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 2px solid #ccc; /* border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #f9f9f9; 
+  color: #333;
+  font-size: 16px;
+  appearance: none; 
+}
+
+/* Focus state for select dropdown */
+.question-form select:focus {
+  outline: none;
+  border-color: #4CAF50; /* Green border on focus */
+  background-color: #fff; /* White background on focus */
+}
+
+/* Submit Button */
+.question-form button.submit-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.question-form button.submit-btn:hover {
+  background-color: #45a049;
+}
+
+/* Error Message styling, to be expanded later most likely split into diff types */
+.question-form .error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Adjust spacing and alignment for category checkboxes */
+.category-group label {
+  display: inline-block; /* label and input stay on same line */
+  margin-right: 15px; /* spacing between each checkbox and label */
+  margin-bottom: 5px; /* Control vertical spacing */
+  font-size: 16px; /* Adjust font size to match rest of the form */
+}
+
+.category-group input {
+  margin-right: 5px; 
+  vertical-align: middle; /* Align checkbox vertically with the text */
+}
+
+/* Style the buttons inside table cells */
+.question-table .edit-btn {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: #007bff; /* Blue color for Edit button */
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* Red color for Delete button */
+.question-table .delete-btn {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: #dc3545; /* Red color for Delete button */
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* Hover effect for Edit button */
+.question-table .edit-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Hover effect for Delete button */
+.question-table .delete-btn:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+
+/* MATCHING FORM VIEWS */
+
+/* Container to center the form */
+.matching-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  padding: 20px;
+}
+
+.matching-form {
+  padding: 20px;
+  max-width: 100%;
+  margin: 0 auto; /* Center the form */
+  border: 2px solid #ccc; /* form border */
+  border-radius: 10px; /* Rounded corners for the form */
+  background-color: white; 
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* shadow */
+}
+
+/* Styles for inputs, textarea, and select within .question-form */
+.matching-form input,
+.matching-form textarea,
+.matching-form select {
+  width: 100%; 
+  padding: 10px; 
+  margin-top: 5px; /* Space between input boxes */
+  border: 1px solid #ccc; /* Border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #f4f4f4; 
+  color: #333; 
+  font-size: 16px;
+  box-sizing: border-box; /* Ensures padding is included within the width */
+}
+
+/* Input Fields Focus State */
+.matching-form input:focus,
+.matching-form textarea:focus,
+.matching-form select:focus {
+  outline: none;
+  border: 2px solid #4CAF50; /* Green border on focus */
+  background-color: #fff; /* White background on focus */
+}
+
+/* Custom styling for the difficulty select dropdown */
+.matching-form select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 2px solid #ccc; /* border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #f9f9f9; 
+  color: #333;
+  font-size: 16px;
+  appearance: none; 
+}
+
+/* Focus state for select dropdown */
+.matching-form select:focus {
+  outline: none;
+  border-color: #4CAF50; /* Green border on focus */
+  background-color: #fff; /* White background on focus */
+}
+
+/* Submit Button */
+.matching-form button.submit-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.matching-form button.submit-btn:hover {
+  background-color: #45a049;
+}
+
+/* Error Message styling, to be expanded later most likely split into diff types */
+.matching-form .error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Position the link in the top right corner */
+.top-left-link {
+  position: absolute;
+  top: 20px;
+  left: 100px;
+  text-decoration: none;
+  color: #4CAF50; /* Green color */
+  font-weight: bold;
+}
+
+.top-left-link:hover {
+  color: #45a049; /* Slightly darker green on hover */
+}
+
+/* Position the link in the top right corner */
+.top-right-link {
+  position: absolute;
+  top: 20px;
+  right: 100px;
+  text-decoration: none;
+  color: #4CAF50; /* Green color */
+  font-weight: bold;
+}
+
+.top-right-link:hover {
+  color: #45a049; /* Slightly darker green on hover */
+}
+
+/* Position the link in the top right corner */
+.centers-link {
+  position: absolute;
+  top: 20px;
+  right: 100px;
+  text-decoration: none;
+  color: #4CAF50; /* Green color */
+  font-weight: bold;
+}
+
+.centers-link:hover {
+  color: #45a049; /* Slightly darker green on hover */
+}
+
+.center-link {
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-decoration: none;
+  color: #4CAF50; /* Green color */
+  font-weight: bold;
+  font-size: 18px;
+  padding: 10px 20px;
+  border: 2px solid #4CAF50;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+  cursor: pointer;
+}
+
+.center-link:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* LOGIN FORM STYLES */
+
+.login-form {
+  width: 100%;
+  max-width: 400px;
+  min-width: 400px;
+  padding: 30px;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  background-color: white;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Input field styling */
+.login-form input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f4f4f4;
+  font-size: 16px;
+  color: black;
+  box-sizing: border-box;
+}
+
+/* Focus state for input fields */
+.login-form input:focus {
+  outline: none;
+  border-color: #4CAF50;
+  color: black;
+  background-color: white;
+}
+
+/* Primary button styling */
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #45a049;
+}
+
+/* Alternative button styling */
+.alt-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.alt-btn:hover {
+  background-color: #444;
+}
+
+/* Error message styling */
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+
+/* Link styling */
+.link {
+  color: #4CAF50;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 10px;
+  background-color: #f3f3f3;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #4caf50;
+  width: 0%;
+  border-radius: 5px;
+  transition: width 1s ease-in-out;
+}
+
+.status-message {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
+}
