@@ -8,8 +8,8 @@ const SessionStubView: React.FC = () => {
 
   return (
     <div>
-      <Link to="/matching" className="top-left-link">Go to Login</Link>
-      <Link to="/questions" className="top-right-link">Go to Questions</Link>
+      <Link to="/" className="top-left-link">Go to Login</Link>
+      <Link to="/matching" className="top-right-link">Go to Matching</Link>
       <h2>Session Details</h2>
       <p>Session ID: {sessionId}</p>
       <p>Topic: {topic}</p>
