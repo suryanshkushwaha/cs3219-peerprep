@@ -13,10 +13,10 @@ const Login = () => {
       try {
         const { token, user } = await loginUser(email, password); // Destructure token and user from the response
   
-        // Store the token and admin status in localStorage
-        localStorage.setItem("token", token);
-        localStorage.setItem("isAdmin", JSON.stringify(user.isAdmin));
-        localStorage.setItem("userId", user.id);
+        // Store the token and admin status in sessionStorage
+        sessionStorage.setItem("token", token);
+        sessionStorage.setItem("isAdmin", JSON.stringify(user.isAdmin));
+        sessionStorage.setItem("userId", user.id);
   
         // Redirect based on admin status
         if (user.isAdmin) {

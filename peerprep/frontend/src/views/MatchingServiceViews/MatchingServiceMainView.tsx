@@ -9,7 +9,7 @@ const MatchingServiceMainView: React.FC = () => {
   const [difficulty, setDifficulty] = useState<string>('');
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const userId = localStorage.getItem('userId'); // Retrieve token from localStorage
+  const userId = sessionStorage.getItem('userId'); // Retrieve token from sessionStorage
 
   // Handle input changes
   const handleTopicChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

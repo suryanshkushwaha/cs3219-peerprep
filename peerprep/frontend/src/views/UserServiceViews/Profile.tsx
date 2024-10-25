@@ -13,7 +13,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem('token'); // Get token from localStorage
+        const token = sessionStorage.getItem('token'); // Get token from sessionStorage
 
         if (token && userId) {
           const userData = await getUserProfile(userId, token); // Fetch the user profile data
