@@ -66,7 +66,7 @@ const MatchingServiceMainView: React.FC = () => {
           }
         },
         (error) => {
-          setStatusMessage("Error: Unable to fetch match status.");
+          setStatusMessage("Match timed out. Please try again.");
           console.error(error);
           setLoading(false);
           stopProgressBar();
