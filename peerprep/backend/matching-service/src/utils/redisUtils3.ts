@@ -398,7 +398,7 @@ export const getRequestStatus = async (userId: string): Promise<string> => {
       console.log("Status is: " + status);
       const duration = await getQueueDurationSeconds(userId);
       if (status) {
-        return "Matching request pending: " + duration + " seconds remaining";
+        return "Matching request pending: " + Math.trunc(duration!) + " seconds remaining";
       } else {
         return "Matching request not in queue";
       }

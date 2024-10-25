@@ -28,6 +28,7 @@ import PrivateRoute from './views/UserServiceViews/PrivateRoute'; // Assuming yo
 import SignUp from './views/UserServiceViews/SignUp'; // Import the new SignUp component
 import QuestionService from './views/QuestionServiceViews/QuestionManagement';
 import MatchingService from './views/MatchingServiceViews/MatchingServiceMainView';
+import SessionStubView from './views/MatchingServiceViews/SessionStubView';
 
 const App: React.FC = () => {
   return (
@@ -39,8 +40,11 @@ const App: React.FC = () => {
         {/* Public Route for Question Management */}
         <Route path="/questions" element={<QuestionService />} />
 
-        {/* Public Route for Question Management */}
+        {/* Public Route for Matching Service */}
         <Route path="/matching" element={<MatchingService />} />
+        
+        {/* Public Route for Session View (Stub for now) */}
+        <Route path="/sessionStub" element={<SessionStubView />} />
 
         {/* Public Route for Sign-Up */}
         <Route path="/signup" element={<SignUp />} /> {/* New Sign-Up Route */}
