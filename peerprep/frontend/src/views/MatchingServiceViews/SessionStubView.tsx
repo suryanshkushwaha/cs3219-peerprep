@@ -11,10 +11,9 @@ const SessionStubView: React.FC = () => {
       <Link to="/" className="top-left-link">Go to Login</Link>
       <Link to="/matching" className="top-right-link">Go to Matching</Link>
       <h2>Session Details</h2>
-      <p>Session ID: {sessionId}</p>
       <p>Topic: {topic}</p>
       <p>Difficulty: {difficulty}</p>
-      <p>User ID: {userId1}</p>
+      <p>Current User ID: {userId1}</p>
     </div>
   );
 };
