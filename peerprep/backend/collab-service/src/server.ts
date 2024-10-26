@@ -12,7 +12,7 @@ const server = http.createServer(app);
 
 async function connectToDB() {
   try {
-    await mongoose.connect(process.env.MONGO_URI as string, {
+    await mongoose.connect(process.env.DB_CLOUD_URI as string, {
       dbName: 'peerprepCollabServiceDB'
     });
     console.log('MongoDB Connected!');
