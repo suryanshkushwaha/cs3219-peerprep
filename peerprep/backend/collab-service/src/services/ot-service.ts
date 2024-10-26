@@ -3,9 +3,7 @@ import WebSocket from 'ws';
 import * as ShareDBMongo from 'sharedb-mongo';
 
 // MongoDB connection using environment variables (from .env file)
-const db = new ShareDBMongo(process.env.DB_CLOUD_URI || 'mongodb://localhost:27017/sharedb', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+const db = new ShareDBMongo(process.env.DB_CLOUD_URI || 'mongodb://127.0.0.1:27017/peerprepCollabServiceDB', {
     dbName: 'sharedb'
 });
 
