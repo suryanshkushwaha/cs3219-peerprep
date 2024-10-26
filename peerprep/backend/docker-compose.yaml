@@ -31,6 +31,6 @@ services:
       context: ./collab-service
       dockerfile: Dockerfile
     ports:
-      - "update:update"
+      - "3002:3002"
     env_file:
       - ./collab-service/.env

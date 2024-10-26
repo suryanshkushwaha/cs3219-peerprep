@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "express": "^4.21.1",
+    "mongoose": "^8.7.3",
+    "sharedb": "^5.1.1",
+    "sharedb-mongo": "^5.0.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/mongoose": "^5.11.97",
+    "@types/ws": "^8.5.12"
+  }
+}
