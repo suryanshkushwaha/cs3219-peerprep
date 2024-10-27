@@ -10,6 +10,7 @@ export const updateStatus = async (userId: string) => {
         throw new Error("Failed to update the status of the user's match request");
     } finally {
         // Find match
+        // TODO (is this correct here?)
         await findMatchInQueue(userId);
     }
     // Add session status check here

@@ -2,6 +2,12 @@ import { Request, Response } from 'express';
 import { addToQueue} from '../services/queueManager2';
 import ReqObj from '../models/ReqObj';
 
+// Backend API for accpting a new matching request
+// POST /matchingrequest
+// Check if the user is already in the queue or in an active session
+// If not, user is added to the queue and 200 ok response is sent
+// NOTE: Matching is not handled here, this is to just succesfully enter a match request
+
 export const createRequest = async (req: Request, res: Response): Promise<void> => {
     const { userId, topic, difficulty } = req.body;
   
