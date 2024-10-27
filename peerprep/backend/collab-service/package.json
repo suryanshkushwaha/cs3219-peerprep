@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.21.1",
     "mongoose": "^8.7.3",
     "sharedb": "^5.1.1",
@@ -7,6 +8,7 @@
     "ws": "^8.18.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/mongoose": "^5.11.97",
     "@types/ws": "^8.5.12"

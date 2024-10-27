@@ -1,11 +1,32 @@
 import http from 'http';
 import express from 'express';
+import cors from 'cors';
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import { startOTService } from './services/ot-service';
 
 const app = express();
 const port = process.env.PORT || 3002;
+
+// Middleware setup
+app.use(cors({
+  origin: (origin, callback) => {
+    if (origin?.startsWith('http://localhost:')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  optionsSuccessStatus: 200,
+}));
+
+// Middleware for parsing JSON
+app.use(express.json());
+
+// Health check route
+app.get('/health', (req, res) => {
+  res.json({ message: 'Collaboration service is up and running!' });
+});
 
 // Create an HTTP server with your Express app
 const server = http.createServer(app);
@@ -35,3 +56,4 @@ async function connectToDB() {
 
 // Initialize database connection
 connectToDB();
+
