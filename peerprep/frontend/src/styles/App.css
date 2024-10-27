@@ -491,3 +491,156 @@ h2 {
   color: #333;
   font-weight: bold;
 }
+
+/* Ensure the container takes up the full page */
+.editor-container-parent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Adjust layout */
+  align-items: center;
+  height: 90vh; /* Full height of the viewport */
+  width: 80vw; /* Full width of the viewport */
+  background-color: #f5f5f5;
+  padding: 20px;
+  box-sizing: border-box; /* Include padding in width and height calculations */
+}
+
+/* Header section styling */
+.editor-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Leave session button */
+.leave-btn {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.leave-btn:hover {
+  background-color: #ff1a1a;
+}
+
+/* Editor container styling */
+.editor-container {
+  width: 100%; /* Make the editor responsive */
+  max-width: 1000px;
+  flex-grow: 1; /* Allow the editor to grow and fill available space */
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #2d2d2d; /* Background color for the editor */
+  color: white;
+}
+
+
+
+
+
+/* Parent container: Flexbox layout to divide the screen */
+.collaboration-container {
+  display: flex;
+  height: 100vh; /* Full height of the viewport */
+  width: 100vw; /* Full width of the viewport */
+  background-color: #f5f5f5;
+}
+
+/* Editor section: Takes most of the space */
+.editor-section {
+  flex: 3; /* 3/4 of the screen */
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Header for the collaboration session */
+.editor-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Leave session button */
+.leave-btn {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.leave-btn:hover {
+  background-color: #ff1a1a;
+}
+
+/* Code editor container */
+.editor-container {
+  flex-grow: 1; /* Take up remaining space */
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #2d2d2d;
+  color: white;
+  text-align: left;
+}
+
+/* Sidebar for messages */
+.sidebar {
+  flex: 1; /* 1/4 of the screen */
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: white;
+  border-left: 2px solid #ccc;
+  box-shadow: -2px 0px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Messages section */
+.messages {
+  flex-grow: 1; /* Allow messages to grow */
+  overflow-y: auto; /* Scroll if messages overflow */
+  margin-bottom: 10px;
+}
+
+/* Individual message styling */
+.message {
+  background-color: #f1f1f1;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* Input section for new message */
+.message-input {
+  display: flex;
+  gap: 10px;
+}
+
+.message-input input {
+  flex-grow: 1; /* Take up most space */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.message-input button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.message-input button:hover {
+  background-color: #45a049;
+}
