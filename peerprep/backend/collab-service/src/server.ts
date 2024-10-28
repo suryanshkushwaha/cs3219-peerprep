@@ -10,15 +10,9 @@ import collabRoutes from './routes/collab-routes';
 const app = express();
 const port = process.env.PORT || 3002;
 
-// Middleware setup
+// Middleware setup allowing all origins (development only)
 app.use(cors({
-  origin: (origin, callback) => {
-    if (origin?.startsWith('http://localhost:')) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: '*', // Allow any origin
   optionsSuccessStatus: 200,
 }));
 
