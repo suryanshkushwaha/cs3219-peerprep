@@ -1,5 +1,5 @@
 import express from 'express';
-import { createSession, getSession, endSession } from '../controller/collab-controller';
+import { createSession, getSession, endSession, processData } from '../controller/collab-controller';
 
 const router = express.Router();
 
@@ -7,5 +7,8 @@ const router = express.Router();
 router.post('/sessions', createSession);
 router.get('/sessions/:sessionId', getSession);
 router.delete('/sessions/:sessionId', endSession);
+
+// Route for processing data
+router.post('/process-data', processData);
 
 export default router;

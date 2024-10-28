@@ -1,13 +1,14 @@
 import ShareDB from 'sharedb';
 import WebSocket from 'ws';
-import * as ShareDBMongo from 'sharedb-mongo';
+import ShareDBMongo from 'sharedb-mongo';
 
-// MongoDB connection using environment variables (from .env file)
+// Use type assertion to tell TypeScript it's a constructor
 const db = new ShareDBMongo(process.env.DB_CLOUD_URI || 'mongodb://127.0.0.1:27017/peerprepCollabServiceDB', {
     dbName: 'sharedb'
 });
 
 const share = new ShareDB({ db });
+
 
 // Open a WebSocket server to sync real-time operations
 function startWebSocketServer() {
@@ -21,11 +22,11 @@ function startWebSocketServer() {
     console.log(`WebSocket server started on ws://localhost:${process.env.WS_PORT || '3003'}`);
 }
 
-// Helper to create a document if not exists
-export function createDoc(collection: string, docId: string, callback: (err: any, doc: any) => void) {
+// Helper to create a document if it does not exist
+export function createDoc(collection: string, docId: string, callback: (err: Error | null, doc?: any) => void) {
     const connection = share.connect();
     const doc = connection.get(collection, docId);
-    doc.fetch((err) => {
+    doc.fetch((err: Error | null) => {
         if (err) throw err;
         if (doc.type === null) {
             doc.create({ content: '' }, callback);

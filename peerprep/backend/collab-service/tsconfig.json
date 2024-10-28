@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "es2016",                                // Target ES2016 JavaScript
+    "module": "commonjs",                              // Use CommonJS modules for compatibility
+    "strict": true,                                    // Enable all strict type-checking options
+    "esModuleInterop": true,                           // Enable ES Module interoperability
+    "forceConsistentCasingInFileNames": true,          // Ensure consistent casing in module imports
+    "skipLibCheck": true,                              // Skip type checking of declaration files
+    "strictNullChecks": true,                          // Take 'null' and 'undefined' into account during type checking
+    "noImplicitAny": true,                             // Raise an error for expressions and declarations with an implied 'any' type
+    "alwaysStrict": true,                              // Parse in strict mode and emit "use strict" for each file
+    "typeRoots": ["./node_modules/@types", "./@types"],
+
+    /* Modules */
+    "moduleResolution": "node",                        // Use Node module resolution strategy
+    "resolveJsonModule": true,                         // Allow importing JSON files
+    "allowSyntheticDefaultImports": true,              // Allow default imports from modules with no default export
+
+    /* Output Settings */
+    "rootDir": "./src",                                // The root directory for your TypeScript files
+    "outDir": "./dist",                                // The output directory for compiled files
+    "sourceMap": true,                                 // Generate source maps for debugging
+
+    /* Additional Options */
+    "noEmitOnError": true,                             // Do not emit files if any errors are found
+  },
+  "include": ["src/**/*.ts"],                          // Include all TypeScript files in the src directory
+  "exclude": ["node_modules"]                          // Exclude node_modules from compilation
+}

@@ -7,7 +7,6 @@ import { startOTService } from './services/ot-service';
 import { startSocketService } from './services/socket-service';
 import collabRoutes from './routes/collab-routes';
 
-
 const app = express();
 const port = process.env.PORT || 3002;
 
@@ -31,10 +30,11 @@ app.get('/health', (req, res) => {
   res.json({ message: 'Collaboration service is up and running!' });
 });
 
+// Include routes
+app.use('/api/collaboration', collabRoutes);
+
 // Create an HTTP server with your Express app
 const server = http.createServer(app);
-
-app.use('/api/collaboration', collabRoutes);
 startSocketService(server);
 
 // MongoDB connection function
@@ -62,4 +62,3 @@ async function connectToDB() {
 
 // Initialize database connection
 connectToDB();
-

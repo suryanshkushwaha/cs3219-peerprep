@@ -1,4 +1,3 @@
-// src/controller/collab-controller.ts
 import { Request, Response } from 'express';
 import Session from '../model/Session';
 
@@ -36,3 +35,19 @@ export const endSession = async (req: Request, res: Response): Promise<void> => 
     res.status(500).json({ message: 'Error ending session', error });
   }
 };
+
+// Example endpoint to receive data, perform operation, and respond
+export const processData = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { data } = req.body;
+
+    // Perform a sample operation (e.g., reversing a string)
+    const result = data.split('').reverse().join('');
+
+    // Send back the processed result
+    res.status(200).json({ original: data, processed: result });
+  } catch (error) {
+    res.status(500).json({ message: 'Error processing data', error });
+  }
+};
+
