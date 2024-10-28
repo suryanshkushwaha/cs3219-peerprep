@@ -69,6 +69,12 @@ const Login = () => {
           >
             Go to Question Management
           </button>
+          <button
+            onClick={() => navigate("/collab")}
+            className="alt-btn"
+          >
+            Go to Collab Stub
+          </button>
         </div>
       </div>
     );
