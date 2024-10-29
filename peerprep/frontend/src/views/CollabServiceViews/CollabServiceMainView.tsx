@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Controlled as CodeMirror } from 'react-codemirror2'; // CodeMirror component
-import { useParams, useNavigate } from 'react-router-dom'; // For routing and session handling
-import 'codemirror/lib/codemirror.css'; // Default CodeMirror styles
-import 'codemirror/theme/material.css'; // CodeMirror theme
-import 'codemirror/mode/javascript/javascript'; // Support for JavaScript mode
-import 'codemirror/mode/swift/swift'; // Support for Swift mode
+import React, { useState, useEffect, useRef } from 'react';
+import { Controlled as CodeMirror } from 'react-codemirror2';
+import { useParams, useNavigate } from 'react-router-dom';
+import io from 'socket.io-client';
+
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/material.css';
+import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/swift/swift';
 
 interface CollaborationServiceViewProps {
   topic: string;
@@ -14,21 +16,34 @@ interface CollaborationServiceViewProps {
 
 const CollaborationServiceView: React.FC<CollaborationServiceViewProps> = ({ topic, difficulty, sessionId }) => {
   const [code, setCode] = useState('// Start coding here...\n');
-  const [users, setUsers] = useState<string[]>([]); // Placeholder for active users
-  const navigate = useNavigate(); // For navigation
+  const [users, setUsers] = useState<string[]>([]);
+  const socketRef = useRef<any>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Assume we later use WebSocket or Socket.io to sync code
-    console.log(`Session ID: ${sessionId}, Topic: ${topic}, Difficulty: ${difficulty}`);
-  }, [sessionId, topic, difficulty]);
+    // Initialize the WebSocket connection
+    socketRef.current = io(`http://localhost:3003`);
+
+    // Join the specific session room
+    socketRef.current.emit('join', { sessionId });
+
+    // Listen for code updates from other users
+    socketRef.current.on('yjs-update', (updatedCode: string) => {
+      setCode(updatedCode);
+    });
+
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, [sessionId]);
 
   const handleCodeChange = (editor: any, data: any, value: string) => {
-    setCode(value); // Update local code state
-    // TODO: Later sync this code change with the backend using WebSocket/Socket.io
+    setCode(value);
+    socketRef.current.emit('yjs-update', value);
   };
 
   const handleLeaveSession = () => {
-    navigate('/matching'); // Navigate back to home on session exit
+    navigate('/matching');
   };
 
   return (
@@ -44,11 +59,11 @@ const CollaborationServiceView: React.FC<CollaborationServiceViewProps> = ({ top
         <CodeMirror
           value={code}
           options={{
-            mode: 'javascript', // CodeMirror mode for syntax highlighting
-            theme: 'material', // Optional theme
-            lineNumbers: true, // Show line numbers
-            tabSize: 2, // Set tab size
-            indentWithTabs: true, // Allow indentation with tabs
+            mode: 'javascript',
+            theme: 'material',
+            lineNumbers: true,
+            tabSize: 2,
+            indentWithTabs: true,
           }}
           onBeforeChange={handleCodeChange}
         />

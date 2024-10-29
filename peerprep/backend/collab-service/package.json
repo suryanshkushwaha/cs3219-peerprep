@@ -1,4 +1,12 @@
 {
+  "name": "collab-service",
+  "version": "1.0.0",
+  "description": "Collaboration service for real-time coding",
+  "main": "dist/server.js",
+  "scripts": {
+    "start": "ts-node src/server.ts",
+    "build": "tsc"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "mongoose": "^8.7.3",
