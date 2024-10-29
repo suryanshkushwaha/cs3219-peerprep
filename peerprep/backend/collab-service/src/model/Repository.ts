@@ -5,6 +5,6 @@ export const saveSession = async (sessionData: any) => {
   await session.save();
 };
 
-export const fetchSession = async (collabId: string) => {
-  return await Session.findOne({ collabId });
+export const fetchSession = async (sessionId: string) => {
+  return await Session.findOne({ sessionId });
 };

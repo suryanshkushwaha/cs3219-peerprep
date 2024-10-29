@@ -165,4 +165,26 @@ export const cancelSession = async (
     console.error("Error in cancelSession:", error);
     res.status(500).json({ message: "Internal server error" });
   }
-};
+}
+
+export const getSessionById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { sessionId } = req.params;
+  
+    // Use Redis utility to retrieve session data
+    const sessionData = await redis.findSession(sessionId);
+  
+    if (!sessionData) {
+      res.status(404).json({ message: 'Session not found' });
+      return;
+    }
+  
+    res.status(200).json({ session: sessionData });
+  } catch (error) {
+    console.error("Error in getSessionById:", error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
