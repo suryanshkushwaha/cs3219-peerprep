@@ -5,7 +5,7 @@ import * as Y from 'yjs';
 import { saveSession, fetchSession } from '../model/Repository';
 import { setupYjsDocument } from '../utils/yjs';
 
-const MATCHING_SERVICE_URL = process.env.MATCHING_SERVICE_URL || 'http://localhost:3001/api';
+const MATCHING_SERVICE_URL = "http://localhost:3000/matchingrequest";
 
 // Creates a collaboration session by using the existing sessionId from matching-service
 export const createCollabSession = async (req: Request, res: Response) => {
