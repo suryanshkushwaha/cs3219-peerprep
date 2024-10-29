@@ -20,6 +20,5 @@ mongoose.connect(MONGO_URI as string)
 
     // Initialize WebSocket on a separate WebSocket port
     setupWebSocket(WS_PORT);
-    console.log(`WebSocket server running on port ${WS_PORT}`);
   })
   .catch(error => console.error('MongoDB connection error:', error));

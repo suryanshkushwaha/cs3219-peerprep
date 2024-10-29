@@ -1,14 +1,15 @@
-import express from 'express';
+import { Router, Request, Response } from 'express';
 import { createSession, getSession } from '../controller/collab-controller';
 
-const router = express.Router();
+const router = Router();
 
-// Wrap async handlers in a function that calls `next` with errors
-const asyncHandler = (fn: Function) => (req: express.Request, res: express.Response, next: express.NextFunction) =>
-  Promise.resolve(fn(req, res, next)).catch(next);
+// Directly pass `createSession` and `getSession` to avoid inference issues
+router.post('/create', (req: Request, res: Response) => {
+  createSession(req, res);
+});
 
-router.post('/create', asyncHandler(createSession));
-router.get('/:id', asyncHandler(getSession));
+router.get('/:id', (req: Request, res: Response) => {
+  getSession(req, res);
+});
 
 export default router;
-

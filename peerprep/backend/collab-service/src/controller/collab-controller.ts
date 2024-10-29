@@ -1,34 +1,37 @@
 import { Request, Response } from 'express';
-import { v4 as uuidv4 } from 'uuid';
 import { Session } from '../model/Session';
 import * as Y from 'yjs';
+import { saveSession, fetchSession } from '../model/Repository';
+import { setupYjsDocument } from '../utils/yjs';
 
 export const createSession = async (req: Request, res: Response) => {
   try {
     const { users, language, difficulty } = req.body;
-    const collabId = uuidv4();
-    const ydoc = new Y.Doc();
-    const encodedState = Buffer.from(Y.encodeStateAsUpdate(ydoc)).toString('base64');
+    const collabId = new Date().getTime().toString();
 
+    // Initialize Yjs document
+    const ydoc = setupYjsDocument();
     const session = new Session({
       collabId,
       users,
       language,
       difficulty,
-      code: encodedState
+      code: Y.encodeStateAsUpdate(ydoc)
     });
-    await session.save();
 
+    await saveSession(session);
     res.status(201).json({ message: 'Session created', session });
   } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    res.status(500).json({ error: errorMessage });
   }
+  
 };
 
 export const getSession = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const session = await Session.findOne({ collabId: id });
+    const { collabId } = req.params;
+    const session = await fetchSession(collabId);
 
     if (!session) {
       return res.status(404).json({ message: 'Session not found' });
@@ -36,7 +39,7 @@ export const getSession = async (req: Request, res: Response) => {
 
     res.json(session);
   } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    res.status(500).json({ error: errorMessage });
   }
 };
-
