@@ -1,8 +1,8 @@
 import { Server } from '@hocuspocus/server'; // Imports the Hocuspocus server for real-time WebSocket communication.
 import { Database } from '@hocuspocus/extension-database'; // Imports the Hocuspocus database extension to persist data.
-import { getDocument, storeDocument } from './src/controller/collab-controller';
+import { getDocument, storeDocument } from './controller/collab-controller';
 
-import connectDB from './config/db';                 
+import connectDB from '../config/db';                 
 import dotenv from 'dotenv';
 
 dotenv.config();                                     
