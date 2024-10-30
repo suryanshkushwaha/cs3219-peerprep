@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@hocuspocus/extension-database": "^2.13.7",
+    "@hocuspocus/server": "^2.13.7",
+    "mongodb": "^6.10.0",
+    "yjs": "^13.6.20"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^4.0.7"
+  }
+}
