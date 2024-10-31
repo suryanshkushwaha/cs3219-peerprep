@@ -5,7 +5,7 @@ This is a demo of a [CodeMirror 5](https://codemirror.net/5) editor that was mad
 
 We use the [y-websocket](https://docs.yjs.dev/ecosystem/connection-provider) provider to share document updates through a server. There are many more providers available for Yjs - try switching to another provider. [See docs](https://docs.yjs.dev/ecosystem/connection-provider).
 
-Also you could try addingh offline persistence to this demo. Wouldn't it be cool if document updates are persisted in the browser, so you can load your application load faster? Try it out: https://docs.yjs.dev/getting-started/allowing-offline-editing
+Also you could try adding offline persistence to this demo. Wouldn't it be cool if document updates are persisted in the browser, so you can load your application load faster? Try it out: https://docs.yjs.dev/getting-started/allowing-offline-editing
 
 ## Quick Start
 
@@ -14,3 +14,6 @@ npm i
 npm start
 # Project is running at http://localhost:8080/
 ```
+
+Debugging tips:
+If you want to open two html times at the same time, in package.json, change "start": "webpack serve" to "start": "webpack serve --open codemirror.html"
