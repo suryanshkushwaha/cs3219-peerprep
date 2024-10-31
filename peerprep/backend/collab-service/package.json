@@ -1,12 +1,8 @@
 {
-  "name": "yjs-demos-server",
-  "version": "0.0.0",
-  "private": true,
+  "name": "collab-service",
+  "version": "1.0.0",
   "description": "Demo server that serves the static assets and provides a shared websocket backend.",
-  "funding": {
-    "type": "GitHub Sponsors ❤",
-    "url": "https://github.com/sponsors/dmonad"
-  },
+  "main": "src/server.js",
   "scripts": {
     "start": "node ./src/server.js",
     "start:nostatic": "node ./src/server.js --nostatic"
@@ -20,6 +16,8 @@
     ]
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
     "mongoose": "^8.7.3",
     "node-static": "^0.7.11",
     "ws": "^7.4.2",
