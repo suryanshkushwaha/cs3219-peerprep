@@ -1,7 +1,6 @@
-// collab-controller.js
 const mongoose = require('mongoose');
 
-// Define a schema and model for the document
+// Define a schema for documents
 const documentSchema = new mongoose.Schema({
   name: { type: String, required: true },
   data: { type: Buffer, required: true },
@@ -15,7 +14,7 @@ async function getDocument(documentName) {
   return document ? new Uint8Array(document.data) : new Uint8Array();
 }
 
-// Update or insert a document with a given name and state
+// Store a document with a given name and state
 async function storeDocument(documentName, state) {
   await DocumentModel.updateOne(
     { name: documentName },

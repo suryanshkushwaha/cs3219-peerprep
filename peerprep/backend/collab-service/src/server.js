@@ -1,68 +1,40 @@
-// server.js
-const express = require('express');
-const WebSocket = require('ws');
+require('dotenv').config();
 const http = require('http');
-const StaticServer = require('node-static').Server;
-const ywsUtils = require('y-websocket/bin/utils');
-const setupWSConnection = ywsUtils.setupWSConnection;
-const docs = ywsUtils.docs;
-const connectDB = require('../config/db');
-const { storeDocument, getDocument } = require('./controller/collab-controller');
+const { WebSocketServer } = require('ws');
+const Y = require('yjs');
+const { MongodbPersistence } = require('y-mongodb-provider');
+const { setupWSConnection } = require('./websocket/utils.js');
 
-const app = express();
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
-
-app.use(express.json());
-
-// Connect to MongoDB
-connectDB();
-
-// Endpoint to save a document to MongoDB
-app.post('/api/saveDocument', async (req, res) => {
-  try {
-    const { name, data } = req.body;
-    await storeDocument(name, Buffer.from(data));
-    res.status(200).json({ message: 'Document saved successfully' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Server running');
 });
 
-// Endpoint to retrieve a document from MongoDB
-app.get('/api/getDocument/:name', async (req, res) => {
-  try {
-    const name = req.params.name;
-    const documentData = await getDocument(name);
-    res.status(200).json({ data: Array.from(documentData) });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+// Set up WebSocket server
+const wss = new WebSocketServer({ server });
+wss.on('connection', setupWSConnection);
+
+// Initialize MongoDB persistence
+const mdb = new MongodbPersistence(process.env.DB_CLOUD_URI, {
+  flushSize: 100,
+  collectionName: 'collab-service',
+  multipleCollections: true,
 });
 
-// Serve static files and set up WebSocket connections for y-websocket
-const staticServer = new StaticServer('../', { cache: false, gzip: true });
-app.get('*', (req, res) => {
-  staticServer.serve(req, res);
+// Update persistence logic
+require('./websocket/utils.js').setPersistence({
+  bindState: async (docName, ydoc) => {
+    const persistedDoc = await mdb.getYDoc(docName);
+    const updates = Y.encodeStateAsUpdate(ydoc);
+    Y.applyUpdate(ydoc, Y.encodeStateAsUpdate(persistedDoc));
+    mdb.storeUpdate(docName, updates);
+    ydoc.on('update', (update) => {
+      mdb.storeUpdate(docName, update);
+    });
+  },
+  writeState: () => Promise.resolve(true),
 });
 
-wss.on('connection', (conn, req) => {
-  setupWSConnection(conn, req, { gc: req.url.slice(1) !== 'ws/prosemirror-versions' });
-});
-
-// Periodically log connection stats
-setInterval(() => {
-  let conns = 0;
-  docs.forEach(doc => { conns += doc.conns.size; });
-  const stats = {
-    conns,
-    docs: docs.size,
-    websocket: `ws://localhost:3002`,
-  };
-  console.log(`${new Date().toISOString()} Stats: ${JSON.stringify(stats)}`);
-}, 10000);
-
-const PORT = process.env.PORT || 3002;
-server.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:3002`);
+server.listen(process.env.PORT || 3000, () => {
+  console.log(`Server running on port ${process.env.PORT || 3000}`);
 });
