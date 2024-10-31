@@ -1,8 +1,8 @@
 FROM node:22-alpine
 
-COPY package.json yarn.lock ./
-RUN yarn install
+COPY package.json package-lock.json ./
+RUN npm install
 
 COPY . .
 
-CMD ["yarn", "start"]
+CMD ["npm", "start"]
