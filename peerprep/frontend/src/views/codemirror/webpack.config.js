@@ -1,5 +1,5 @@
-// webpack.config.js
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -14,19 +14,25 @@ module.exports = {
     publicPath: '/codemirror/dist/'
   },
   devServer: {
-    static: path.join(__dirname),
-    compress: true
-  },
-  module: {
-    rules: [
+    proxy: [
       {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
+        context: ['/ws'],
+        target: 'ws://localhost:3003',
+        ws: true,
+        changeOrigin: true
+      }
     ],
+    static: {
+      directory: path.join(__dirname),
+    },
+    open: {
+      target: '/codemirror.html',  // Specify the path to open on startup
+    }
   },
-  resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
-  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './codemirror.html',
+      filename: 'index.html'
+    })
+  ]
 };
