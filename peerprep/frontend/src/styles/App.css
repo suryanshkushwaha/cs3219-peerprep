@@ -499,7 +499,7 @@ h2 {
   justify-content: space-between; /* Adjust layout */
   align-items: center;
 
-  height: 90vh; /* Full height of the viewport */
+  height: 85vh; /* Full height of the viewport */
   width: 80vw; /* Full width of the viewport */
   
   background-color: white;
@@ -508,7 +508,7 @@ h2 {
 }
 
 .CodeMirror {
-  min-height: 700px;
+  min-height: 1000px;
   width: 100%;
 }
 
