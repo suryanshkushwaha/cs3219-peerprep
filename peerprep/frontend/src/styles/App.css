@@ -561,6 +561,11 @@ h2 {
   animation: blink 1s step-end infinite; /* Blinking effect */
 }
 
+.CodeMirror-cursor {
+  border-left: 1px solid white;
+  border-right: 1px solid black;
+}
+
 /* Styles for the label (optional) */
 .CodeMirror-cursor-label {
   position: absolute;

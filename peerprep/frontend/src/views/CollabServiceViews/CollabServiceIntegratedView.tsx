@@ -4,7 +4,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 import 'codemirror/mode/javascript/javascript';
-import '../../styles/App.css';
 
 import * as Y from 'yjs';
 import { WebsocketProvider } from 'y-websocket';
@@ -13,14 +12,15 @@ import { WebsocketProvider } from 'y-websocket';
 import { CodemirrorBinding } from 'y-codemirror';
 
 const CollaborationServiceIntegratedView: React.FC = () => {
-  const { topic, difficulty, sessionId } = useParams<{ topic: string; difficulty: string; sessionId: string }>();
+  const { topic, difficulty, questionId, sessionId } = useParams<{ topic: string; difficulty: string; questionId: string; sessionId: string; }>();
   const [code, setCode] = useState('// Start coding here...\n');
   const editorRef = useRef<any>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     console.log(`Session ID: ${sessionId}, Topic: ${topic}, Difficulty: ${difficulty}`);
-  }, [sessionId, topic, difficulty]);
+    console.log(`Question: ${questionId}`);
+  }, [sessionId, topic, difficulty, questionId]);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -56,8 +56,8 @@ const CollaborationServiceIntegratedView: React.FC = () => {
     <div className="editor-container-parent">
       <div className="editor-header">
         <h2>Collaboration Session</h2>
-        <p>Topic: {topic} | Difficulty: {difficulty}</p>
-        <p>Session ID: {sessionId}</p>
+        <p>Topic: {topic} | Difficulty: {difficulty} | Session: {sessionId}</p>
+        <p>Question: {questionId}</p>
         <button onClick={handleLeaveSession} className="leave-btn">Leave Session</button>
       </div>
 
