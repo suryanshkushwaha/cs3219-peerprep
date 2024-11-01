@@ -70,7 +70,7 @@ const Login = () => {
             Go to Question Management
           </button>
           <button
-            onClick={() => navigate("/collab")}
+            onClick={() => navigate("/collabFull")}
             className="alt-btn"
           >
             Go to Collab Stub
