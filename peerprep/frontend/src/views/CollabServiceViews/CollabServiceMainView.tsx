@@ -21,6 +21,17 @@ const CollaborationServiceView: React.FC<CollaborationServiceViewProps> = ({ top
     console.log(`Session ID: ${sessionId}, Topic: ${topic}, Difficulty: ${difficulty}`);
   }, [sessionId, topic, difficulty]);
 
+
+  useEffect(() => {
+    // Lock scroll when this component mounts
+    document.body.style.overflow = 'hidden';
+
+    // Cleanup function to unlock scroll when component unmounts
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   const handleCodeChange = (editor: any, data: any, value: string) => {
     setCode(value); // Update local code state
     // TODO: Later sync this code change with the backend using WebSocket/Socket.io
@@ -44,7 +55,7 @@ const CollaborationServiceView: React.FC<CollaborationServiceViewProps> = ({ top
           value={code}
           options={{
             mode: 'javascript', // CodeMirror mode for syntax highlighting
-            theme: 'material', // Optional theme
+             // Optional theme
             lineNumbers: true, // Show line numbers
             tabSize: 2, // Set tab size
             indentWithTabs: true, // Allow indentation with tabs
