@@ -4,7 +4,6 @@ import { useParams, useNavigate } from 'react-router-dom'; // For routing and se
 import 'codemirror/lib/codemirror.css'; // Default CodeMirror styles
 import 'codemirror/theme/material.css'; // CodeMirror theme
 import 'codemirror/mode/javascript/javascript'; // Support for JavaScript mode
-import 'codemirror/mode/swift'; // Support for Swift mode
 
 interface CollaborationServiceViewProps {
   topic: string;
