@@ -15,6 +15,8 @@ const MatchingServiceMainView: React.FC = () => {
   const userId = sessionStorage.getItem('userId');
   const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const questionId = "Q-43: Easy Algorithms"; // Temp stub for now
+
   // Handle input changes
   const handleTopicChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setTopic(e.target.value);
@@ -147,20 +149,12 @@ const MatchingServiceMainView: React.FC = () => {
 
         {/* Show "Go to Session" link if match is found */}
         {matchFound && (
-          <Link
-          to={{
-            pathname: "/sessionStub",
-          }}
-          state={{
-            sessionId: sessionId, // Replace with the actual session ID if different
-            topic,
-            difficulty,
-            userId1: userId,
-          }}
-          className="center-link"
-          >
-          Go to Session
-          </Link>
+            <button
+              onClick={() => navigate("/collabFull/" + topic + "/" + difficulty + "/" + questionId + "/" + sessionId)}
+              className="center-link"
+            >
+            Go to Session
+            </button>
         )}
 
         {/* Loading bar */}
@@ -175,3 +169,21 @@ const MatchingServiceMainView: React.FC = () => {
 };
 
 export default MatchingServiceMainView;
+
+/*
+          <Link
+          to={{
+            pathname: "/sessionStub",
+          }}
+          state={{
+            sessionId: sessionId, // Replace with the actual session ID if different
+            topic,
+            difficulty,
+            userId1: userId,
+          }}
+          className="center-link"
+          >
+          Go to Session
+          </Link>
+
+*/
