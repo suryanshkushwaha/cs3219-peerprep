@@ -551,3 +551,33 @@ h2 {
 .leave-btn:hover {
   background-color: #ff1a1a;
 }
+
+/* Styles for the collaborative cursor to look like a blinking bar */
+.CodeMirror-cursor {
+  position: absolute;
+  width: 2px;
+  background-color: blue; /* Adjust the color per user */
+  opacity: 0.8;
+  animation: blink 1s step-end infinite; /* Blinking effect */
+}
+
+/* Styles for the label (optional) */
+.CodeMirror-cursor-label {
+  position: absolute;
+  background-color: orange;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+  top: -20px;
+}
+
+/* Blinking animation */
+@keyframes blink {
+  from, to {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}

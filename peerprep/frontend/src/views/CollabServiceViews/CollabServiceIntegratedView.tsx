@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 import 'codemirror/mode/javascript/javascript';
+import '../../styles/App.css';
 
 import * as Y from 'yjs';
 import { WebsocketProvider } from 'y-websocket';
@@ -30,7 +31,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
 
   useEffect(() => {
     const ydoc = new Y.Doc();
-    const provider = new WebsocketProvider('ws://localhost:1234', 'collaborative-doc', ydoc);
+    const provider = new WebsocketProvider('ws://localhost:1234/' + sessionId, 'collaborative-doc', ydoc);
     const yText = ydoc.getText('codemirror');
 
     if (editorRef.current) {
@@ -43,7 +44,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
     }
   }, []);
 
-  const handleCodeChange = (editor: any, data: any, value: string) => {
+  const handleBeforeCodeChange = (editor: any, data: any, value: string) => {
     //setCode(value);
   };
 
@@ -68,9 +69,9 @@ const CollaborationServiceIntegratedView: React.FC = () => {
             mode: 'javascript',
             lineNumbers: true,
             tabSize: 2,
-            indentWithTabs: true,
+            indentWithTabs: true
           }}
-          onBeforeChange={handleCodeChange}
+          onBeforeChange={handleBeforeCodeChange}
         />
       </div>
     </div>
