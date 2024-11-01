@@ -17,7 +17,7 @@ wss.on('connection', setupWSConnection);
 // Initialize MongoDB persistence
 const mdb = new MongodbPersistence(process.env.DB_CLOUD_URI, {
   flushSize: 100,
-  collectionName: 'collab-service',
+  collectionName: 'sessions',
   multipleCollections: true,
 });
 

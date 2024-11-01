@@ -6,11 +6,11 @@ import 'codemirror/mode/javascript/javascript.js';
 
 window.addEventListener('load', () => {
   const ydoc = new Y.Doc();
-  const provider = new WebsocketProvider(
-    "ws://localhost:8080/ws",
-    'collab-service-demo',
-    ydoc
-  );
+  const provider = new WebsocketProvider( {
+    serverUrl: "ws://localhost:8080/ws",
+    roomName: 'collab-service-demo',
+    doc: ydoc
+  });
 
   // WebSocket Event Logging
   provider.on('status', event => {
