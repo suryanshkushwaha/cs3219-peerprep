@@ -8,6 +8,9 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState(""); // State to store error messages
     const navigate = useNavigate();
+    const topic = "algorithms";
+    const difficulty = "easy"; 
+    const sessionId ="session1";
   
     const handleLogin = async () => {
       try {
@@ -70,7 +73,7 @@ const Login = () => {
             Go to Question Management
           </button>
           <button
-            onClick={() => navigate("/collabFull")}
+            onClick={() => navigate("/collabFull/" + topic + "/" + difficulty + "/" + sessionId)}
             className="alt-btn"
           >
             Go to Collab Stub
