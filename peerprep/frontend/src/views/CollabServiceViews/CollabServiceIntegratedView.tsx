@@ -12,10 +12,11 @@ import { CodemirrorBinding } from 'y-codemirror';
 
 const CollaborationServiceIntegratedView: React.FC = () => {
   const { topic, difficulty, questionId, sessionId } = useParams<{ topic: string; difficulty: string; questionId: string; sessionId: string; }>();
-  const [code, setCode] = useState('// Start coding here...\n');
   const [output, setOutput] = useState<string | null>(null);
   const editorRef = useRef<any>(null);
   const navigate = useNavigate();
+  const [ydoc, setYDoc] = useState<Y.Doc | null>(null);
+  const [yText, setYText] = useState<Y.Text | null>(null);
 
   useEffect(() => {
     console.log(`Session ID: ${sessionId}, Topic: ${topic}, Difficulty: ${difficulty}`);
@@ -30,23 +31,22 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const ydoc = new Y.Doc();
-    const provider = new WebsocketProvider('ws://localhost:1234/' + sessionId, 'collaborative-doc', ydoc);
-    const yText = ydoc.getText('codemirror');
+    const newYDoc = new Y.Doc();
+    const provider = new WebsocketProvider('ws://localhost:1234/' + sessionId, 'collaborative-doc', newYDoc);
+    const newYText = newYDoc.getText('codemirror');
+    setYDoc(newYDoc);
+    setYText(newYText);
 
     if (editorRef.current) {
-      const binding = new CodemirrorBinding(yText, editorRef.current.editor, provider.awareness);
+      const binding = new CodemirrorBinding(newYText, editorRef.current.editor, provider.awareness);
+
       return () => {
         binding.destroy();
         provider.destroy();
-        ydoc.destroy();
+        newYDoc.destroy();
       };
     }
-  }, []);
-
-  const handleBeforeCodeChange = (editor: any, data: any, value: string) => {
-    // setCode(value);
-  };
+  }, [sessionId]);
 
   const handleLeaveSession = () => {
     navigate('/matching');
@@ -54,7 +54,11 @@ const CollaborationServiceIntegratedView: React.FC = () => {
 
   const handleRunCode = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/run-code', { code });
+      if (!yText) {
+        throw new Error('Yjs text instance is not available');
+      }
+      const currentCode = yText.toString();
+      const response = await axios.post('http://localhost:4000/run-code', { code: currentCode });
       setOutput(response.data.output);
     } catch (error) {
       console.error('Error executing code:', error);
@@ -74,15 +78,14 @@ const CollaborationServiceIntegratedView: React.FC = () => {
       <div className="editor-container">
         <CodeMirror
           ref={editorRef}
-          value={code}
           options={{
             mode: 'javascript',
             lineNumbers: true,
             tabSize: 2,
             indentWithTabs: true
           }}
-          onChange={(editor, data, value) => {
-            setCode(value); // Update code state here
+          onChange={() => {
+            // Let Yjs handle all updates; do not use setCode here
           }}
         />
       </div>

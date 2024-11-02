@@ -25,11 +25,15 @@ app.post('/run-code', (req, res) => {
   // Run the temporary file using Node.js
   exec(`node ${tempFilePath}`, (error, stdout, stderr) => {
     // Clean up the temporary file after execution
+    console.log('Code:', code); // Log the code being executed
     fs.unlinkSync(tempFilePath);
 
     if (error) {
+      console.log('Error:', error); // Log any errors
       return res.json({ output: stderr || 'Error occurred' });
     }
+
+    console.log('Output:', stdout); // Log the output
     res.json({ output: stdout || 'No output' });
   });
 });
