@@ -1,56 +1,83 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { UnControlled as CodeMirror } from 'react-codemirror2';
-import { useParams, useNavigate } from 'react-router-dom';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/material.css';
-import 'codemirror/mode/javascript/javascript';
-
-import * as Y from 'yjs';
-import { WebsocketProvider } from 'y-websocket';
-
-// @ts-check
-import { CodemirrorBinding } from 'y-codemirror';
+// frontend/src/CollaborationServiceIntegratedView.jsx
+import React, { useState, useEffect, useRef } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import * as Y from 'yjs'
+import { yCollab } from 'y-codemirror.next'
+import { HocuspocusProvider } from '@hocuspocus/provider'
+import { EditorState } from '@codemirror/state'
+import { EditorView, basicSetup } from 'codemirror'
+import { javascript } from '@codemirror/lang-javascript'
 
 const CollaborationServiceIntegratedView: React.FC = () => {
-  const { topic, difficulty, questionId, sessionId } = useParams<{ topic: string; difficulty: string; questionId: string; sessionId: string; }>();
-  const [code, setCode] = useState('// Start coding here...\n');
-  const editorRef = useRef<any>(null);
-  const navigate = useNavigate();
+  const { topic, difficulty, questionId, sessionId } = useParams<{
+    topic: string
+    difficulty: string
+    questionId: string
+    sessionId: string
+  }>()
+
+  const editorRef = useRef(null) // Reference to the CodeMirror editor container
+  const navigate = useNavigate()
 
   useEffect(() => {
-    console.log(`Session ID: ${sessionId}, Topic: ${topic}, Difficulty: ${difficulty}`);
-    console.log(`Question: ${questionId}`);
-  }, [sessionId, topic, difficulty, questionId]);
+    // Log session details
+    console.log(`Session ID: ${sessionId}, Topic: ${topic}, Difficulty: ${difficulty}`)
+    console.log(`Question: ${questionId}`)
+  }, [sessionId, topic, difficulty, questionId])
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    // Lock scroll when component mounts
+    document.body.style.overflow = 'hidden'
     return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, []);
+      document.body.style.overflow = 'auto' // Unlock scroll on unmount
+    }
+  }, [])
 
   useEffect(() => {
-    const ydoc = new Y.Doc();
-    const provider = new WebsocketProvider('ws://localhost:1234/' + sessionId, 'collaborative-doc', ydoc);
-    const yText = ydoc.getText('codemirror');
+    if (!editorRef.current) return // Check if editorRef is available
+    
+    // Initialize Y.js document and Hocuspocus provider for real-time collaboration
+    const ydoc = new Y.Doc()
+    const provider = new HocuspocusProvider({
+      url: `ws://localhost:1234/${sessionId}`,
+      name: 'collaborative-doc',
+      document: ydoc,
+    })
 
-    if (editorRef.current) {
-      const binding = new CodemirrorBinding(yText, editorRef.current.editor, provider.awareness);
-      return () => {
-        binding.destroy();
-        provider.destroy();
-        ydoc.destroy();
-      };
+    const yText = ydoc.getText('codemirror')
+
+    // Create CodeMirror editor state with collaborative extensions
+    const state = EditorState.create({
+      doc: yText.toString(),
+      extensions: [
+        basicSetup,
+        javascript(),
+        yCollab(yText, provider.awareness), // Enable Y.js collaboration with yCollab
+        EditorView.theme({
+          '&': { height: '100%' },
+          '.cm-scroller': { overflow: 'auto' },
+        }),
+      ],
+    })
+
+    // Initialize and mount the CodeMirror editor view
+    const view = new EditorView({
+      state,
+      parent: editorRef.current,
+    })
+
+    // Clean up resources on component unmount
+    return () => {
+      provider.disconnect()
+      ydoc.destroy()
+      view.destroy()
     }
-  }, []);
+  }, [sessionId])
 
-  const handleBeforeCodeChange = (editor: any, data: any, value: string) => {
-    //setCode(value);
-  };
-
+  // Navigate back to the matching screen on session exit
   const handleLeaveSession = () => {
-    navigate('/matching');
-  };
+    navigate('/matching')
+  }
 
   return (
     <div className="editor-container-parent">
@@ -62,20 +89,10 @@ const CollaborationServiceIntegratedView: React.FC = () => {
       </div>
 
       <div className="editor-container">
-        <CodeMirror
-          ref={editorRef}
-          value={code}
-          options={{
-            mode: 'javascript',
-            lineNumbers: true,
-            tabSize: 2,
-            indentWithTabs: true
-          }}
-          onBeforeChange={handleBeforeCodeChange}
-        />
+        <div ref={editorRef} style={{ height: '100%', border: '1px solid #000', marginTop: '1rem' }} />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CollaborationServiceIntegratedView;
+export default CollaborationServiceIntegratedView

@@ -1,45 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import { Controlled as CodeMirror } from 'react-codemirror2'; // CodeMirror component
-import { useParams, useNavigate } from 'react-router-dom'; // For routing and session handling
-import 'codemirror/lib/codemirror.css'; // Default CodeMirror styles
-import 'codemirror/theme/material.css'; // CodeMirror theme
-import 'codemirror/mode/javascript/javascript'; // Support for JavaScript mode
+// frontend/src/CollaborationServiceView2.jsx
+import React, { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import * as Y from 'yjs'
+import { yCollab } from 'y-codemirror.next'
+import { HocuspocusProvider } from '@hocuspocus/provider'
+import { EditorState } from '@codemirror/state'
+import { EditorView, basicSetup } from 'codemirror'
+import { javascript } from '@codemirror/lang-javascript'
 
 interface CollaborationServiceViewProps {
-  topic: string;
-  difficulty: string;
-  sessionId: string;
+  topic: string
+  difficulty: string
+  sessionId: string
 }
 
 const CollaborationServiceView: React.FC<CollaborationServiceViewProps> = ({ topic, difficulty, sessionId }) => {
-  const [code, setCode] = useState('// Start coding here...\n');
-  const [users, setUsers] = useState<string[]>([]); // Placeholder for active users
-  const navigate = useNavigate(); // For navigation
+  const [users, setUsers] = useState<string[]>([]) // Placeholder for active users
+  const navigate = useNavigate() // For navigation
+  const editorRef = useRef<HTMLDivElement | null>(null) // Ref for CodeMirror editor container
 
   useEffect(() => {
-    // Assume we later use WebSocket or Socket.io to sync code
-    console.log(`Session ID: ${sessionId}, Topic: ${topic}, Difficulty: ${difficulty}`);
-  }, [sessionId, topic, difficulty]);
+    // Log session details
+    console.log(`Session ID: ${sessionId}, Topic: ${topic}, Difficulty: ${difficulty}`)
 
+    // Initialize Y.js document and Hocuspocus provider
+    const ydoc = new Y.Doc()
+    const provider = new HocuspocusProvider({
+      url: 'ws://127.0.0.1:1234',
+      name: sessionId,
+      document: ydoc,
+    })
 
-  useEffect(() => {
+    const yText = ydoc.getText('codemirror')
+
+    // Set a basic user awareness field (for demonstration purposes)
+    provider.setAwarenessField('user', {
+      name: 'Test User',
+      color: '#30bced',
+      colorLight: '#30bced33',
+    })
+
+    // Configure the CodeMirror editor state for real-time collaboration
+    const state = EditorState.create({
+      doc: yText.toString(),
+      extensions: [
+        basicSetup,
+        javascript(),
+        yCollab(yText, provider.awareness),
+        EditorView.theme({
+          '&': { height: '100%' },
+          '.cm-scroller': { overflow: 'auto' },
+        }),
+      ],
+    })
+
+    // Initialize and mount the CodeMirror editor view
+    const view = new EditorView({
+      state,
+      parent: editorRef.current!,
+    })
+
     // Lock scroll when this component mounts
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden'
 
-    // Cleanup function to unlock scroll when component unmounts
+    // Cleanup function on component unmount
     return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, []);
+      document.body.style.overflow = 'auto' // Unlock scroll
+      provider.disconnect()
+      ydoc.destroy()
+      view.destroy()
+    }
+  }, [sessionId, topic, difficulty])
 
-  const handleCodeChange = (editor: any, data: any, value: string) => {
-    setCode(value); // Update local code state
-    // TODO: Later sync this code change with the backend using WebSocket/Socket.io
-  };
-
+  // Function to handle session exit and navigate back
   const handleLeaveSession = () => {
-    navigate('/matching'); // Navigate back to home on session exit
-  };
+    navigate('/matching')
+  }
 
   return (
     <div className="editor-container-parent">
@@ -51,20 +87,10 @@ const CollaborationServiceView: React.FC<CollaborationServiceViewProps> = ({ top
       </div>
 
       <div className="editor-container">
-        <CodeMirror
-          value={code}
-          options={{
-            mode: 'javascript', // CodeMirror mode for syntax highlighting
-             // Optional theme
-            lineNumbers: true, // Show line numbers
-            tabSize: 2, // Set tab size
-            indentWithTabs: true, // Allow indentation with tabs
-          }}
-          onBeforeChange={handleCodeChange}
-        />
+        <div ref={editorRef} style={{ height: '100%', border: '1px solid #000', marginTop: '1rem' }} />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CollaborationServiceView;
+export default CollaborationServiceView

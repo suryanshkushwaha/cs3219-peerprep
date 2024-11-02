@@ -1,0 +1,17 @@
+{
+  "name": "collab-service-2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@hocuspocus/server": "^2.13.7",
+    "y-protocols": "^1.0.6",
+    "yjs": "^13.6.20"
+  }
+}
