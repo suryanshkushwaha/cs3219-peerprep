@@ -25,3 +25,13 @@ services:
       - "3000:3000"
     env_file:
       - ./matching-service/.env
+
+  collab-service:
+    build:
+      context: ./collab-service
+      dockerfile: Dockerfile
+    ports:
+      - "1234:1234"
+      - "3003:3003"
+    env_file:
+      - ./collab-service/.env
