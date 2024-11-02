@@ -35,3 +35,12 @@ services:
       - "3003:3003"
     env_file:
       - ./collab-service/.env
+
+  code-execution-service:
+    build:
+      context: ./code-execution-service
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./code-execution-service/.env
