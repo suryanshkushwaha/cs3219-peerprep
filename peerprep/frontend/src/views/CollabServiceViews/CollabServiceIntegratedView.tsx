@@ -87,10 +87,11 @@ const CollaborationServiceIntegratedView: React.FC = () => {
         />
       </div>
 
-      <button onClick={handleRunCode} className="run-btn">Run Code</button>
-      <div className="output-container">
-        <h3>Output:</h3>
-        <pre>{output}</pre>
+      <button onClick={handleRunCode} className="run-btn" style={{ marginTop: '20px', marginBottom: '20px' }}>Run Code</button>
+      
+      <h3 style={{ textAlign: 'left', marginBottom: '5px' }}>Output</h3>
+      <div className="output-container" style={{ width: '900px', textAlign: 'left', border: '1px solid #ddd', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
+        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{output}</pre>
       </div>
     </div>
   );
