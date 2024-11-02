@@ -4,16 +4,16 @@ import { useParams, useNavigate } from 'react-router-dom';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 import 'codemirror/mode/javascript/javascript';
+import axios from 'axios';
 
 import * as Y from 'yjs';
 import { WebsocketProvider } from 'y-websocket';
-
-// @ts-check
 import { CodemirrorBinding } from 'y-codemirror';
 
 const CollaborationServiceIntegratedView: React.FC = () => {
   const { topic, difficulty, questionId, sessionId } = useParams<{ topic: string; difficulty: string; questionId: string; sessionId: string; }>();
   const [code, setCode] = useState('// Start coding here...\n');
+  const [output, setOutput] = useState<string | null>(null);
   const editorRef = useRef<any>(null);
   const navigate = useNavigate();
 
@@ -45,11 +45,21 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   }, []);
 
   const handleBeforeCodeChange = (editor: any, data: any, value: string) => {
-    //setCode(value);
+    // setCode(value);
   };
 
   const handleLeaveSession = () => {
     navigate('/matching');
+  };
+
+  const handleRunCode = async () => {
+    try {
+      const response = await axios.post('http://localhost:4000/run-code', { code });
+      setOutput(response.data.output);
+    } catch (error) {
+      console.error('Error executing code:', error);
+      setOutput('Error executing code');
+    }
   };
 
   return (
@@ -71,8 +81,16 @@ const CollaborationServiceIntegratedView: React.FC = () => {
             tabSize: 2,
             indentWithTabs: true
           }}
-          onBeforeChange={handleBeforeCodeChange}
+          onChange={(editor, data, value) => {
+            setCode(value); // Update code state here
+          }}
         />
+      </div>
+
+      <button onClick={handleRunCode} className="run-btn">Run Code</button>
+      <div className="output-container">
+        <h3>Output:</h3>
+        <pre>{output}</pre>
       </div>
     </div>
   );
