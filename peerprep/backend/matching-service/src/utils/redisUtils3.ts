@@ -305,7 +305,14 @@ const createSession = async (
   ): Promise<string> =>{
     const sessionId = "lol";
     try {
-      let sessionId = `${userId1}-${userId2}-${Date.now()}`;
+      let sessionId = `${userId1}-${userId2}-${Date.now()}-Q`;
+      
+      /* RANDOM QUESTION STARTS HERE */
+      const randomQuestion = await getRandomQuestionFromQuestionService(topic, difficulty);
+      console.log("Random Question:", randomQuestion?.title);
+      sessionId += randomQuestion?.title
+      console.log("UPDATED Session ID:", sessionId);
+      
       const session: Session = {
         sessionId: sessionId,
         userId1,
@@ -315,12 +322,6 @@ const createSession = async (
         timestamp: Date.now(),
       };
 
-      /* RANDOM QUESTION STARTS HERE @MAHI
-      const randomQuestion = await getRandomQuestionFromQuestionService(topic, difficulty);
-      console.log("Random Question:", randomQuestion?.title);
-      sessionId = sessionId + "Q" + randomQuestion?.title
-      */
-      
       await saveSession(session);
       // return sessionId as string
       // convert to string to match the return type
@@ -335,7 +336,7 @@ const createSession = async (
     try {
       //const response = await axios.get(`http://localhost:8080/api/questions/random-question`, {
       const response = await axios.get(`http://question-service:8080/api/questions/random-question`, {
-        params: { topic: topic, difficulty: difficulty }
+        params: { topic, difficulty }
       });
       return response.data;
     } catch (error) {
