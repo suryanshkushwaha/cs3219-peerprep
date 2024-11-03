@@ -1,4 +1,5 @@
 import { ChainableCommander } from "ioredis";
+import axios from 'axios';
 import connectRedis from "../../config/redis";
 import { Session } from "../models/Session";
 import { Redis } from 'ioredis';
@@ -304,7 +305,7 @@ const createSession = async (
   ): Promise<string> =>{
     const sessionId = "lol";
     try {
-      const sessionId = `${userId1}-${userId2}-${Date.now()}`;
+      let sessionId = `${userId1}-${userId2}-${Date.now()}`;
       const session: Session = {
         sessionId: sessionId,
         userId1,
@@ -313,6 +314,13 @@ const createSession = async (
         difficulty,
         timestamp: Date.now(),
       };
+
+      /* RANDOM QUESTION STARTS HERE @MAHI
+      const randomQuestion = await getRandomQuestionFromQuestionService(topic, difficulty);
+      console.log("Random Question:", randomQuestion?.title);
+      sessionId = sessionId + "Q" + randomQuestion?.title
+      */
+      
       await saveSession(session);
       // return sessionId as string
       // convert to string to match the return type
@@ -320,6 +328,19 @@ const createSession = async (
     } catch (error) {
       console.error("Error in createSession:", error);
       throw error;
+    }
+  };
+
+  export const getRandomQuestionFromQuestionService = async (topic: string, difficulty: string) => {
+    try {
+      //const response = await axios.get(`http://localhost:8080/api/questions/random-question`, {
+      const response = await axios.get(`http://question-service:8080/api/questions/random-question`, {
+        params: { topic: topic, difficulty: difficulty }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching random question from question-service:', error);
+      throw new Error('Failed to fetch random question from question service');
     }
   };
 

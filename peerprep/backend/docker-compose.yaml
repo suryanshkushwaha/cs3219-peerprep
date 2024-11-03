@@ -35,3 +35,7 @@ services:
       - "3003:3003"
     env_file:
       - ./collab-service/.env
+
+networks:
+  my-network:
+    driver: bridge
