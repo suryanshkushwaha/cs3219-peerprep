@@ -1,27 +1,42 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import * as Y from 'yjs';
+
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
-import 'codemirror/mode/javascript/javascript';
 import 'codemirror/addon/hint/show-hint';
 import 'codemirror/addon/hint/show-hint.css';
 import 'codemirror/addon/hint/javascript-hint'; // For JavaScript hints
-import axios from 'axios';
 
-import * as Y from 'yjs';
-import { WebsocketProvider } from 'y-websocket';
+import 'codemirror/mode/javascript/javascript'; // For JavaScript
+import 'codemirror/mode/clike/clike'; // For C, C++, Java (these use the 'clike' mode)
+import 'codemirror/mode/python/python'; // For Python
+import 'codemirror/mode/swift/swift'; // For Swift
 
 // @ts-check
 import { CodemirrorBinding } from 'y-codemirror';
+import { WebsocketProvider } from 'y-websocket';
+
 
 const CollaborationServiceIntegratedView: React.FC = () => {
   const { topic, difficulty, questionId, sessionId } = useParams<{ topic: string; difficulty: string; questionId: string; sessionId: string; }>();
   const [output, setOutput] = useState<string | null>(null);
   const [language, setLanguage] = useState<number>(63); // Default to JavaScript (Node.js)
+  const [syntaxLang, setSyntaxLang] = useState<string>('javascript');
   const editorRef = useRef<any>(null);
   const navigate = useNavigate();
   const [yText, setYText] = useState<Y.Text | null>(null);
+
+  // Mapping for CodeMirror modes
+  const languageModes = {
+    javascript: 'javascript',
+    cpp: 'text/x-c++src', // Mode for C++
+    c: 'text/x-csrc', // Mode for C
+    java: 'text/x-java', // Mode for Java
+    python: 'python', // Mode for Python
+  };
 
   useEffect(() => {
     console.log(`Session ID: ${sessionId}, Topic: ${topic}, Difficulty: ${difficulty}`);
@@ -55,6 +70,16 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   const handleLeaveSession = () => {
     navigate('/matching');
   };
+
+  const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLanguage(parseInt(e.target.value));
+    setSyntaxLang(e.target.value === '63' ? 'javascript' 
+        : e.target.value === '54' ? 'text/x-c++src' 
+        : e.target.value === '50' ? 'text/x-csrc' 
+        : e.target.value === '71' ? 'python' 
+        : e.target.value === '62' ? 'text/x-java'
+        : 'javascript');
+  }
 
   const handleRunCode = async () => {
     try {
@@ -140,7 +165,11 @@ const CollaborationServiceIntegratedView: React.FC = () => {
                     <select
                         name="topic"
                         value={language}
-                        onChange={(e) => setLanguage(parseInt(e.target.value))}
+                        onChange={
+                            //(e) => setLanguage(parseInt(e.target.value))
+                            //setSyntaxLang(e.target.value === '63' ? 'javascript' : e.target.value === '54' ? 'clike' : e.target.value === '50' ? 'clike' : e.target.value === '71' ? 'python' : 'java')
+                            (e) => handleLangChange(e)
+                        }
                         required
                     >
                         <option value="" disabled>Select Language</option> {/* Placeholder option */}
@@ -164,7 +193,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
             <CodeMirror
             ref={editorRef}
             options={{
-                mode: 'javascript',
+                mode: syntaxLang,
                 lineNumbers: true,
                 tabSize: 2,
                 indentWithTabs: true,
