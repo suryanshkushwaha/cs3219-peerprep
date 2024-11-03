@@ -167,8 +167,6 @@ const CollaborationServiceIntegratedView: React.FC = () => {
                         name="topic"
                         value={language}
                         onChange={
-                            //(e) => setLanguage(parseInt(e.target.value))
-                            //setSyntaxLang(e.target.value === '63' ? 'javascript' : e.target.value === '54' ? 'clike' : e.target.value === '50' ? 'clike' : e.target.value === '71' ? 'python' : 'java')
                             (e) => handleLangChange(e)
                         }
                         required
