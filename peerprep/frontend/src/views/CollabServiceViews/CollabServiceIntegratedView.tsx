@@ -10,6 +10,14 @@ import * as Y from 'yjs';
 import { WebsocketProvider } from 'y-websocket';
 import { CodemirrorBinding } from 'y-codemirror';
 
+const languageMap: { [key: number]: string } = {
+  63: 'JavaScript (Node.js)',
+  54: 'C++ (GCC 9.2.0)',
+  50: 'C (GCC 9.2.0)',
+  71: 'Python (3.8.1)',
+  62: 'Java (OpenJDK 13.0.1)',
+};
+
 const CollaborationServiceIntegratedView: React.FC = () => {
   const { topic, difficulty, questionId, sessionId } = useParams<{ topic: string; difficulty: string; questionId: string; sessionId: string; }>();
   const [output, setOutput] = useState<string | null>(null);
@@ -153,7 +161,9 @@ const CollaborationServiceIntegratedView: React.FC = () => {
 
       <button onClick={handleRunCode} className="run-btn" style={{ marginBottom: '20px' }}>Run Code</button>
       
-      <h3 style={{ textAlign: 'left', marginBottom: '5px' }}>Output</h3>
+      <h3 style={{ textAlign: 'left', marginBottom: '5px' }}>
+        Output {languageMap[language] && `(Using ${languageMap[language]})`}
+      </h3>
       <div className="output-container" style={{ width: '900px', textAlign: 'left', border: '1px solid #ddd', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
         <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{output}</pre>
       </div>
