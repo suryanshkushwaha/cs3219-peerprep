@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import connectDB from '../config/db';
 import questionRoutes from './routes/questionRoutes';
+import databaseRoutes from './routes/databaseRoutes';
 import loadSampleData from './sampleData';
 
 connectDB() // Initialize MongoDB connection
@@ -43,6 +44,9 @@ app.use(express.json());
 
 // API routes
 app.use('/api', questionRoutes);
+
+// Database routes
+app.use('/api', databaseRoutes);
 
 // Health check route
 app.get('/hello', (req, res) => {
