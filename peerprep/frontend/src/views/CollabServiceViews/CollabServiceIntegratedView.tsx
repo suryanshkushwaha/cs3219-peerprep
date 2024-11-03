@@ -1,22 +1,42 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import * as Y from 'yjs';
+
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
-import 'codemirror/mode/javascript/javascript';
-import axios from 'axios';
+import 'codemirror/addon/hint/show-hint';
+import 'codemirror/addon/hint/show-hint.css';
+import 'codemirror/addon/hint/javascript-hint'; // For JavaScript hints
 
-import * as Y from 'yjs';
-import { WebsocketProvider } from 'y-websocket';
+import 'codemirror/mode/javascript/javascript'; // For JavaScript
+import 'codemirror/mode/clike/clike'; // For C, C++, Java (these use the 'clike' mode)
+import 'codemirror/mode/python/python'; // For Python
+import 'codemirror/mode/swift/swift'; // For Swift
+
+// @ts-check
 import { CodemirrorBinding } from 'y-codemirror';
+import { WebsocketProvider } from 'y-websocket';
+
 
 const CollaborationServiceIntegratedView: React.FC = () => {
   const { topic, difficulty, questionId, sessionId } = useParams<{ topic: string; difficulty: string; questionId: string; sessionId: string; }>();
   const [output, setOutput] = useState<string | null>(null);
   const [language, setLanguage] = useState<number>(63); // Default to JavaScript (Node.js)
+  const [syntaxLang, setSyntaxLang] = useState<string>('javascript');
   const editorRef = useRef<any>(null);
   const navigate = useNavigate();
   const [yText, setYText] = useState<Y.Text | null>(null);
+
+  // Mapping for CodeMirror modes
+  const languageModes = {
+    javascript: 'javascript',
+    cpp: 'text/x-c++src', // Mode for C++
+    c: 'text/x-csrc', // Mode for C
+    java: 'text/x-java', // Mode for Java
+    python: 'python', // Mode for Python
+  };
 
   useEffect(() => {
     console.log(`Session ID: ${sessionId}, Topic: ${topic}, Difficulty: ${difficulty}`);
@@ -24,7 +44,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   }, [sessionId, topic, difficulty, questionId]);
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'auto';
     return () => {
       document.body.style.overflow = 'auto';
     };
@@ -50,6 +70,17 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   const handleLeaveSession = () => {
     navigate('/matching');
   };
+
+  const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLanguage(parseInt(e.target.value));
+    setSyntaxLang(e.target.value === '63' ? 'javascript' 
+        : e.target.value === '54' ? 'text/x-c++src' 
+        : e.target.value === '50' ? 'text/x-csrc' 
+        : e.target.value === '71' ? 'python' 
+        : e.target.value === '62' ? 'text/x-java'
+        : e.target.value === '83' ? 'swift'
+        : 'javascript');
+  }
 
   const handleRunCode = async () => {
     try {
@@ -119,39 +150,77 @@ const CollaborationServiceIntegratedView: React.FC = () => {
         <h2>Collaboration Session</h2>
         <p>Topic: {topic} | Difficulty: {difficulty} | Session: {sessionId}</p>
         <p>Question: {questionId}</p>
-        <button onClick={handleLeaveSession} className="leave-btn">Leave Session</button>
-      </div>
+        </div>
+        
+        <div className="editor-header2">
+            <button
+                onClick={handleLeaveSession}
+                className="leave-btn"
+                style={{ marginBottom: '0px' }}
+            >
+                Leave Session
+            </button>
 
-      <div className="editor-container">
-        <CodeMirror
-          ref={editorRef}
-          options={{
-            mode: 'javascript',
-            lineNumbers: true,
-            tabSize: 2,
-            indentWithTabs: true
-          }}
-          onChange={() => {
-            // Let Yjs handle all updates; do not use setCode here
-          }}
-        />
-      </div>
+            <div className="matching-form2">
+                <div>
+                    <select
+                        name="topic"
+                        value={language}
+                        onChange={
+                            (e) => handleLangChange(e)
+                        }
+                        required
+                    >
+                        <option value="" disabled>Select Language</option> {/* Placeholder option */}
+                        <option value="63">JavaScript</option>
+                        <option value="54">C++</option>
+                        <option value="50">C</option>
+                        <option value="71">Python</option>
+                        <option value="62">Java</option>
+                        <option value="83">Swift</option>
+                    </select>
+                </div>
+            </div>
+            <button
+                onClick={handleRunCode}
+                className="run-btn"
+                style={{ marginBottom: '0px' }}
+            > Run Code
+            </button>
+        </div>
 
-      <label htmlFor="language-select" style={{ marginTop: '20px' }}>Select Language:</label>
-      <select
-        id="language-select"
-        value={language}
-        onChange={(e) => setLanguage(parseInt(e.target.value))}
-        style={{ marginBottom: '20px' }}
-      >
-        <option value="63">JavaScript (Node.js)</option>
-        <option value="54">C++ (GCC 9.2.0)</option>
-        <option value="50">C (GCC 9.2.0)</option>
-        <option value="71">Python (3.8.1)</option>
-        <option value="62">Java (OpenJDK 13.0.1)</option>
-      </select>
+        <div className="editor-container">
+            <CodeMirror
+            ref={editorRef}
+            options={{
+                mode: syntaxLang,
+                lineNumbers: true,
+                tabSize: 2,
+                indentWithTabs: true,
+                showHint: true,
+                extraKeys: {
+                    'Ctrl-Space': 'autocomplete', // Trigger autocomplete with Ctrl-Space
+                },
+                hintOptions: { completeSingle: false },
+            }}
 
-      <button onClick={handleRunCode} className="run-btn" style={{ marginBottom: '20px' }}>Run Code</button>
+            editorDidMount={(editor) => {
+                editor.on('keyup', (cm: any, event: any) => {
+                    // Only trigger autocomplete on specific characters
+                    const triggerKeys = /^[a-zA-Z0-9_]$/; // Allow letters, numbers, and underscore
+                    if (
+                        triggerKeys.test(event.key) &&
+                        !cm.state.completionActive // Ensure that completion is not already active
+                    ) {
+                        cm.showHint({ completeSingle: false });
+                    }
+                });
+            }}
+            onChange={() => {
+                // Let Yjs handle all updates; do not use setCode here
+            }}
+            />
+        </div>
       
       <h3 style={{ textAlign: 'left', marginBottom: '5px' }}>Output</h3>
       <div className="output-container" style={{ width: '900px', textAlign: 'left', border: '1px solid #ddd', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>

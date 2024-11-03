@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 5rem;
   text-align: center;
+  background-color: white;
 }
 
 /* Global Styling */
@@ -515,8 +516,8 @@ h2 {
 .editor-container {
   width: 100%;
   height: 100%;
-  max-width: 1000px;
-  min-height: 500px;
+  max-width: 900px;
+  min-height: 300px;
   flex-grow: 1;
   border: 2px solid #ccc;
   border-radius: 10px;
@@ -533,8 +534,17 @@ h2 {
 /* Header section styling */
 .editor-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: -10px;
   margin-top: -60px;
+}
+
+.leave-btn,
+.run-btn {
+  margin-top: 10px; /* Additional spacing if needed for each button */
+}
+
+#language-select {
+  margin-bottom: 20px;
 }
 
 /* Leave session button */
@@ -585,4 +595,90 @@ h2 {
   50% {
     opacity: 1;
   }
+}
+
+.editor-header2 {
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row; /* Arrange items in a vertical stack */
+  align-items: center; /* Align items to the left */
+  gap: 100px; /* Add vertical spacing between items */
+}
+
+.matching-form2 {
+  padding: 0px;
+  max-width: 40%;
+  margin: 0 auto; /* Center the form */
+  border-radius: 10px; /* Rounded corners for the form */
+  background-color: white; 
+}
+
+/* Styles for inputs, textarea, and select within .question-form */
+.matching-form2 input,
+.matching-form2 textarea,
+.matching-form2 select {
+  width: 100%; 
+  padding: 10px; 
+  margin-top: 5px; /* Space between input boxes */
+  border: 1px solid #ccc; /* Border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #f4f4f4; 
+  color: #333; 
+  font-size: 16px;
+  box-sizing: border-box; /* Ensures padding is included within the width */
+}
+
+/* Input Fields Focus State */
+.matching-form2 input:focus,
+.matching-form2 textarea:focus,
+.matching-form2 select:focus {
+  outline: none;
+  border: 2px solid #4CAF50; /* Green border on focus */
+  background-color: #fff; /* White background on focus */
+}
+
+/* Custom styling for the difficulty select dropdown */
+.matching-form2 select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 2px solid #ccc; /* border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #f9f9f9; 
+  color: #333;
+  font-size: 16px;
+  appearance: none; 
+}
+
+/* Focus state for select dropdown */
+.matching-form2 select:focus {
+  outline: none;
+  border-color: #4CAF50; /* Green border on focus */
+  background-color: #fff; /* White background on focus */
+}
+
+/* Submit Button */
+.matching-form2 button.submit-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.matching-form2 button.submit-btn:hover {
+  background-color: #45a049;
+}
+
+/* Error Message styling, to be expanded later most likely split into diff types */
+.matching-form2 .error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
 }
