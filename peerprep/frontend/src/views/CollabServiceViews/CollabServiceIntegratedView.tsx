@@ -4,10 +4,15 @@ import { useParams, useNavigate } from 'react-router-dom';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 import 'codemirror/mode/javascript/javascript';
+import 'codemirror/addon/hint/show-hint';
+import 'codemirror/addon/hint/show-hint.css';
+import 'codemirror/addon/hint/javascript-hint'; // For JavaScript hints
 import axios from 'axios';
 
 import * as Y from 'yjs';
 import { WebsocketProvider } from 'y-websocket';
+
+// @ts-check
 import { CodemirrorBinding } from 'y-codemirror';
 
 const CollaborationServiceIntegratedView: React.FC = () => {
@@ -24,7 +29,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   }, [sessionId, topic, difficulty, questionId]);
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'auto';
     return () => {
       document.body.style.overflow = 'auto';
     };
@@ -119,39 +124,74 @@ const CollaborationServiceIntegratedView: React.FC = () => {
         <h2>Collaboration Session</h2>
         <p>Topic: {topic} | Difficulty: {difficulty} | Session: {sessionId}</p>
         <p>Question: {questionId}</p>
-        <button onClick={handleLeaveSession} className="leave-btn">Leave Session</button>
-      </div>
+        </div>
+        
+        <div className="editor-header2">
+            <button
+                onClick={handleLeaveSession}
+                className="leave-btn"
+                style={{ marginBottom: '0px' }}
+            >
+                Leave Session
+            </button>
 
-      <div className="editor-container">
-        <CodeMirror
-          ref={editorRef}
-          options={{
-            mode: 'javascript',
-            lineNumbers: true,
-            tabSize: 2,
-            indentWithTabs: true
-          }}
-          onChange={() => {
-            // Let Yjs handle all updates; do not use setCode here
-          }}
-        />
-      </div>
+            <div className="matching-form2">
+                <div>
+                    <select
+                        name="topic"
+                        value={language}
+                        onChange={(e) => setLanguage(parseInt(e.target.value))}
+                        required
+                    >
+                        <option value="" disabled>Select Language</option> {/* Placeholder option */}
+                        <option value="63">JavaScript</option>
+                        <option value="54">C++</option>
+                        <option value="50">C</option>
+                        <option value="71">Python</option>
+                        <option value="62">Java</option>
+                    </select>
+                </div>
+            </div>
+            <button
+                onClick={handleRunCode}
+                className="run-btn"
+                style={{ marginBottom: '0px' }}
+            > Run Code
+            </button>
+        </div>
 
-      <label htmlFor="language-select" style={{ marginTop: '20px' }}>Select Language:</label>
-      <select
-        id="language-select"
-        value={language}
-        onChange={(e) => setLanguage(parseInt(e.target.value))}
-        style={{ marginBottom: '20px' }}
-      >
-        <option value="63">JavaScript (Node.js)</option>
-        <option value="54">C++ (GCC 9.2.0)</option>
-        <option value="50">C (GCC 9.2.0)</option>
-        <option value="71">Python (3.8.1)</option>
-        <option value="62">Java (OpenJDK 13.0.1)</option>
-      </select>
+        <div className="editor-container">
+            <CodeMirror
+            ref={editorRef}
+            options={{
+                mode: 'javascript',
+                lineNumbers: true,
+                tabSize: 2,
+                indentWithTabs: true,
+                showHint: true,
+                extraKeys: {
+                    'Ctrl-Space': 'autocomplete', // Trigger autocomplete with Ctrl-Space
+                },
+                hintOptions: { completeSingle: false },
+            }}
 
-      <button onClick={handleRunCode} className="run-btn" style={{ marginBottom: '20px' }}>Run Code</button>
+            editorDidMount={(editor) => {
+                editor.on('keyup', (cm: any, event: any) => {
+                    // Only trigger autocomplete on specific characters
+                    const triggerKeys = /^[a-zA-Z0-9_]$/; // Allow letters, numbers, and underscore
+                    if (
+                        triggerKeys.test(event.key) &&
+                        !cm.state.completionActive // Ensure that completion is not already active
+                    ) {
+                        cm.showHint({ completeSingle: false });
+                    }
+                });
+            }}
+            onChange={() => {
+                // Let Yjs handle all updates; do not use setCode here
+            }}
+            />
+        </div>
       
       <h3 style={{ textAlign: 'left', marginBottom: '5px' }}>Output</h3>
       <div className="output-container" style={{ width: '900px', textAlign: 'left', border: '1px solid #ddd', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
