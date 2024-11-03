@@ -78,6 +78,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
         : e.target.value === '50' ? 'text/x-csrc' 
         : e.target.value === '71' ? 'python' 
         : e.target.value === '62' ? 'text/x-java'
+        : e.target.value === '83' ? 'swift'
         : 'javascript');
   }
 
@@ -178,6 +179,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
                         <option value="50">C</option>
                         <option value="71">Python</option>
                         <option value="62">Java</option>
+                        <option value="83">Swift</option>
                     </select>
                 </div>
             </div>
