@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { CorsOptions } from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
 import connectDB from '../config/db';
@@ -21,6 +22,7 @@ const PORT = process.env.PORT ?? 8080;
 const app = express();
 
 // Middleware for handling CORS and JSON parsing
+/*
 app.use(cors({
   origin: (origin, callback) => {
     if (origin?.startsWith('http://localhost:')) {
@@ -31,6 +33,13 @@ app.use(cors({
   },
   optionsSuccessStatus: 200,
 }));
+*/
+
+// MODIFY TO ALLOW ALL ORIGINS
+app.use(cors({
+  origin: '*',
+  optionsSuccessStatus: 200,
+} as CorsOptions));
 app.use(express.json());
 
 // API routes

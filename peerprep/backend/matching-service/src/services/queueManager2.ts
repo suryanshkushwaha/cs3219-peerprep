@@ -72,6 +72,7 @@ export const getStatus = async (userId: string) => {
     try {
       const sessionID = await getSessionStatus(userId);
       if (sessionID !== null) {
+        // inject the question finder here, and return tgt with sessionID
         return "matched on Session ID: " + sessionID;
       } else {
         const requestStatus = await getRequestStatus(userId);
@@ -86,3 +87,39 @@ export const getStatus = async (userId: string) => {
       throw new Error("Failed to retrieve the status of the user's match request");
     }
 }
+
+/*
+export const getStatus = async (userId: string, topic: string, difficulty: string) => {
+  try {
+    const sessionID = await getSessionStatus(userId);
+    if (sessionID !== null) {
+      // Fetch a random question based on topic and difficulty
+      const question = await getRandomQuestionByTopicAndDifficulty(topic, difficulty);
+
+      // If a question is found, return it with the session ID
+      if (question) {
+        return {
+          status: "matched",
+          sessionId: sessionID,
+          question: {
+            id: question.questionId,
+            title: question.title,
+            description: question.description
+          }
+        };
+      } else {
+        return { status: "matched", sessionId: sessionID, question: null };
+      }
+    } else {
+      const requestStatus = await getRequestStatus(userId);
+      if (requestStatus !== null) {
+        return { status: requestStatus };
+      }
+      return { status: "none" };
+    }
+  } catch (error) {
+    console.error('Error in getStatus:', error);
+    throw new Error("Failed to retrieve the status of the user's match request");
+  }
+};
+*/

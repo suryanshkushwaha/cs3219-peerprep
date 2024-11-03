@@ -8,14 +8,13 @@ const MatchingServiceMainView: React.FC = () => {
   const [difficulty, setDifficulty] = useState<string>('');
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [questionId, setQuestionId] = useState<string>('Q');
   const [loading, setLoading] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const [matchFound, setMatchFound] = useState<boolean>(false); 
   const navigate = useNavigate();
   const userId = sessionStorage.getItem('userId');
   const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const questionId = "Q-43: Easy Algorithms"; // Temp stub for now
 
   // Handle input changes
   const handleTopicChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -43,6 +42,24 @@ const MatchingServiceMainView: React.FC = () => {
     setProgress(0);
   };
 
+  const getValueAfterDelimiter = (input: string): string | null => {
+    // Split the input string using "-Q" as the delimiter
+    const parts = input.split("-Q");
+
+    // Check if there is a part after the delimiter
+    if (parts.length > 1) {
+        return "Q" + parts[1]; // Return the part after "-Q"
+    }
+    return null;
+};
+
+  const handleSetQuestionId = (fullSessionId: string) => {
+    const parsedQuestionId = getValueAfterDelimiter(fullSessionId);
+    if (parsedQuestionId != null) {
+        setQuestionId(parsedQuestionId);
+    }
+  }
+
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,6 +79,7 @@ const MatchingServiceMainView: React.FC = () => {
           if (data.message.includes("Session")) {
             setStatusMessage(data.message);
             setSessionId(data.message);
+            handleSetQuestionId(data.message);
             console.log(data.message);
             setMatchFound(true); // Set match status to true
             stopProgressBar();
