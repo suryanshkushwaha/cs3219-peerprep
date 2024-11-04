@@ -1,4 +1,3 @@
-// frontend/src/CollaborationServiceView2.jsx
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as Y from 'yjs'
@@ -13,6 +12,17 @@ interface CollaborationServiceViewProps {
   difficulty: string
   sessionId: string
 }
+
+// Define a custom theme with darker colors
+const customTheme = EditorView.theme({
+  '.cm-content': {
+    color: '#D3D3D3', // Darker, soft gray text color
+    fontFamily: 'monospace', // Optional: set a font family
+  },
+  '&': {
+    backgroundColor: '#121212', // Dark background for contrast
+  },
+})
 
 const CollaborationServiceView: React.FC<CollaborationServiceViewProps> = ({ topic, difficulty, sessionId }) => {
   const [users, setUsers] = useState<string[]>([]) // Placeholder for active users

@@ -522,7 +522,7 @@ h2 {
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   background-color: white;
-  color: white;
+  color: darkgray;
   
   /* Add these properties */
   overflow-y: auto;
@@ -552,22 +552,34 @@ h2 {
   background-color: #ff1a1a;
 }
 
-/* Styles for the collaborative cursor to look like a blinking bar */
-.CodeMirror-cursor {
+/* Styles for the main editor cursor */
+.cm-cursor {
   position: absolute;
-  width: 2px;
-  background-color: blue; /* Adjust the color per user */
+  width: 0.5px;
+  background-color: blue; /* Adjust to a unique color per user */
   opacity: 0.8;
-  animation: blink 1s step-end infinite; /* Blinking effect */
+  animation: blink 1s step-end infinite;
 }
 
-.CodeMirror-cursor {
+/* Add borders for a more visible cursor */
+/*
+.cm-cursor {
   border-left: 1px solid white;
   border-right: 1px solid black;
 }
+*/
 
-/* Styles for the label (optional) */
-.CodeMirror-cursor-label {
+/* Collaborative cursor label for other users */
+.cm-collaborative-cursor {
+  position: absolute;
+  width: 2px;
+  background-color: red; /* Adjust color for each collaborative user */
+  opacity: 0.8;
+  animation: blink 1s step-end infinite;
+}
+
+/* Styles for the label (tooltip) to show user name */
+.cm-cursor-label {
   position: absolute;
   background-color: orange;
   color: white;
@@ -575,9 +587,10 @@ h2 {
   border-radius: 3px;
   font-size: 12px;
   top: -20px;
+  white-space: nowrap;
 }
 
-/* Blinking animation */
+/* Blinking animation for the cursor */
 @keyframes blink {
   from, to {
     opacity: 0;
