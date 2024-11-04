@@ -69,6 +69,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
 
   const handleLeaveSession = () => {
     navigate('/matching');
+    // Trigger deleteSession API call here
   };
 
   const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
