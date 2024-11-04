@@ -1,6 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
 import React, { useState, useEffect, useRef } from 'react';
-import { createMatchingRequest, listenToMatchStatus } from "../../api/matchingApi.ts";
+import { createMatchingRequest, listenToMatchStatus, deleteMatchingRequest} from "../../api/matchingApi.ts";
 import { ApiError } from "../../api/matchingApi";
 
 const MatchingServiceMainView: React.FC = () => {
@@ -62,6 +62,34 @@ const MatchingServiceMainView: React.FC = () => {
     }
   }
 
+  // Function to listen to match status, declared outside handleSubmit
+  const startListeningToMatchStatus = () => {
+    const stopListening = listenToMatchStatus(
+      userId!,
+      (data) => {
+        setStatusMessage(data.message);
+        if (data.message.includes("Session")) {
+          setStatusMessage(data.message);
+          setSessionId(data.message);
+          handleSetQuestionId(data.message);
+          console.log(data.message);
+          setMatchFound(true); // Set match status to true
+          stopProgressBar();
+          setStatusMessage(`Match found for ${topic} and ${difficulty}!`);
+          setLoading(false);
+          stopListening();
+        }
+    },
+      (error) => {
+        setStatusMessage("Match timed out. Please try again.");
+        console.error(error);
+        setLoading(false);
+        stopProgressBar();
+        stopListening();
+      }
+    );
+  };
+
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,41 +99,22 @@ const MatchingServiceMainView: React.FC = () => {
     startProgressBar(); // Start the progress bar
 
     try {
+      // Attempt to create a matching request
       await createMatchingRequest(userId, topic, difficulty);
 
-      // Listen for match status updates using SSE
-      const stopListening = listenToMatchStatus(
-        userId!,
-        (data) => {
-          setStatusMessage(data.message);
-          if (data.message.includes("Session")) {
-            setStatusMessage(data.message);
-            setSessionId(data.message);
-            handleSetQuestionId(data.message);
-            console.log(data.message);
-            setMatchFound(true); // Set match status to true
-            stopProgressBar();
-            setStatusMessage(`Match found for ${topic} and ${difficulty}!`);
-            setLoading(false);
-            stopListening();
-          }
-        },
-        (error) => {
-          setStatusMessage("Match timed out. Please try again.");
-          console.error(error);
-          setLoading(false);
-          stopProgressBar();
-          stopListening();
-        }
-      );
+      // If successful, listen for match status updates
+      startListeningToMatchStatus();
     } catch (error) {
-      if (error instanceof ApiError) {
-        setStatusMessage(error.message); // Use specific error message
+      // Check if the error code is 409, indicating an active session
+      if (error instanceof ApiError && (error.message === "You are already in an active session" || error.message === "You are already looking for a match in the matching queue")) {
+        // Start listening to the existing session status as if the request was successful
+        startListeningToMatchStatus();
       } else {
+        // Handle other errors
         setStatusMessage("Error: Failed to create match request.");
+        setLoading(false);
+        stopProgressBar();
       }
-      setLoading(false);
-      stopProgressBar();
     }
   };
 
@@ -117,6 +126,11 @@ const MatchingServiceMainView: React.FC = () => {
       stopProgressBar();
     }
   }, [progress]);
+
+  // Handle delete request
+  const handleDeleteRequest = () => {
+    deleteMatchingRequest(userId!); // Fire-and-forget API request
+  };
 
   // Handle navigation to session stub
   const goToSession = () => {
@@ -183,6 +197,21 @@ const MatchingServiceMainView: React.FC = () => {
             <div className="progress-bar" style={{ width: `${progress}%` }}></div>
           </div>
         )}
+        {/* Add the cancel button below the loading bar */}
+        {loading && !matchFound && (
+          <>
+            {/* Cancel button to remove the matching request */}
+          <button
+            onClick={() => {
+              handleDeleteRequest(); // Fire-and-forget API request, no error handling
+            }}
+            className="cancel-btn"
+          >
+          Cancel Matching
+          </button>
+  </>
+)}
+        
       </div>
     </div>
   );

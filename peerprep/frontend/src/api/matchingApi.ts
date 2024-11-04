@@ -124,6 +124,17 @@ export const deleteMatchingRequest = async (userId: string): Promise<void> => {
     }
 }
 
+// Method to delete matched session
+export const deleteMatchedSession = async (sessionId: string): Promise<void> => {
+    try {
+        // Extract Id from "matched on Session ID: 670d81daf90653ef4b9162b8-67094dcc6be97361a2e7cb1a-1730747329524-Qtest1, Topic: algorithms, Difficulty: easy"
+        const id = sessionId.split(": ")[1].split(",")[0];
+        await axios.delete(`${API_URL}/session/${id}`);
+    } catch (error) {
+        return handleApiError(error);
+    }
+}
+
 // Method to save matched session
 export const saveMatchedSession = async (userId1: string, userId2: string, topic: string, difficulty: string, sessionId: string): Promise<void> => {
     try {
@@ -138,15 +149,6 @@ export const getMatchedSession = async (userId: string): Promise<MatchingRequest
     try {
         const response = await axios.get(`${API_URL}/session/${userId}`);
         return response.data;
-    } catch (error) {
-        return handleApiError(error);
-    }
-}
-
-// Method to delete matched session
-export const deleteMatchedSession = async (userId: string): Promise<void> => {
-    try {
-        await axios.delete(`${API_URL}/session/${userId}`);
     } catch (error) {
         return handleApiError(error);
     }
