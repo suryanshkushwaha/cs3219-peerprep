@@ -22,10 +22,11 @@ import { CodemirrorBinding } from 'y-codemirror';
 import { WebsocketProvider } from 'y-websocket';
 
 import { listenToMatchStatus, deleteMatchedSession} from "../../api/matchingApi.ts";
+import { getQuestionById } from '../../api/questionApi.ts';
 
 
 const CollaborationServiceIntegratedView: React.FC = () => {
-  const { topic, difficulty, questionId, sessionId } = useParams<{ topic: string; difficulty: string; questionId: string; sessionId: string; }>();
+  const { sessionId } = useParams<{ sessionId: string; }>();
   const [output, setOutput] = useState<string | null>(null);
   const [language, setLanguage] = useState<number>(63); // Default to JavaScript (Node.js)
   const [syntaxLang, setSyntaxLang] = useState<string>('javascript');
@@ -33,6 +34,31 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   const navigate = useNavigate();
   const [yText, setYText] = useState<Y.Text | null>(null);
   const [commentoutput, setCommentOutput] = useState<string | null>(null);
+  var topic = 'topic';
+  var difficulty = 'difficulty';
+  //extract questionID from session id (eg. 670d81daf90653ef4b9162b8-67094dcc6be97361a2e7cb1a-1730832550120-Q672890c43266d81a769bfaee)
+  console.log(sessionId);
+  const questionId = sessionId? sessionId.split('-Q')[1] : "672890c43266d81a769bfaee";
+
+  //set topic, difficulty, questionId by calling the API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getQuestionById(questionId);
+        console.log(response);
+        if (response) {
+          console.log(`Session ID: ${sessionId}, Topics: ${response.categories}, Difficulty: ${response.difficulty}`);
+          console.log(`Question: ${response._id}`);
+          //set topics, difficulty
+          topic = response.categories.join(', ');
+          difficulty = response.difficulty;
+        }
+      } catch (error) {
+        console.error('Error fetching matched session:', error);
+      }
+    };
+    fetchData();
+  }, [sessionId]);
 
   // Mapping for CodeMirror modes
   const languageModes = {

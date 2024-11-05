@@ -184,7 +184,7 @@ const MatchingServiceMainView: React.FC = () => {
         {/* Show "Go to Session" link if match is found */}
         {matchFound && (
             <button
-              onClick={() => navigate("/collabFull/" + topic + "/" + difficulty + "/" + questionId + "/" + sessionId)}
+              onClick={() => navigate("/collabFull/" + sessionId)}
               className="center-link"
             >
             Go to Session

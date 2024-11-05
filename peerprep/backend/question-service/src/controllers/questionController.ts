@@ -107,11 +107,13 @@ const getRandomQuestionByTopicAndDifficultyHelper = (questions: IQuestion[], top
    This function will handle everything, including fetching from MongoDB and
    selecting a random question with the specified filters.
 */
-export const getRandomQuestionByTopicAndDifficulty = async (topic: string, difficulty: string): Promise<IQuestion | null> => {
+export const getRandomQuestionByTopicAndDifficulty = async (topic: string, difficulty: string): Promise<string | null> => {
   try {
     // Fetch questions from MongoDB
     const questions = await Question.find().lean();
-    return getRandomQuestionByTopicAndDifficultyHelper(questions, topic, difficulty);
+    //return getRandomQuestionByTopicAndDifficultyHelper(questions, topic, difficulty);
+    const question = getRandomQuestionByTopicAndDifficultyHelper(questions, topic, difficulty);
+    return question ? question._id.toString() : null;
   } catch (error) {
     console.error('Error fetching random question at Helper:', error);
     throw new Error("Error fetching random question at Helper");
@@ -123,9 +125,10 @@ export const getRandomQuestionEndpoint = async (req: Request, res: Response): Pr
   const { topic, difficulty } = req.query;
 
   try {
-    const question = await getRandomQuestionByTopicAndDifficulty(topic as string, difficulty as string);
-    if (question) {
-      res.status(200).json(question);
+    //const question = await getRandomQuestionByTopicAndDifficulty(topic as string, difficulty as string);
+    const questionId = await getRandomQuestionByTopicAndDifficulty(topic as string, difficulty as string);
+    if (questionId) {
+      res.status(200).json(questionId);
     } else {
       res.status(404).json({ message: 'No question found for the specified criteria.' });
     }
