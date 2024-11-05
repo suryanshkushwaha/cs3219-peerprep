@@ -21,6 +21,16 @@ export const addToQueue = async (userId: string, topic: string, difficulty: stri
     }
 };
 
+export const removeFromQueue = async (userId: string) => {
+    try {
+      await redis.dequeueUser(userId);
+    } 
+    catch (error) {
+      console.error('Error in removeFromQueue:', error);
+      throw new Error("Failed to remove user from the queue due to an unknown error");
+    }
+};
+
 
 export const findMatchInQueue = async (userId: string)  => {
     const topicTimeoutSeconds = MATCH_TIMEOUT_SECONDS / 2;
@@ -85,6 +95,17 @@ export const getStatus = async (userId: string) => {
     catch (error) {
       console.error('Error in getStatus:', error);
       throw new Error("Failed to retrieve the status of the user's match request");
+    }
+}
+
+// function to delete session
+export const cancelSession = async (sessionId: string) => {
+    try {
+      await redis.deleteSession(sessionId);
+    } 
+    catch (error) {
+      console.error('Error in cancelSession:', error);
+      throw new Error("Failed to cancel the user's session");
     }
 }
 

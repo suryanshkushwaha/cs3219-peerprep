@@ -57,6 +57,41 @@ export const enqueueUser = async (
     }
 };
 
+export const dequeueUser = async (userId: string): Promise<void> => {
+  const redisClient: Redis = app.locals.redisClient;
+  const multi = redisClient.multi();
+
+  try {
+    // Retrieve the user's topic and difficulty from Redis
+    const topic = await redisClient.hget("user-topic", userId);
+    const difficulty = await redisClient.hget("user-difficulty", userId);
+
+    if (!topic || !difficulty) {
+      console.log(`User ${userId} not found in queue or missing topic/difficulty.`);
+      return;
+    }
+
+    // Remove the user from general and topic-difficulty specific queues
+    multi.zrem("queue2:users", userId);
+    multi.zrem(`queue1:${topic}:${difficulty}`, userId);
+    multi.zrem(`queue2:${topic}`, userId);
+
+    // Remove user-related entries in hash sets
+    multi.hdel("user-timestamp", userId);
+    multi.hdel("user-topic", userId);
+    multi.hdel("user-difficulty", userId);
+
+    await multi.exec();
+    console.log(`User ${userId} has been dequeued successfully.`);
+  } catch (error) {
+    console.error("Error in dequeueUser:", error);
+    if (multi) {
+      multi.discard();
+    }
+    throw error;
+  }
+};
+
 export const clearExpiredQueue = async () => {
   const redisClient: Redis = app.locals.redisClient;
   const expiredTime = Date.now();
@@ -309,7 +344,7 @@ const createSession = async (
       
       /* RANDOM QUESTION STARTS HERE */
       const randomQuestion = await getRandomQuestionFromQuestionService(topic, difficulty);
-      const randomQuestionTitle = randomQuestion?.title.replace(/ /g, "-");
+      const randomQuestionTitle = randomQuestion?.title.replace(/ /g, "_");
       sessionId += randomQuestionTitle
       console.log("UPDATED Session ID:", sessionId);
       
@@ -544,6 +579,118 @@ export const findSessionByUser = async (
     return findSession(sessionId);
   } catch (error) {
     console.error("Error in findSessionByUser:", error);
+    throw error;
+  }
+};
+
+export const findSessionIdByUser = async (
+  userId: string
+): Promise<string | null> => {
+  const redisClient: Redis = app.locals.redisClient;
+  console.log("Finding session id by user" + userId);
+  try {
+    const sessionId = await redisClient.hget(`session:userId`, userId);
+    if (!sessionId) {
+      return null;
+    }
+    return sessionId;
+  } catch (error) {
+    console.error("Error in findSessionIdByUser:", error);
+    throw error;
+  }
+};
+
+export const findUserIdsBySessionId = async (
+  sessionId: string
+): Promise<{ userId1: string; userId2: string } | null> => {
+  const redisClient: Redis = app.locals.redisClient;
+  try {
+    // Retrieve the session data from Redis
+    const sessionData = await redisClient.hget(`session:sessionId`, sessionId);
+    if (!sessionData) {
+      console.log(`No session found for sessionId ${sessionId}`);
+      return null;
+    }
+
+    // Parse the session JSON data
+    const session: Session = JSON.parse(sessionData);
+
+    // Return the userId1 and userId2 from the session
+    return { userId1: session.userId1, userId2: session.userId2 };
+  } catch (error) {
+    console.error("Error in findUserIdsBySessionId:", error);
+    throw error;
+  }
+};
+
+
+
+export const deleteSession = async (
+  sessionId: string
+): Promise<void> => {
+  const redisClient: Redis = app.locals.redisClient;
+  // Find users based on sessionId
+  const userIds = await findUserIdsBySessionId(sessionId);
+  const userId1 = userIds?.userId1;
+  const userId2 = userIds?.userId2;
+  if (!userId1 || !userId2) {
+    console.log(`No users found for sessionId ${sessionId}`);
+    throw new Error("No users found for sessionId");
+  }
+
+  console.log(`Deleting session ${sessionId} and user1 ${userId1} and user2 ${userId2}`);
+
+  try {
+    const multi = redisClient.multi();
+
+    // Deleting session details by sessionId
+    multi.hdel("session:sessionId", sessionId);
+
+    // Deleting the user-session mapping entries
+    multi.hdel("session:userId", userId1);
+    multi.hdel("session:userId", userId2);
+
+    // Remove the user from general and topic-difficulty specific queues
+    multi.zrem("queue2:users", userId1);
+    multi.zrem("queue2:users", userId2);
+
+    // Remove user-related entries in hash sets
+    multi.hdel("user-timestamp", userId1);
+    multi.hdel("user-topic", userId1);
+    multi.hdel("user-difficulty", userId1);
+    multi.hdel("user-timestamp", userId2);
+    multi.hdel("user-topic", userId2);
+    multi.hdel("user-difficulty", userId2);
+
+    await multi.exec();
+    console.log(`Session ${sessionId} and associated user entries deleted.`);
+  } catch (error) {
+    console.error("Error in deleteSession:", error);
+    throw error;
+  }
+};
+
+export const deleteSessionByUserId = async (userId: string): Promise<void> => {
+  try {
+    // Step 1: Find sessionId by userId
+    const sessionId = await findSessionIdByUser(userId);
+    if (!sessionId) {
+      console.log(`No session found for userId ${userId}`);
+      return;
+    }
+
+    // Step 2: Find userId1 and userId2 by sessionId
+    const userIds = await findUserIdsBySessionId(sessionId);
+    if (!userIds) {
+      console.log(`No user IDs found for sessionId ${sessionId}`);
+      return;
+    }
+
+    // Step 3: Delete the session and all associated entries
+    await deleteSession(sessionId);
+    console.log(`Session and entries associated with userId ${userId} have been deleted.`);
+  } catch (error) {
+    console.error("Error in deleteSessionByUserId:", error);
     throw error;
   }
 };

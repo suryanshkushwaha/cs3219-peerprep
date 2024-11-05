@@ -19,6 +19,8 @@ import 'codemirror/mode/swift/swift'; // For Swift
 import { CodemirrorBinding } from 'y-codemirror';
 import { WebsocketProvider } from 'y-websocket';
 
+import { listenToMatchStatus, deleteMatchedSession} from "../../api/matchingApi.ts";
+
 
 const CollaborationServiceIntegratedView: React.FC = () => {
   const { topic, difficulty, questionId, sessionId } = useParams<{ topic: string; difficulty: string; questionId: string; sessionId: string; }>();
@@ -68,8 +70,15 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   }, [sessionId]);
 
   const handleLeaveSession = () => {
-    navigate('/matching');
-    // Trigger deleteSession API call here
+    // Call the API to delete the session
+    try {
+      if (sessionId) {
+        deleteMatchedSession(sessionId);
+        navigate('/matching');
+      }
+    } catch {
+      console.error('Error deleting matched session');
+    }
   };
 
   const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
