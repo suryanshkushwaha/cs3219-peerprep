@@ -15,6 +15,8 @@ import 'codemirror/mode/clike/clike'; // For C, C++, Java (these use the 'clike'
 import 'codemirror/mode/python/python'; // For Python
 import 'codemirror/mode/swift/swift'; // For Swift
 
+import { assesCode } from '../../api/assescodeApi.ts';
+
 // @ts-check
 import { CodemirrorBinding } from 'y-codemirror';
 import { WebsocketProvider } from 'y-websocket';
@@ -30,6 +32,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   const editorRef = useRef<any>(null);
   const navigate = useNavigate();
   const [yText, setYText] = useState<Y.Text | null>(null);
+  const [commentoutput, setCommentOutput] = useState<string | null>(null);
 
   // Mapping for CodeMirror modes
   const languageModes = {
@@ -154,6 +157,23 @@ const CollaborationServiceIntegratedView: React.FC = () => {
     }
   };
 
+  const handleAssesCode = async () => {
+    try {
+      if (!yText) {
+        console.error('Error: Yjs text instance is not available');
+        setCommentOutput('Error: Yjs text instance is not available');
+        return;
+      }
+  
+      const currentCode = yText.toString();
+      const responseContent = await assesCode(currentCode);
+      setCommentOutput(responseContent);
+    } catch (error) {
+      console.error('Error executing OpenAI API call:', error);
+      setCommentOutput('Error executing code');
+    }
+  };
+
   return (
     <div className="editor-container-parent">
       <div className="editor-header">
@@ -197,6 +217,12 @@ const CollaborationServiceIntegratedView: React.FC = () => {
                 style={{ marginBottom: '0px' }}
             > Run Code
             </button>
+            <button
+                onClick={handleAssesCode}
+                className="run-btn"
+                style={{ marginBottom: '0px' }}
+            > Asses Code
+            </button>
         </div>
 
         <div className="editor-container">
@@ -235,6 +261,9 @@ const CollaborationServiceIntegratedView: React.FC = () => {
       <h3 style={{ textAlign: 'left', marginBottom: '5px' }}>Output</h3>
       <div className="output-container" style={{ width: '900px', textAlign: 'left', border: '1px solid #ddd', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
         <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{output}</pre>
+      </div>
+      <div className="comments-container"style={{ width: '900px', textAlign: 'left', border: '1px solid #ddd', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9', overflowY: 'scroll'}}>
+        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{commentoutput}</pre>
       </div>
     </div>
   );
