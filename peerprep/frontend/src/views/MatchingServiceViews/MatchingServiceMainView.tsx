@@ -48,7 +48,7 @@ const MatchingServiceMainView: React.FC = () => {
 
     // Check if there is a part after the delimiter
     if (parts.length > 1) {
-        return parts[1]; // Return the part after "-Q"
+        return parts[1].replace(/-/g, " "); // Return the part after "-Q"
     } else {
         return "Empty Q"
     }
