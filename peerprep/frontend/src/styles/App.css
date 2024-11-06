@@ -602,6 +602,7 @@ input {
   background-color: white;
   margin-right: 2px;
   color: black;
+  min-width: 0px;
 }
 
 .sendBtn {
