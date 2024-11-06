@@ -52,7 +52,7 @@ const App: React.FC = () => {
         <Route path="/collab" element={<CollaborationServiceView topic={''} difficulty={''} sessionId={''} />} />
 
         {/* Public Route for Collaboration Service Integrated View */}
-        <Route path="/collabFull/:topic/:difficulty/:questionId/:sessionId" element={<CollaborationServiceIntegratedView />} />
+        <Route path="/collabFull/:sessionId" element={<CollaborationServiceIntegratedView />} />
 
         {/* Public Route for Sign-Up */}
         <Route path="/signup" element={<SignUp />} /> {/* New Sign-Up Route */}

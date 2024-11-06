@@ -344,7 +344,7 @@ const createSession = async (
       
       /* RANDOM QUESTION STARTS HERE */
       const randomQuestion = await getRandomQuestionFromQuestionService(topic, difficulty);
-      const randomQuestionTitle = randomQuestion?.title.replace(/ /g, "_");
+      const randomQuestionTitle = randomQuestion;
       sessionId += randomQuestionTitle
       console.log("UPDATED Session ID:", sessionId);
       
