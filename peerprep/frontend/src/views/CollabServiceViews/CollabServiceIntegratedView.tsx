@@ -122,6 +122,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
 
   const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(parseInt(e.target.value));
+    setSyntaxFullLang(e.target.textContent!);
     setSyntaxLang(e.target.value === '63' ? 'javascript'
       : e.target.value === '54' ? 'text/x-c++src'
         : e.target.value === '50' ? 'text/x-csrc'
