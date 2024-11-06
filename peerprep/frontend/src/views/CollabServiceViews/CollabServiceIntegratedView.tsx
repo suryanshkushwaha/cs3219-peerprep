@@ -3,6 +3,7 @@ import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import * as Y from 'yjs';
+import Chat from '../../components/Chat.tsx';
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
@@ -19,7 +20,7 @@ import 'codemirror/mode/swift/swift'; // For Swift
 import { CodemirrorBinding } from 'y-codemirror';
 import { WebsocketProvider } from 'y-websocket';
 
-import { listenToMatchStatus, deleteMatchedSession} from "../../api/matchingApi.ts";
+import { listenToMatchStatus, deleteMatchedSession } from "../../api/matchingApi.ts";
 
 
 const CollaborationServiceIntegratedView: React.FC = () => {
@@ -83,13 +84,13 @@ const CollaborationServiceIntegratedView: React.FC = () => {
 
   const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(parseInt(e.target.value));
-    setSyntaxLang(e.target.value === '63' ? 'javascript' 
-        : e.target.value === '54' ? 'text/x-c++src' 
-        : e.target.value === '50' ? 'text/x-csrc' 
-        : e.target.value === '71' ? 'python' 
-        : e.target.value === '62' ? 'text/x-java'
-        : e.target.value === '83' ? 'swift'
-        : 'javascript');
+    setSyntaxLang(e.target.value === '63' ? 'javascript'
+      : e.target.value === '54' ? 'text/x-c++src'
+        : e.target.value === '50' ? 'text/x-csrc'
+          : e.target.value === '71' ? 'python'
+            : e.target.value === '62' ? 'text/x-java'
+              : e.target.value === '83' ? 'swift'
+                : 'javascript');
   }
 
   const handleRunCode = async () => {
@@ -99,13 +100,13 @@ const CollaborationServiceIntegratedView: React.FC = () => {
         setOutput('Error: Yjs text instance is not available');
         return;
       }
-  
+
       const currentCode = yText.toString();
       console.log('Submitting code for execution:', currentCode);
-  
+
       // Base64 encode the source code if required by the API
       const base64EncodedCode = btoa(currentCode); // `btoa()` encodes a string to base64
-  
+
       // Make a POST request to Judge0 API for code execution
       const response = await axios.post('https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=true&wait=false&fields=*', {
         language_id: language, // Ensure `language` is set correctly in your component
@@ -118,13 +119,13 @@ const CollaborationServiceIntegratedView: React.FC = () => {
           'x-rapidapi-key': 'f5d59ce024msha6cd5fccde3d182p14459fjsn8a83590f92b4'
         }
       });
-  
+
       console.log('Submission response:', response.data);
-  
+
       // Polling for the result of the code execution
       const token = response.data.token;
       let result = null;
-  
+
       while (!result || result.status.id <= 2) {
         console.log(`Polling result for token: ${token}`);
         const statusResponse = await axios.get(`https://judge0-ce.p.rapidapi.com/submissions/${token}?base64_encoded=true&fields=*`, {
@@ -133,16 +134,16 @@ const CollaborationServiceIntegratedView: React.FC = () => {
             'x-rapidapi-key': 'f5d59ce024msha6cd5fccde3d182p14459fjsn8a83590f92b4'
           }
         });
-  
+
         result = statusResponse.data;
-  
+
         // Decode the output if it's base64-encoded
         const decodedOutput = result.stdout ? atob(result.stdout) : (result.stderr ? atob(result.stderr) : 'No output');
         console.log('Polling response:', result);
-  
+
         // Wait for a short duration before the next poll (e.g., 1 second)
         await new Promise(resolve => setTimeout(resolve, 1000));
-  
+
         // Set the output only when status is finished
         if (result.status.id > 2) {
           setOutput(decodedOutput);
@@ -160,78 +161,81 @@ const CollaborationServiceIntegratedView: React.FC = () => {
         <h2>Collaboration Session</h2>
         <p>Topic: {topic} | Difficulty: {difficulty} | Session: {sessionId}</p>
         <p>Question: {questionId}</p>
-        </div>
-        
-        <div className="editor-header2">
-            <button
-                onClick={handleLeaveSession}
-                className="leave-btn"
-                style={{ marginBottom: '0px' }}
+      </div>
+
+      <div className="editor-header2">
+        <button
+          onClick={handleLeaveSession}
+          className="leave-btn"
+          style={{ marginBottom: '0px' }}
+        >
+          Leave Session
+        </button>
+
+        <div className="matching-form2">
+          <div>
+            <select
+              name="topic"
+              value={language}
+              onChange={
+                (e) => handleLangChange(e)
+              }
+              required
             >
-                Leave Session
-            </button>
-
-            <div className="matching-form2">
-                <div>
-                    <select
-                        name="topic"
-                        value={language}
-                        onChange={
-                            (e) => handleLangChange(e)
-                        }
-                        required
-                    >
-                        <option value="" disabled>Select Language</option> {/* Placeholder option */}
-                        <option value="63">JavaScript</option>
-                        <option value="54">C++</option>
-                        <option value="50">C</option>
-                        <option value="71">Python</option>
-                        <option value="62">Java</option>
-                        <option value="83">Swift</option>
-                    </select>
-                </div>
-            </div>
-            <button
-                onClick={handleRunCode}
-                className="run-btn"
-                style={{ marginBottom: '0px' }}
-            > Run Code
-            </button>
+              <option value="" disabled>Select Language</option> {/* Placeholder option */}
+              <option value="63">JavaScript</option>
+              <option value="54">C++</option>
+              <option value="50">C</option>
+              <option value="71">Python</option>
+              <option value="62">Java</option>
+              <option value="83">Swift</option>
+            </select>
+          </div>
         </div>
+        <button
+          onClick={handleRunCode}
+          className="run-btn"
+          style={{ marginBottom: '0px' }}
+        > Run Code
+        </button>
+      </div>
 
+      <div className="code-and-chat">
         <div className="editor-container">
-            <CodeMirror
+          <CodeMirror
             ref={editorRef}
             options={{
-                mode: syntaxLang,
-                lineNumbers: true,
-                tabSize: 2,
-                indentWithTabs: true,
-                showHint: true,
-                extraKeys: {
-                    'Ctrl-Space': 'autocomplete', // Trigger autocomplete with Ctrl-Space
-                },
-                hintOptions: { completeSingle: false },
+              mode: syntaxLang,
+              lineNumbers: true,
+              tabSize: 2,
+              indentWithTabs: true,
+              showHint: true,
+              extraKeys: {
+                'Ctrl-Space': 'autocomplete', // Trigger autocomplete with Ctrl-Space
+              },
+              hintOptions: { completeSingle: false },
             }}
 
             editorDidMount={(editor) => {
-                editor.on('keyup', (cm: any, event: any) => {
-                    // Only trigger autocomplete on specific characters
-                    const triggerKeys = /^[a-zA-Z0-9_]$/; // Allow letters, numbers, and underscore
-                    if (
-                        triggerKeys.test(event.key) &&
-                        !cm.state.completionActive // Ensure that completion is not already active
-                    ) {
-                        cm.showHint({ completeSingle: false });
-                    }
-                });
+              editor.on('keyup', (cm: any, event: any) => {
+                // Only trigger autocomplete on specific characters
+                const triggerKeys = /^[a-zA-Z0-9_]$/; // Allow letters, numbers, and underscore
+                if (
+                  triggerKeys.test(event.key) &&
+                  !cm.state.completionActive // Ensure that completion is not already active
+                ) {
+                  cm.showHint({ completeSingle: false });
+                }
+              });
             }}
             onChange={() => {
-                // Let Yjs handle all updates; do not use setCode here
+              // Let Yjs handle all updates; do not use setCode here
             }}
-            />
+          />
         </div>
-      
+        {sessionId &&<Chat sessionId={sessionId} />}
+      </div>
+
       <h3 style={{ textAlign: 'left', marginBottom: '5px' }}>Output</h3>
       <div className="output-container" style={{ width: '900px', textAlign: 'left', border: '1px solid #ddd', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
         <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{output}</pre>
