@@ -75,7 +75,8 @@ const MatchingServiceMainView: React.FC = () => {
           console.log(data.message);
           setMatchFound(true); // Set match status to true
           stopProgressBar();
-          setStatusMessage(`Match found for ${topic} and ${difficulty}!`);
+          //setStatusMessage(`Match found for ${topic} and ${difficulty}!`);
+          setStatusMessage(`Match found! Join the session to start coding.`);
           setLoading(false);
           stopListening();
         }

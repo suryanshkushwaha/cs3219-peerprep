@@ -12,7 +12,7 @@ export const assesCode = async (req: Request, res: Response): Promise<void> => {
     }
 
     const instructionalPrompt = 
-    "Analyze the following code snippet, focusing on its efficiency and style. Your response should include:" + "\n" + 
+    "Analyze the following code snippet, focusing on its efficiency and style. Determine the correctness of the code, given the language specified. Your response should include:" + "\n" + 
          "\n" + 
          "\t1. Time Complexity – Provide the Big-O notation." + "\n" + 
          "\t2. Space Complexity – Provide the Big-O notation." + "\n" + 
