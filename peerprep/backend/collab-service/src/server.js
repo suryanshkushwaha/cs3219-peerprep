@@ -7,11 +7,14 @@ const setupWSConnection = ywsUtils.setupWSConnection;
 const docs = ywsUtils.docs;
 const connectDB = require('../config/db');
 const { storeDocument, getDocument } = require('./controller/collab-controller');
+const { Server } = require("socket.io");
+const cors = require("cors");
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
@@ -49,7 +52,30 @@ wss.on('connection', (conn, req) => {
   setupWSConnection(conn, req, { gc: req.url.slice(1) !== 'ws/prosemirror-versions' });
 });
 
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log(`User Connected: ${socket.id}`);
+
+  socket.on("join_room", (data) => {
+    socket.join(data);
+  });
+
+  socket.on("send_message", (data) => {
+    socket.in(data.room).emit("receive_message", data); // Send to all clients except sender
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`User Disconnected: ${socket.id}`);
+  });
+});
+
 const PORT = process.env.PORT || 1234;
 server.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:1234`);
+  console.log(`Server is running at http://localhost:${PORT}`);
 });
