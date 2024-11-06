@@ -87,7 +87,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
 
   useEffect(() => {
     const ydoc = new Y.Doc();
-    const provider = new WebsocketProvider(import.meta.env.VITE_WEBSOCKET_API_URL + sessionId, 'collaborative-doc', ydoc);
+    const provider = new WebsocketProvider('ws://localhost:1234/' + sessionId, 'collaborative-doc', ydoc);
     const newYText = ydoc.getText('codemirror');
     setYText(newYText);
 
