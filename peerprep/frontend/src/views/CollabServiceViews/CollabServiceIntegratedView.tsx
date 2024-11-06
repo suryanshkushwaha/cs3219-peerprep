@@ -22,7 +22,7 @@ import { assesCode } from '../../api/assescodeApi.ts';
 import { CodemirrorBinding } from 'y-codemirror';
 import { WebsocketProvider } from 'y-websocket';
 
-import { listenToMatchStatus, deleteMatchedSession} from "../../api/matchingApi.ts";
+import { listenToMatchStatus, deleteMatchedSession } from "../../api/matchingApi.ts";
 import { getQuestionById } from '../../api/questionApi.ts';
 
 
@@ -43,10 +43,10 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   //extract questionID from session id (eg. 670d81daf90653ef4b9162b8-67094dcc6be97361a2e7cb1a-1730832550120-Q672890c43266d81a769bfaee)
   const [topics, setTopics] = useState<string>('N/A');
   const [difficulty, setDifficulty] = useState<string>('N/A');
-  const[questionTitle, setQuestionTitle] = useState<string>('N/A');
-  const[questionDescription, setQuestionDescription] = useState<string>('N/A');
+  const [questionTitle, setQuestionTitle] = useState<string>('N/A');
+  const [questionDescription, setQuestionDescription] = useState<string>('N/A');
   console.log(sessionId);
-  const questionId = sessionId? sessionId.split('-Q')[1] : "N/A";
+  const questionId = sessionId ? sessionId.split('-Q')[1] : "N/A";
 
   //set topic, difficulty, questionId by calling the API
   useEffect(() => {
@@ -200,7 +200,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
         setCommentOutput('Error: Yjs text instance is not available');
         return;
       }
-  
+
       const currentCode = yText.toString();
       const inputString = "LANGUAGE SPECIFIED IS: " + syntaxFullLang + "\n" + currentCode;
       const responseContent = await assesCode(inputString);
@@ -219,55 +219,48 @@ const CollaborationServiceIntegratedView: React.FC = () => {
         <p>Topics: {topics} | Difficulty: {difficulty}</p>
         <p>Question: {questionTitle}</p>
         <p>Description: {questionDescription}</p>
-        </div>
-        
-        <div className="editor-header2">
-            <button
-                onClick={handleLeaveSession}
-                className="leave-btn"
-                style={{ marginBottom: '0px' }}
-            >
-                Leave Session
-            </button>
+      </div>
 
-            <div className="matching-form2">
-                <div>
-                    <select
-                        name="topic"
-                        value={language}
-                        onChange={
-                            (e) => handleLangChange(e)
-                        }
-                        required
-                    >
-                        <option value="" disabled>Select Language</option> {/* Placeholder option */}
-                        <option value="63">JavaScript</option>
-                        <option value="54">C++</option>
-                        <option value="50">C</option>
-                        <option value="71">Python</option>
-                        <option value="62">Java</option>
-                        <option value="83">Swift</option>
-                    </select>
-                </div>
-            </div>
-            <button
-                onClick={handleRunCode}
-                className="run-btn"
-                style={{ marginBottom: '0px' }}
-            > Run Code
-            </button>
-            <button
-                onClick={handleAssesCode}
-                className="run-btn"
-                style={{ marginBottom: '0px' }}
-            > Assess Code
-            </button>
+      <div className="editor-header2">
+        <button
+          onClick={handleLeaveSession}
+          className="leave-btn"
+          style={{ marginBottom: '0px' }}
+        >
+          Leave Session
+        </button>
+
+        <div className="matching-form2">
+          <div>
+            <select
+              name="topic"
+              value={language}
+              onChange={
+                (e) => handleLangChange(e)
+              }
+              required
+            >
+              <option value="" disabled>Select Language</option> {/* Placeholder option */}
+              <option value="63">JavaScript</option>
+              <option value="54">C++</option>
+              <option value="50">C</option>
+              <option value="71">Python</option>
+              <option value="62">Java</option>
+              <option value="83">Swift</option>
+            </select>
+          </div>
         </div>
         <button
           onClick={handleRunCode}
           className="run-btn"
           style={{ marginBottom: '0px' }}
         > Run Code
+        </button>
+        <button
+          onClick={handleAssesCode}
+          className="run-btn"
+          style={{ marginBottom: '0px' }}
+        > Assess Code
         </button>
       </div>
 
@@ -304,7 +297,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
             }}
           />
         </div>
-        {sessionId &&<Chat sessionId={sessionId} />}
+        {sessionId && <Chat sessionId={sessionId} />}
       </div>
 
       <h3 style={{ textAlign: 'left', marginBottom: '5px' }}>Output</h3>
@@ -315,7 +308,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
       {/*<div className="comments-container"style={{ width: '900px', textAlign: 'left', border: '1px solid #ddd', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9', overflowY: 'scroll'}}>
         <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{commentoutput}</pre>
       </div>*/}
-    </div>
+    </div >
   );
 };
 
