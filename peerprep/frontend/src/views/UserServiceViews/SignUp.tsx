@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom"; // Import Link and useNavigate for navigation
 import { createUser } from "../../api/usersApi"; // Import the createUser API
 import { AxiosError } from "axios"; // Import AxiosError for error handling
