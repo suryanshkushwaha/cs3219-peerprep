@@ -82,3 +82,15 @@ export const deleteQuestion = async (id: string): Promise<void> => {
     return handleApiError(error);
   }
 };
+
+export const getQuestionById = async (id: string): Promise<Question> => {
+  try {
+    const response = await axios.get<any>(`${API_URL}/${id}`);
+    if (!validateQuestionData(response.data)) {
+      throw new Error('Invalid question data received from server');
+    }
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+}

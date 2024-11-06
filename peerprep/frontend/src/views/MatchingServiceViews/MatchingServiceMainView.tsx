@@ -9,6 +9,7 @@ const MatchingServiceMainView: React.FC = () => {
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [questionId, setQuestionId] = useState<string>('Q');
+  console.log(questionId);
   const [loading, setLoading] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const [matchFound, setMatchFound] = useState<boolean>(false); 
@@ -75,7 +76,8 @@ const MatchingServiceMainView: React.FC = () => {
           console.log(data.message);
           setMatchFound(true); // Set match status to true
           stopProgressBar();
-          setStatusMessage(`Match found for ${topic} and ${difficulty}!`);
+          //setStatusMessage(`Match found for ${topic} and ${difficulty}!`);
+          setStatusMessage(`Match found! Join the session to start coding.`);
           setLoading(false);
           stopListening();
         }
@@ -173,7 +175,7 @@ const MatchingServiceMainView: React.FC = () => {
         {/* Show "Go to Session" link if match is found */}
         {matchFound && (
             <button
-              onClick={() => navigate("/collabFull/" + topic + "/" + difficulty + "/" + questionId + "/" + sessionId)}
+              onClick={() => navigate("/collabFull/" + sessionId)}
               className="center-link"
             >
             Go to Session

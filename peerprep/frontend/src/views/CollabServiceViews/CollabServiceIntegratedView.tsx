@@ -15,31 +15,69 @@ import 'codemirror/mode/clike/clike'; // For C, C++, Java (these use the 'clike'
 import 'codemirror/mode/python/python'; // For Python
 import 'codemirror/mode/swift/swift'; // For Swift
 
+import { assesCode } from '../../api/assescodeApi.ts';
+
 // @ts-check
 import { CodemirrorBinding } from 'y-codemirror';
 import { WebsocketProvider } from 'y-websocket';
 
 import { deleteMatchedSession} from "../../api/matchingApi.ts";
+import { getQuestionById } from '../../api/questionApi.ts';
 
 
 const CollaborationServiceIntegratedView: React.FC = () => {
-  const { topic, difficulty, questionId, sessionId } = useParams<{ topic: string; difficulty: string; questionId: string; sessionId: string; }>();
+  const { sessionId } = useParams<{ sessionId: string; }>();
   const [output, setOutput] = useState<string | null>(null);
   const [language, setLanguage] = useState<number>(63); // Default to JavaScript (Node.js)
   const [syntaxLang, setSyntaxLang] = useState<string>('javascript');
+  const [syntaxFullLang, setSyntaxFullLang] = useState<string>('javascript');
   const editorRef = useRef<any>(null);
   const navigate = useNavigate();
   const [yText, setYText] = useState<Y.Text | null>(null);
+  const [commentoutput, setCommentOutput] = useState<string | null>(null);
+  console.log(commentoutput);
+  //let topic = 'topic';
+  //let difficulty = 'difficulty';
+  // Declare question object
+  //extract questionID from session id (eg. 670d81daf90653ef4b9162b8-67094dcc6be97361a2e7cb1a-1730832550120-Q672890c43266d81a769bfaee)
+  const [topics, setTopics] = useState<string>('N/A');
+  const [difficulty, setDifficulty] = useState<string>('N/A');
+  const[questionTitle, setQuestionTitle] = useState<string>('N/A');
+  const[questionDescription, setQuestionDescription] = useState<string>('N/A');
+  console.log(sessionId);
+  const questionId = sessionId? sessionId.split('-Q')[1] : "N/A";
+
+  //set topic, difficulty, questionId by calling the API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getQuestionById(questionId);
+        console.log(response);
+        if (response) {
+          console.log(`Session ID: ${sessionId}, Topics: ${response.categories}, Difficulty: ${response.difficulty}`);
+          console.log(`Question: ${response._id}`);
+          //set topics, difficulty
+          setTopics(response.categories.join(', ')); // Set topic from API response
+          setDifficulty(response.difficulty); // Set difficulty from API response
+          setQuestionTitle(response.title);
+          setQuestionDescription(response.description);
+        }
+      } catch (error) {
+        console.error('Error fetching matched session:', error);
+      }
+    };
+    fetchData();
+  }, [sessionId]);
 
   // Mapping for CodeMirror modes
 
   useEffect(() => {
-    console.log(`Session ID: ${sessionId}, Topic: ${topic}, Difficulty: ${difficulty}`);
+    console.log(`Session ID: ${sessionId}, Topics: ${topics}, Difficulty: ${difficulty}`);
     console.log(`Question: ${questionId}`);
-  }, [sessionId, topic, difficulty, questionId]);
+  }, [sessionId, topics, difficulty, questionId]);
 
   useEffect(() => {
-    document.body.style.overflow = 'auto';
+    document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = 'auto';
     };
@@ -76,6 +114,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
 
   const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(parseInt(e.target.value));
+    setSyntaxFullLang(e.target.textContent!);
     setSyntaxLang(e.target.value === '63' ? 'javascript' 
         : e.target.value === '54' ? 'text/x-c++src' 
         : e.target.value === '50' ? 'text/x-csrc' 
@@ -147,12 +186,32 @@ const CollaborationServiceIntegratedView: React.FC = () => {
     }
   };
 
+  const handleAssesCode = async () => {
+    try {
+      if (!yText) {
+        console.error('Error: Yjs text instance is not available');
+        setCommentOutput('Error: Yjs text instance is not available');
+        return;
+      }
+  
+      const currentCode = yText.toString();
+      const inputString = "LANGUAGE SPECIFIED IS: " + syntaxFullLang + "\n" + currentCode;
+      const responseContent = await assesCode(inputString);
+      //setCommentOutput(responseContent);
+      setOutput(responseContent)
+    } catch (error) {
+      console.error('Error executing OpenAI API call:', error);
+      setCommentOutput('Error executing code');
+    }
+  };
+
   return (
     <div className="editor-container-parent">
       <div className="editor-header">
-        <h2>Collaboration Session</h2>
-        <p>Topic: {topic} | Difficulty: {difficulty} | Session: {sessionId}</p>
-        <p>Question: {questionId}</p>
+        <h3>Collaboration Session</h3>
+        <p>Topics: {topics} | Difficulty: {difficulty}</p>
+        <p>Question: {questionTitle}</p>
+        <p>Description: {questionDescription}</p>
         </div>
         
         <div className="editor-header2">
@@ -190,6 +249,12 @@ const CollaborationServiceIntegratedView: React.FC = () => {
                 style={{ marginBottom: '0px' }}
             > Run Code
             </button>
+            <button
+                onClick={handleAssesCode}
+                className="run-btn"
+                style={{ marginBottom: '0px' }}
+            > Assess Code
+            </button>
         </div>
 
         <div className="editor-container">
@@ -226,9 +291,12 @@ const CollaborationServiceIntegratedView: React.FC = () => {
         </div>
       
       <h3 style={{ textAlign: 'left', marginBottom: '5px' }}>Output</h3>
-      <div className="output-container" style={{ width: '900px', textAlign: 'left', border: '1px solid #ddd', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
+      <div className="output-container" style={{ width: '900px', textAlign: 'left', border: '1px solid #ddd', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9', overflowY: 'scroll' }}>
         <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{output}</pre>
       </div>
+      {/*<div className="comments-container"style={{ width: '900px', textAlign: 'left', border: '1px solid #ddd', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9', overflowY: 'scroll'}}>
+        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{commentoutput}</pre>
+      </div>*/}
     </div>
   );
 };
