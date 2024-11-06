@@ -1,8 +1,9 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, ObjectId } from 'mongoose';
 import Counter from './counterModel';
 
 // Interface for the Question document
 interface IQuestion extends Document {
+    _id: ObjectId;
     questionId: number;
     title: string;
     description: string;
