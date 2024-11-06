@@ -32,9 +32,9 @@ app.post('/api/saveDocument', async (req, res) => {
 });
 
 // Endpoint to retrieve a document from MongoDB
-app.get('/api/document/:name', async (req, res) => {
-  const { name } = req.params;
+app.get('/api/getDocument/:name', async (req, res) => {
   try {
+    const name = req.params.name;
     const documentData = await getDocument(name);
     res.status(200).json({ data: Array.from(documentData) });
   } catch (error) {
