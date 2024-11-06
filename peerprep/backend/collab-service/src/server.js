@@ -67,7 +67,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", (data) => {
-    socket.to(data.room).emit("receive_message", data); // Send to all clients except sender
+    socket.in(data.room).emit("receive_message", data); // Send to all clients except sender
   });
 
   socket.on("disconnect", () => {

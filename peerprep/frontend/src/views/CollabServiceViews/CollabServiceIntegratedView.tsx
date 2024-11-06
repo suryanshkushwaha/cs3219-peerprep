@@ -237,7 +237,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
       </div>
 
       <h3 style={{ textAlign: 'left', marginBottom: '5px' }}>Output</h3>
-      <div className="output-container" style={{ width: '900px', textAlign: 'left', border: '1px solid #ddd', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
+      <div className="output-container" style={{ width: '100%', textAlign: 'left', border: '1px solid #ddd', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
         <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{output}</pre>
       </div>
     </div>

@@ -570,6 +570,7 @@ h2 {
   padding-left: 5px;
   border-radius: 5px;
   max-width: 60%;
+  overflow-x: scroll;
   display: flex;
 }
 
