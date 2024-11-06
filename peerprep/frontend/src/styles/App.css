@@ -770,3 +770,7 @@ input {
   margin-bottom: 15px;
   text-align: center;
 }
+
+.output-container{
+  overflow-y: scroll;
+}
