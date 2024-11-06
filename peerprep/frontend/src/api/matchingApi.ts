@@ -1,5 +1,4 @@
 import axios, { AxiosError } from 'axios';
-import { Request } from '../models/Request';
 
 // Set up axios instance with base URL
 const API_URL = "http://localhost:3000/matchingrequest";
@@ -9,10 +8,6 @@ export class ApiError extends Error {
       super(message);
       this.name = 'ApiError';
     }
-}
-
-interface ErrorResponseData {
-    message: string;
 }
 
 const handleApiError = (error: unknown): never => {
