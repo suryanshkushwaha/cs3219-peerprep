@@ -19,7 +19,7 @@ import 'codemirror/mode/swift/swift'; // For Swift
 import { CodemirrorBinding } from 'y-codemirror';
 import { WebsocketProvider } from 'y-websocket';
 
-import { listenToMatchStatus, deleteMatchedSession} from "../../api/matchingApi.ts";
+import { deleteMatchedSession} from "../../api/matchingApi.ts";
 
 
 const CollaborationServiceIntegratedView: React.FC = () => {
@@ -32,13 +32,6 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   const [yText, setYText] = useState<Y.Text | null>(null);
 
   // Mapping for CodeMirror modes
-  const languageModes = {
-    javascript: 'javascript',
-    cpp: 'text/x-c++src', // Mode for C++
-    c: 'text/x-csrc', // Mode for C
-    java: 'text/x-java', // Mode for Java
-    python: 'python', // Mode for Python
-  };
 
   useEffect(() => {
     console.log(`Session ID: ${sessionId}, Topic: ${topic}, Difficulty: ${difficulty}`);
@@ -54,7 +47,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
 
   useEffect(() => {
     const ydoc = new Y.Doc();
-    const provider = new WebsocketProvider('ws://localhost:1234/' + sessionId, 'collaborative-doc', ydoc);
+    const provider = new WebsocketProvider(import.meta.env.VITE_WEBSOCKET_API_URL + sessionId, 'collaborative-doc', ydoc);
     const newYText = ydoc.getText('codemirror');
     setYText(newYText);
 

@@ -133,17 +133,6 @@ const MatchingServiceMainView: React.FC = () => {
   };
 
   // Handle navigation to session stub
-  const goToSession = () => {
-    navigate('/sessionStub', {
-      state: {
-        sessionId: userId,
-        topic,
-        difficulty,
-        userId1: userId,
-        userId2: 'OtherUserId', // Replace with actual matched user ID from the data
-      },
-    });
-  };
 
   return (
     <div className="matching-container">
