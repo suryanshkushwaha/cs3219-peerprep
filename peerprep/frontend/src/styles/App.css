@@ -698,6 +698,7 @@ input {
 .matching-form2 {
   padding: 0px;
   max-width: 40%;
+  min-width: 10%;
   margin: 0 auto; /* Center the form */
   border-radius: 10px; /* Rounded corners for the form */
   background-color: white; 
