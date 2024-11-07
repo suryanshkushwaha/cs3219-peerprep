@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Question from '../models/questionModel';
+import Question, { IQuestion } from '../models/questionModel';
 
 // Get all questions
 export const getQuestions = async (req: Request, res: Response): Promise<void> => {
@@ -83,5 +83,74 @@ export const deleteQuestion = async (req: Request, res: Response): Promise<void>
     res.status(200).json({ message: 'Question deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error deleting question', error });
+  }
+};
+
+// Get a random question from an array of questions
+const getRandomQuestionFromArray = (questions: IQuestion[]): IQuestion | null => {
+  if (questions.length === 0) return null;
+  const randomIndex = Math.floor(Math.random() * questions.length);
+  return questions[randomIndex];
+};
+
+// Get a random question by both topic and difficulty
+const getRandomQuestionByTopicAndDifficultyHelper = (questions: IQuestion[], topic: string, difficulty: string): IQuestion | null => {
+  const filteredQuestions = questions.filter(
+    question => question.categories.includes(topic) && question.difficulty === difficulty
+  );
+  return getRandomQuestionFromArray(filteredQuestions);
+};
+
+/* 
+   Can use the function below directly. It will take in a topic and difficulty
+   to fetch a random question from MongoDB based on the given topic and difficulty.
+   This function will handle everything, including fetching from MongoDB and
+   selecting a random question with the specified filters.
+*/
+export const getRandomQuestionByTopicAndDifficulty = async (topic: string, difficulty: string): Promise<string | null> => {
+  try {
+    // Fetch questions from MongoDB
+    const questions = await Question.find().lean();
+    //return getRandomQuestionByTopicAndDifficultyHelper(questions, topic, difficulty);
+    const question = getRandomQuestionByTopicAndDifficultyHelper(questions, topic, difficulty);
+    return question ? question._id.toString() : null;
+  } catch (error) {
+    console.error('Error fetching random question at Helper:', error);
+    throw new Error("Error fetching random question at Helper");
+  }
+};
+
+// Define a route handler for fetching a random question
+export const getRandomQuestionEndpoint = async (req: Request, res: Response): Promise<void> => {
+  const { topic, difficulty } = req.query;
+
+  try {
+    //const question = await getRandomQuestionByTopicAndDifficulty(topic as string, difficulty as string);
+    const questionId = await getRandomQuestionByTopicAndDifficulty(topic as string, difficulty as string);
+    if (questionId) {
+      res.status(200).json(questionId);
+    } else {
+      res.status(404).json({ message: 'No question found for the specified criteria.' });
+    }
+  } catch (error) {
+    console.error('RRQ Failed at questionController Endpoint:', error);
+    res.status(500).json({ message: 'RRQ Failed at questionController Endpoint.' });
+  }
+};
+
+// Get a random question by topic and difficulty whole sale
+export const getRandomQuestionByTopicAndDifficultyOld = async (topic: string, difficulty: string): Promise<IQuestion | null> => {
+  try {
+    // Find questions that match the topic and difficulty
+    const questions = await Question.aggregate([
+      { $match: { categories: topic, difficulty: difficulty } },
+      { $sample: { size: 1 } } // Randomly select one document
+    ]);
+
+    // Return the random question or null if none is found
+    return questions.length > 0 ? questions[0] : null;
+  } catch (error) {
+    console.error('Error fetching random question:', error);
+    throw new Error("Failed to retrieve a random question");
   }
 };

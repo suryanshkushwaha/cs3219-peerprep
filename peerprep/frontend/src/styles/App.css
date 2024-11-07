@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 5rem;
   text-align: center;
+  background-color: white;
 }
 
 /* Global Styling */
@@ -490,4 +491,287 @@ h2 {
   font-size: 16px;
   color: #333;
   font-weight: bold;
+}
+
+/* Ensure the container takes up the full page */
+.editor-container-parent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Adjust layout */
+  align-items: center;
+
+  height: 85vh; /* Full height of the viewport */
+  width: 80vw; /* Full width of the viewport */
+  
+  background-color: white;
+  padding: 20px;
+  box-sizing: border-box; /* Include padding in width and height calculations */
+}
+
+.CodeMirror {
+  min-height: 1000px;
+  width: 100%;
+}
+
+.code-and-chat {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  max-width: 900px;
+  min-height: 300px;
+  flex-grow: 1;
+  position: relative;
+}
+
+.editor-container {
+  width: 70%;
+  height: 100%;
+  max-width: 900px;
+  min-height: 300px;
+  flex-grow: 1;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  color: white;
+  
+  /* Add these properties */
+  overflow-y: auto;
+  text-align: left; /* Ensure text aligns to the left */
+  vertical-align: top; /* Ensures text starts from the top */
+}
+
+.chat-box {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  color: black; /* Changed to black for better readability */
+}
+
+.chat-heading{
+  margin: 1px;
+}
+
+.messages {
+  font-size: small;
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 5px;
+}
+
+.message {
+  margin-bottom: 5px;
+  padding: 3px;
+  padding-left: 5px;
+  border-radius: 5px;
+  max-width: 60%;
+  overflow-x: scroll;
+  display: flex;
+}
+
+.sent {
+  background-color: #dcf8c6;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.received {
+  background-color: #f1f0f0;
+  align-self: flex-start;
+  margin-right: auto;
+}
+
+.input-container {
+  display: flex;
+  background-color: white;
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-bottom: 2px;
+}
+
+input {
+  flex-grow: 1;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+  margin-right: 2px;
+  color: black;
+  min-width: 0px;
+}
+
+.sendBtn {
+  padding: 5px 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: small;
+}
+
+.sendBtn:hover {
+  background-color: #0056b3;
+}
+
+/* Header section styling */
+.editor-header {
+  text-align: center;
+  margin-bottom: -10px;
+  margin-top: -60px;
+}
+
+.leave-btn,
+.run-btn {
+  margin-top: 10px; /* Additional spacing if needed for each button */
+}
+
+#language-select {
+  margin-bottom: 20px;
+}
+
+/* Leave session button */
+.leave-btn {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.leave-btn:hover {
+  background-color: #ff1a1a;
+}
+
+/* Styles for the collaborative cursor to look like a blinking bar */
+.CodeMirror-cursor {
+  position: absolute;
+  width: 2px;
+  background-color: blue; /* Adjust the color per user */
+  opacity: 0.8;
+  animation: blink 1s step-end infinite; /* Blinking effect */
+}
+
+.CodeMirror-cursor {
+  border-left: 1px solid white;
+  border-right: 1px solid black;
+}
+
+/* Styles for the label (optional) */
+.CodeMirror-cursor-label {
+  position: absolute;
+  background-color: orange;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+  top: -20px;
+}
+
+/* Blinking animation */
+@keyframes blink {
+  from, to {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.editor-header2 {
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row; /* Arrange items in a vertical stack */
+  align-items: center; /* Align items to the left */
+  gap: 100px; /* Add vertical spacing between items */
+}
+
+.matching-form2 {
+  padding: 0px;
+  max-width: 40%;
+  min-width: 10%;
+  margin: 0 auto; /* Center the form */
+  border-radius: 10px; /* Rounded corners for the form */
+  background-color: white; 
+}
+
+/* Styles for inputs, textarea, and select within .question-form */
+.matching-form2 input,
+.matching-form2 textarea,
+.matching-form2 select {
+  width: 100%; 
+  padding: 10px; 
+  margin-top: 5px; /* Space between input boxes */
+  border: 1px solid #ccc; /* Border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #f4f4f4; 
+  color: #333; 
+  font-size: 16px;
+  box-sizing: border-box; /* Ensures padding is included within the width */
+}
+
+/* Input Fields Focus State */
+.matching-form2 input:focus,
+.matching-form2 textarea:focus,
+.matching-form2 select:focus {
+  outline: none;
+  border: 2px solid #4CAF50; /* Green border on focus */
+  background-color: #fff; /* White background on focus */
+}
+
+/* Custom styling for the difficulty select dropdown */
+.matching-form2 select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 2px solid #ccc; /* border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #f9f9f9; 
+  color: #333;
+  font-size: 16px;
+  appearance: none; 
+}
+
+/* Focus state for select dropdown */
+.matching-form2 select:focus {
+  outline: none;
+  border-color: #4CAF50; /* Green border on focus */
+  background-color: #fff; /* White background on focus */
+}
+
+/* Submit Button */
+.matching-form2 button.submit-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.matching-form2 button.submit-btn:hover {
+  background-color: #45a049;
+}
+
+/* Error Message styling, to be expanded later most likely split into diff types */
+.matching-form2 .error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.output-container{
+  overflow-y: scroll;
 }

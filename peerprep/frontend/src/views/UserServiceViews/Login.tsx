@@ -8,6 +8,12 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState(""); // State to store error messages
     const navigate = useNavigate();
+    
+    // Temp stubs needed to move into Collab stub
+    const topic = "algorithms";
+    const difficulty = "easy"; 
+    const sessionId ="session1";
+    const questionId="Q-42: Write an algorithm for Radix Sort";
   
     const handleLogin = async () => {
       try {
@@ -68,6 +74,12 @@ const Login = () => {
             className="alt-btn"
           >
             Go to Question Management
+          </button>
+          <button
+            onClick={() => navigate("/collabFull/" + topic + "/" + difficulty + "/" + questionId + "/" + sessionId)}
+            className="alt-btn"
+          >
+            Go to Collab Stub
           </button>
         </div>
       </div>
