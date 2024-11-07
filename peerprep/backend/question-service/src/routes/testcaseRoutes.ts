@@ -3,10 +3,10 @@ import Testcase, { ITestcase } from '../models/testcaseModel';
 
 const router = express.Router();
 
-router.get('/testcases/:questionId', async (req: Request, res: Response) => {
-  const { questionId } = req.params;
+router.get('/testcases/:title', async (req: Request, res: Response) => {
+  const { title } = req.params;
   try {
-    const testcase: ITestcase | null = await Testcase.findOne({ questionId });
+    const testcase: ITestcase | null = await Testcase.findOne({ title });
     if (!testcase) {
       return res.status(404).json({ message: 'Testcases not found' });
     }

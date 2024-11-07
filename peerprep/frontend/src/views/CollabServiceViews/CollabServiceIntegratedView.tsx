@@ -24,7 +24,7 @@ import { WebsocketProvider } from 'y-websocket';
 
 import { deleteMatchedSession} from "../../api/matchingApi.ts";
 import { getQuestionById } from '../../api/questionApi.ts';
-import { getTestcasesByQuestionId, Testcase } from '../../api/testcaseApi.ts';
+import { getTestcasesByTitle, Testcase } from '../../api/testcaseApi.ts';
 
 const CollaborationServiceIntegratedView: React.FC = () => {
   const { sessionId } = useParams<{ sessionId: string; }>();
@@ -36,7 +36,15 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   const navigate = useNavigate();
   const [yText, setYText] = useState<Y.Text | null>(null);
   const [commentoutput, setCommentOutput] = useState<string | null>(null);
-  const [testcases, setTestcases] = useState<Testcase | null>(null);
+  const [testcases, setTestcases] = useState<Testcase>({
+    questionId: 0,
+    title: "N/A",
+    input1: "N/A",
+    output1: "N/A",
+    input2: "N/A",
+    output2: "N/A"
+  });
+  
   console.log(commentoutput);
   //let topic = 'topic';
   //let difficulty = 'difficulty';
@@ -46,7 +54,6 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   const [difficulty, setDifficulty] = useState<string>('N/A');
   const [questionTitle, setQuestionTitle] = useState<string>('N/A');
   const [questionDescription, setQuestionDescription] = useState<string>('N/A');
-  const [questionId2, setQuestionId] = useState<number>(0);
   console.log(sessionId);
   const questionId = sessionId ? sessionId.split('-Q')[1] : "N/A";
 
@@ -64,7 +71,6 @@ const CollaborationServiceIntegratedView: React.FC = () => {
           setDifficulty(response.difficulty); // Set difficulty from API response
           setQuestionTitle(response.title);
           setQuestionDescription(response.description);
-          setQuestionId(response.questionId);
         }
       } catch (error) {
         console.error('Error fetching matched session:', error);
@@ -77,7 +83,6 @@ const CollaborationServiceIntegratedView: React.FC = () => {
 
   useEffect(() => {
     console.log(`Session ID: ${sessionId}, Topics: ${topics}, Difficulty: ${difficulty}`);
-    console.log(`Question: ${questionId}`);
   }, [sessionId, topics, difficulty, questionId]);
 
   useEffect(() => {
@@ -107,19 +112,39 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   useEffect(() => {
     const fetchTestcases = async () => {
       try {
-        const response2 = await getTestcasesByQuestionId(questionId2);
-        if (response2) {
-          console.log('Setting fetched testcases:', response2);
-          setTestcases(response2);
+        const response = await getTestcasesByTitle(questionTitle);
+        if (response) {
+          console.log('Setting fetched testcases:', response);
+          setTestcases(response);
+        } else {
+          console.log('No testcases found, setting default values');
+          setTestcases({
+            questionId: 0,
+            title: "N/A",
+            input1: "N/A",
+            output1: "N/A",
+            input2: "N/A",
+            output2: "N/A"
+          });
         }
       } catch (error) {
         console.error('Error fetching testcases:', error);
+        setTestcases({
+          questionId: 0,
+          title: "N/A",
+          input1: "N/A",
+          output1: "N/A",
+          input2: "N/A",
+          output2: "N/A"
+        });
       }
     };
-    if (questionId2 && questionId2 !== 0) {
+  
+    if (questionTitle && questionTitle !== 'N/A') {
       fetchTestcases();
     }
-  }, [questionId2]);
+  }, [questionTitle]);
+  
   
 
   const handleLeaveSession = () => {
