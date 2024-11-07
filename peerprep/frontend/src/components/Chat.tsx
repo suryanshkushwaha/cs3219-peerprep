@@ -8,28 +8,25 @@ interface ChatProps {
 }
 
 const Chat: React.FC<ChatProps> = ({ sessionId }) => {
-  // Room State
-  const [room, setRoom] = useState<string>(sessionId);
-
   // Messages States
   const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<{ text: string; sender: boolean }[]>([]);
 
   const joinRoom = () => {
-    if (room !== '') {
-      socket.emit('join_room', room);
+    if (sessionId !== '') {
+      socket.emit('join_room', sessionId);
     }
   };
 
   const sendMessage = () => {
-    const messageData = { message, room, senderId: socket.id };
+    const messageData = { message, room: sessionId, senderId: socket.id };
     socket.emit('send_message', messageData);
     setMessages((prevMessages) => [...prevMessages, { text: message, sender: true }]);
-    setMessage(''); // Clear the input field after sending the message
+    setMessage('');
   };
 
   useEffect(() => {
-    joinRoom(); // Automatically join the room based on sessionId
+    joinRoom();
 
     socket.on('receive_message', (data) => {
       if (data.senderId !== socket.id) {
@@ -40,7 +37,7 @@ const Chat: React.FC<ChatProps> = ({ sessionId }) => {
     return () => {
       socket.off('receive_message');
     };
-  }, [room]);
+  }, [sessionId]);
 
   return (
     <div className="chat-box">
