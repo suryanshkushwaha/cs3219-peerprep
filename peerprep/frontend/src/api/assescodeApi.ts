@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 
-const API_URL = 'http://localhost:8080/api/gpt/asses';
+const API_URL = import.meta.env.VITE_ASSESS_CODE_API_URL;
 
 // Define a custom error class for API errors
 export class ApiError extends Error {

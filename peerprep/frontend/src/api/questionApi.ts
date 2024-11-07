@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { Question } from '../models/Question';
 
-const API_URL = 'http://localhost:8080/api/questions';
+const API_URL = import.meta.env.VITE_QUESTIONS_API_URL;
 
 class ApiError extends Error {
   constructor(message: string, public statusCode?: number) {
