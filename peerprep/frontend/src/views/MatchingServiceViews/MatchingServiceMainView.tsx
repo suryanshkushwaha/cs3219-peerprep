@@ -8,7 +8,10 @@ const MatchingServiceMainView: React.FC = () => {
   const [difficulty, setDifficulty] = useState<string>('');
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  // FIXME: questionId is not used
+  // Hey, why is this not used?
   const [questionId, setQuestionId] = useState<string>('Q');
+  console.debug("questionId", questionId); // Fix compiler warning
   const [loading, setLoading] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const [matchFound, setMatchFound] = useState<boolean>(false); 
@@ -134,17 +137,18 @@ const MatchingServiceMainView: React.FC = () => {
   };
 
   // Handle navigation to session stub
-  const goToSession = () => {
-    navigate('/sessionStub', {
-      state: {
-        sessionId: userId,
-        topic,
-        difficulty,
-        userId1: userId,
-        userId2: 'OtherUserId', // Replace with actual matched user ID from the data
-      },
-    });
-  };
+  // Kim: Unused
+  // const goToSession = () => {
+  //   navigate('/sessionStub', {
+  //     state: {
+  //       sessionId: userId,
+  //       topic,
+  //       difficulty,
+  //       userId1: userId,
+  //       userId2: 'OtherUserId', // Replace with actual matched user ID from the data
+  //     },
+  //   });
+  // };
 
   return (
     <div className="matching-container">

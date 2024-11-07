@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_ASSESS_CODE_API_URL;
 
@@ -9,21 +9,6 @@ export class ApiError extends Error {
     this.name = 'ApiError';
   }
 }
-
-const handleApiError = (error: unknown): never => {
-  if (axios.isAxiosError(error)) {
-    const axiosError = error as AxiosError;
-    if (axiosError.response) {
-      throw new ApiError(`API error: ${axiosError.response.statusText}`, axiosError.response.status);
-    } else if (axiosError.request) {
-      throw new ApiError('API error: No response received from the server');
-    } else {
-      throw new ApiError(`API error: ${axiosError.message}`);
-    }
-  } else {
-    throw new ApiError(`API error: An unexpected error occurred ${error}`);
-  }
-};
 
 export const assesCode = async (currentCode: string): Promise<string> => {
   try {

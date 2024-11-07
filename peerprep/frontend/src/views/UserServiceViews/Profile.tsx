@@ -1,5 +1,5 @@
 // src/Profile.tsx
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getUserProfile } from '../../api/usersApi'; // Import the getUserProfile function
 import { useParams, Link } from 'react-router-dom'; // Import useParams to get userId from the URL
 import { User } from '../../models/User'; // Import the User model
