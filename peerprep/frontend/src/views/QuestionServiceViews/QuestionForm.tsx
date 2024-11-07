@@ -73,7 +73,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
 
       <div className="form-section category-group">
         <label>Categories:</label>
-        {['algorithms', 'data-structures', 'dynamic-programming', 'graphs', 'strings'].map(category => (
+        {['algorithms', 'arrays', 'bit-manipulation', 'brainteaser', 'databases', 'data-structures', 'dynamic-programming', 'graphs', 'recursion', 'strings'].map(category => (
           <label key={category}>
             <input
               type="checkbox"
