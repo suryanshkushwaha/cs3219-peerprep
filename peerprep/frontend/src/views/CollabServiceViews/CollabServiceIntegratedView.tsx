@@ -196,7 +196,9 @@ const CollaborationServiceIntegratedView: React.FC = () => {
       }
 
       const currentCode = yText.toString();
-      const inputString = "LANGUAGE SPECIFIED IS: " + syntaxFullLang + "\n" + currentCode;
+      const questionInput = "1: Question - " + questionTitle + "\n" + "2: Description" + questionDescription + "\n";
+      const codeAttempt = "3: Code attempt in - " + syntaxFullLang + "\n" + currentCode;
+      const inputString = questionInput + codeAttempt;
       const responseContent = await assesCode(inputString);
       //setCommentOutput(responseContent);
       setOutput(responseContent)
