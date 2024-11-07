@@ -503,6 +503,7 @@ h2 {
   height: 85vh; /* Full height of the viewport */
   width: 80vw; /* Full width of the viewport */
   
+  overflow-y: auto;
   background-color: white;
   padding: 20px;
   box-sizing: border-box; /* Include padding in width and height calculations */
@@ -518,8 +519,8 @@ h2 {
   width: 100%;
   height: 100%;
   max-width: 900px;
-  max-height: 50px;
-  min-height: 50px;
+  max-height: 200px;
+  min-height: 200px;
   flex-grow: 1;
   position: relative;
 }
@@ -528,8 +529,8 @@ h2 {
   width: 70%;
   height: 100%;
   max-width: 900px;
-  max-height: 50px;
-  min-height: 50px;
+  max-height: 200px;
+  min-height: 200px;
   flex-grow: 1;
   border: 2px solid #ccc;
   border-radius: 10px;
@@ -777,4 +778,30 @@ input {
 
 .output-container{
   overflow-y: scroll;
+}
+
+.testcases-table {
+  margin: 20px 0;
+  width: 100%;
+}
+
+.testcases-table table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid #333 !important; /* Outer border around the table */
+  text-align: center;
+}
+
+.testcases-table th, .testcases-table td {
+  border: 1px solid #333 !important; /* Border around each cell */
+  padding: 8px;
+}
+
+.testcases-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.testcases-table td {
+  background-color: #fff;
 }

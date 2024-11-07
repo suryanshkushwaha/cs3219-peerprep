@@ -231,10 +231,8 @@ const CollaborationServiceIntegratedView: React.FC = () => {
     <div className="editor-container-parent">
       <div className="editor-header">
         <h3>Collaboration Session</h3>
-        <p>Topics: {topics} | Difficulty: {difficulty}</p>
-        <p>Question: {questionTitle}</p>
+        <p>Topics: {topics} | Difficulty: {difficulty} | Question: {questionTitle}</p>
         <p>Description: {questionDescription}</p>
-        <p>Question ID: {questionId2}</p>
       </div>
 
       <div className="editor-header2">
@@ -325,29 +323,29 @@ const CollaborationServiceIntegratedView: React.FC = () => {
         <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{commentoutput}</pre>
       </div> */}
 
-      {testcases && (
-        <div className="testcases-table">
-          <h3>Test Cases</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Input 1</th>
-                <th>Output 1</th>
-                <th>Input 2</th>
-                <th>Output 2</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{testcases.input1}</td>
-                <td>{testcases.output1}</td>
-                <td>{testcases.input2}</td>
-                <td>{testcases.output2}</td>
-              </tr>
-            </tbody>
-         </table>
-       </div>
-      )}
+{testcases && (
+  <div className="testcases-table">
+    <h3>Test Cases</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Input 1</th>
+          <th>Output 1</th>
+          <th>Input 2</th>
+          <th>Output 2</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{testcases.input1}</td>
+          <td>{testcases.output1}</td>
+          <td>{testcases.input2}</td>
+          <td>{testcases.output2}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+)}
       </div >
     );
 };
