@@ -1,4 +1,5 @@
 import * as api from '../api/questionApi';
+import { ApiError } from '../api/questionApi';
 import { Question } from '../models/Question';
 
 class QuestionController {
@@ -64,11 +65,20 @@ class QuestionController {
     }
     try {
       return await api.updateQuestion(id, questionData);
-    } catch (error) {
-      console.error('Error updating question:', error);
-      throw new Error('Failed to update question. Please check your input and try again.');
+    } catch (error: unknown) {  // Specify `unknown` type for error
+      if (error instanceof ApiError && error.statusCode === 400) {
+        console.error('Duplicate title error:', error.message);
+        throw new Error(error.message); // Show specific message for duplicate title
+      } else if (error instanceof Error) {  // Check if error is a general Error instance
+        console.error('Error updating question:', error.message);
+        throw new Error('Failed to update question. Please check your input and try again.');
+      } else {
+        console.error('An unknown error occurred');
+        throw new Error('Failed to update question due to an unknown error.');
+      }
     }
   }
+  
 
   static async deleteQuestion(id: string): Promise<void> {
     if (!id || typeof id !== 'string') {

@@ -3,7 +3,7 @@ import { Question } from '../models/Question';
 
 const API_URL = 'http://localhost:8080/api/questions';
 
-class ApiError extends Error {
+export class ApiError extends Error {
   constructor(message: string, public statusCode?: number) {
     super(message);
     this.name = 'ApiError';
@@ -13,7 +13,14 @@ class ApiError extends Error {
 const handleApiError = (error: unknown): never => {
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError;
+
+    // Explicitly cast response data as an object with a `message` string field if expected
+    const responseData = axiosError.response?.data as { message?: string } | undefined;
+
     if (axiosError.response) {
+      if (axiosError.response.status === 400 && responseData?.message?.includes('title already exists')) {
+        throw new ApiError('A question with this title already exists.', 400);
+      }
       throw new ApiError(`API error: ${axiosError.response.statusText}`, axiosError.response.status);
     } else if (axiosError.request) {
       throw new ApiError('API error: No response received from the server');
@@ -21,9 +28,10 @@ const handleApiError = (error: unknown): never => {
       throw new ApiError(`API error: ${axiosError.message}`);
     }
   } else {
-    throw new ApiError(`API error: An unexpected error occurred ${error}`);
+    throw new ApiError(`API error: An unexpected error occurred ${String(error)}`);
   }
 };
+
 
 const validateQuestionData = (data: any): data is Question => {
   return (

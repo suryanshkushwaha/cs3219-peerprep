@@ -55,7 +55,16 @@ export const createQuestion = async (req: Request, res: Response): Promise<void>
 
 // Update a question
 export const updateQuestion = async (req: Request, res: Response): Promise<void> => {
+  const { title } = req.body;
+
   try {
+    // Check if another question with the same title exists (excluding the current question by ID)
+    const duplicateQuestion = await Question.findOne({ title, _id: { $ne: req.params.id } });
+    if (duplicateQuestion) {
+      res.status(400).json({ message: 'A question with this title already exists' });
+      return;
+    }
+
     const updatedQuestion = await Question.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true
