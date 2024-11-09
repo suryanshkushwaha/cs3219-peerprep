@@ -35,8 +35,8 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   const editorRef = useRef<any>(null);
   const navigate = useNavigate();
   const [yText, setYText] = useState<Y.Text | null>(null);
-  const [commentoutput, setCommentOutput] = useState<string | null>(null);
-  console.log(commentoutput);
+  // const [commentoutput, setCommentOutput] = useState<string | null>(null);
+  // console.log(commentoutput);
   //let topic = 'topic';
   //let difficulty = 'difficulty';
   // Declare question object
@@ -191,9 +191,11 @@ const CollaborationServiceIntegratedView: React.FC = () => {
     try {
       if (!yText) {
         console.error('Error: Yjs text instance is not available');
-        setCommentOutput('Error: Yjs text instance is not available');
+        setOutput('Error: Yjs text instance is not available');
         return;
       }
+
+      setOutput('Waiting for code assessment...');
 
       const currentCode = yText.toString();
       const questionInput = "1: Question - " + questionTitle + "\n" + "2: Description" + questionDescription + "\n";
@@ -205,7 +207,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
       setOutput(responseContent)
     } catch (error) {
       console.error('Error executing OpenAI API call:', error);
-      setCommentOutput('Error executing code');
+      setOutput('Error executing code');
     }
   };
 
