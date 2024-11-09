@@ -161,7 +161,6 @@ const MatchingServiceMainView: React.FC = () => {
               <option value="arrays">Arrays</option>
               <option value="bit-manipulation">Bit Manipulation</option>
               <option value="brainteaser">Brainteaser</option>
-              <option value="databases">Databases</option>
               <option value="data-structures">Data Structures</option>
               <option value="dynamic-programming">Dynamic Programming</option>
               <option value="graphs">Graphs</option>

@@ -1,54 +1,6 @@
 import { Request, Response } from 'express';
 import { createQuestion } from './controllers/questionController';
 import Question from './models/questionModel';
-/*
-   {
-      questionId: 6,
-      title: 'Implement Stack using Queues',
-      description: `Implement a last-in-first-out (LIFO) stack using only two queues. The implemented stack should support all the functions of a normal stack (push, top, pop, and empty).`,
-      categories: 'data-structures',
-      difficulty: 'easy',
-    },
-    {
-      questionId: 7,
-      title: 'Combine Two Tables',
-      description: `Given table Person with the following columns: personId, lastName, firstName. And table Address with the following columns: addressId, personId, city, state. Write a solution to report the first name, last name, city, and state of each person.`,
-      categories: 'Databases',
-      difficulty: 'easy',
-    },
-    {
-        questionId: 12,
-        title: 'Rotate Image',
-        description: `You are given an n x n 2D matrix representing an image, rotate the image by 90 degrees (clockwise).`,
-        categories: 'Arrays, algorithms',
-        difficulty: 'medium',
-    },
-    {
-        questionId: 13,
-        title: 'Airplane Seat Assignment Probability',
-        description: `n passengers board an airplane with exactly n seats. The first passenger has lost the ticket and picks a seat randomly. After that, the rest of the passengers will: take their own seat if it is still available, or pick other seats randomly if their seat is taken. Return the probability that the nth person gets their own seat.`,
-        categories: 'Brainteaser',
-        difficulty: 'medium',
-    },
-    {
-        questionId: 19,
-        title: 'Chalkboard XOR Game',
-        description: `You are given an array of integers representing numbers written on a chalkboard. Alice and Bob take turns erasing exactly one number from the chalkboard. Return true if and only if Alice wins the game, assuming both players play optimally.`,
-        categories: 'Brainteaser',
-        difficulty: 'hard',
-    },
-    {
-        questionId: 18,
-        title: 'Wildcard Matching',
-        description: `Given an input string (s) and a pattern (p), implement wildcard pattern matching with support for '?' and '*' where:
-        - '?' matches any single character.
-        - '*' matches any sequence of characters (including the empty sequence).
-        
-        The matching should cover the entire input string (not partial).`,
-        categories: 'Strings, algorithms',
-        difficulty: 'hard',
-    }
-*/
 
 const sampleQuestions = [
   {
@@ -96,12 +48,6 @@ const sampleQuestions = [
     title: 'Implement Stack using Queues',
     description: `Implement a last-in-first-out (LIFO) stack using only two queues. The implemented stack should support all the functions of a normal stack (push, top, pop, and empty).`,
     categories: 'data-structures',
-    difficulty: 'easy',
-  },
-  {
-    title: 'Combine Two Tables',
-    description: `Given table Person with the following columns: 1. personId (int) 2. lastName (varchar) 3. firstName (varchar). personId is the primary key. And table Address with the following columns: 1. addressId (int) 2. personId (int) 3. city (varchar) 4. state (varchar). addressId is the primary key. Write a solution to report the first name, last name, city, and state of each person in the Person table. If the address of a personId is not present in the Address table, report null instead. Return the result table in any order.`,
-    categories: 'databases',
     difficulty: 'easy',
   },
   {
@@ -195,13 +141,7 @@ const sampleQuestions = [
       Return true if and only if Alice wins the game, assuming both players play optimally.`,
     categories: 'brainteaser',
     difficulty: 'hard',
-  },
-  {
-    title: 'Trips and Users',
-    description: `Given table Trips with columns id, client_id, driver_id, city_id, status, request_at, and table Users with columns users_id, banned, role, write a solution to find the cancellation rate of requests with unbanned users (both client and driver must not be banned) between specific dates.`,
-    categories: 'databases',
-    difficulty: 'hard',
-  },
+  }
 ];
 
 // Create a helper function to simulate the Express request-response cycle
