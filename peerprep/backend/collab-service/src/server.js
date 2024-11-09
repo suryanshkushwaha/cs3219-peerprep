@@ -9,6 +9,8 @@ const connectDB = require('../config/db');
 const { storeDocument, getDocument } = require('./controller/collab-controller');
 const { Server } = require("socket.io");
 const cors = require("cors");
+const gptRoutes = require('./routes/gptRoutes');
+const dotenv = require('dotenv');
 
 const app = express();
 const server = http.createServer(app);
@@ -19,6 +21,8 @@ app.use(express.json());
 
 // Connect to MongoDB
 connectDB();
+
+app.use('/api', gptRoutes);
 
 // Endpoint to save a document to MongoDB
 app.post('/api/saveDocument', async (req, res) => {

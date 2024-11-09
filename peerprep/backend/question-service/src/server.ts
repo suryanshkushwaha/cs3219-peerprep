@@ -6,7 +6,6 @@ dotenv.config();
 import connectDB from '../config/db';
 import questionRoutes from './routes/questionRoutes';
 import databaseRoutes from './routes/databaseRoutes';
-import gptRoutes from './routes/gptRoutes';
 import loadSampleData from './sampleData';
 
 connectDB() // Initialize MongoDB connection
@@ -48,8 +47,6 @@ app.use('/api', questionRoutes);
 
 // Database routes
 app.use('/api', databaseRoutes);
-
-app.use('/api', gptRoutes);
 
 // Health check route
 app.get('/hello', (req, res) => {

@@ -16,7 +16,7 @@ import 'codemirror/mode/clike/clike'; // For C, C++, Java (these use the 'clike'
 import 'codemirror/mode/python/python'; // For Python
 import 'codemirror/mode/swift/swift'; // For Swift
 
-import { assesCode } from '../../api/assescodeApi.ts';
+import { assessCode } from '../../api/assesscodeApi.ts';
 
 // @ts-check
 import { CodemirrorBinding } from 'y-codemirror';
@@ -187,7 +187,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
     }
   };
 
-  const handleAssesCode = async () => {
+  const handleAssessCode = async () => {
     try {
       if (!yText) {
         console.error('Error: Yjs text instance is not available');
@@ -199,8 +199,9 @@ const CollaborationServiceIntegratedView: React.FC = () => {
       const questionInput = "1: Question - " + questionTitle + "\n" + "2: Description" + questionDescription + "\n";
       const codeAttempt = "3: Code attempt in - " + syntaxFullLang + "\n" + currentCode;
       const inputString = questionInput + codeAttempt;
-      const responseContent = await assesCode(inputString);
+      const responseContent = await assessCode(inputString);
       //setCommentOutput(responseContent);
+      console.log(responseContent)
       setOutput(responseContent)
     } catch (error) {
       console.error('Error executing OpenAI API call:', error);
@@ -253,7 +254,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
         > Run Code
         </button>
         <button
-          onClick={handleAssesCode}
+          onClick={handleAssessCode}
           className="run-btn"
           style={{ marginBottom: '0px' }}
         > Assess Code
