@@ -77,6 +77,7 @@ const QuestionManagement: React.FC = () => {
       setError(null);
     } catch (err) {
       setError('Failed to save question. Please try again.');
+      setEditingQuestion(null);
     }
   };
 
