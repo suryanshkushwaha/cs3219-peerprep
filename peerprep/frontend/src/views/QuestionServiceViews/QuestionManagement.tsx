@@ -76,10 +76,18 @@ const QuestionManagement: React.FC = () => {
       setSelectedQuestion(null);
       setError(null);
     } catch (err) {
-      setError('Failed to save question. Please try again.');
+      // Set the specific error message from QuestionController
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred. Please try again.');
+      }
+  
+      // Reset to "Add a New Question" mode after a failed edit
       setEditingQuestion(null);
     }
   };
+  
 
   const handleDelete = async (id: string) => {
     try {

@@ -41,16 +41,23 @@ class QuestionController {
   }
 
   static async createQuestion(questionData: Omit<Question, '_id'>): Promise<Question> {
-    console.log('Creating question:', questionData);
     const error = QuestionController.validateQuestion(questionData);
     if (error) {
-      throw new Error(`Invalid question data: ${error}`);
+      throw new Error(error.message); // Throw validation error message directly
     }
     try {
       return await api.createQuestion(questionData);
     } catch (error) {
-      console.error('Error creating question:', error);
-      throw new Error('Failed to create question. Please check your input and try again.');
+      if (error instanceof ApiError && error.statusCode === 400) {
+        console.error('Duplicate title error:', error.message);
+        throw new Error(error.message);
+      } else if (error instanceof Error) {
+        console.error('Error creating question:', error.message);
+        throw new Error('Failed to create question. Please check your input and try again.');
+      } else {
+        console.error('An unknown error occurred');
+        throw new Error('Failed to create question due to an unknown error.');
+      }
     }
   }
 
