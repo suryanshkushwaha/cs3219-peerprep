@@ -45,7 +45,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   const [difficulty, setDifficulty] = useState<string>('N/A');
   const [questionTitle, setQuestionTitle] = useState<string>('N/A');
   const [questionDescription, setQuestionDescription] = useState<string>('N/A');
-  console.log(sessionId);
+  console.log("session id is " + sessionId);
   const questionId = sessionId ? sessionId.split('-Q')[1] : "N/A";
 
   //set topic, difficulty, questionId by calling the API
@@ -296,7 +296,8 @@ const CollaborationServiceIntegratedView: React.FC = () => {
             }}
           />
         </div>
-        {sessionId && <Chat sessionId={sessionId} />}
+        {sessionId && <Chat sessionId={sessionId.replace("matched on Session ID: ", "")} />}
+
       </div>
 
       <h3 style={{ textAlign: 'left', marginBottom: '5px' }}>Output</h3>

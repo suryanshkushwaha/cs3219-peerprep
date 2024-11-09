@@ -66,18 +66,37 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 
-  socket.on("join_room", (data) => {
-    socket.join(data);
+  socket.on("join_room", (room) => {
+    try {
+      socket.join(room);
+      console.log(`User ${socket.id} joined room ${room}`);
+    } catch (error) {
+      console.error(`Error joining room: ${error.message}`);
+      socket.emit("error_message", { message: "Failed to join room. Try again later." });
+    }
   });
 
   socket.on("send_message", (data) => {
-    socket.in(data.room).emit("receive_message", data); // Send to all clients except sender
+    try {
+      socket.in(data.room).emit("receive_message", data);
+    } catch (error) {
+      console.error(`Error sending message: ${error.message}`);
+      socket.emit("error_message", { message: "Failed to send message. Try again later." });
+    }
   });
 
-  socket.on("disconnect", () => {
-    console.log(`User Disconnected: ${socket.id}`);
+  socket.on("disconnect", (reason) => {
+    console.log(`User Disconnected: ${socket.id} - Reason: ${reason}`);
+    if (reason === "io server disconnect") {
+      socket.connect(); // Reconnect on server-side disconnect
+    }
+  });
+
+  socket.on("error", (error) => {
+    console.error(`Socket error: ${error.message}`);
   });
 });
+
 
 const PORT = process.env.PORT || 1234;
 server.listen(PORT, () => {
