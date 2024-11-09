@@ -12,7 +12,7 @@ const cors = require("cors");
 
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({ noServer: true });
 
 app.use(cors());
 app.use(express.json());
