@@ -6,7 +6,13 @@ export const updateStatus = async (userId: string) => {
     try {
         const status = await getStatus(userId);
         if (status.includes("request pending")) {
-            findMatchInQueue(userId);
+            try {
+                // Find match
+                await findMatchInQueue(userId);
+            } catch (error) {
+                console.error('Error in updateStatus:', error);
+                //throw new Error("Failed to update the status of the user's match request");
+            }
         }
         return status;
     } catch (error) {
