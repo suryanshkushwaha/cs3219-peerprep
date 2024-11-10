@@ -24,8 +24,8 @@ const questionSchema: Schema = new Schema({
     difficulty: { type: String, required: true },
     input1: { type: String, required: true },
     output1: { type: String, required: true },
-    input2: { type: String },
-    output2: { type: String }
+    input2: { type: String, required: true},
+    output2: { type: String, required: true }
 });
 
 // Indexing for effecient search
