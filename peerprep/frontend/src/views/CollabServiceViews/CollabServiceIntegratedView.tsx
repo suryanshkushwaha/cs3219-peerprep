@@ -12,9 +12,9 @@ import 'codemirror/addon/hint/show-hint.css';
 import 'codemirror/addon/hint/javascript-hint'; // For JavaScript hints
 
 import 'codemirror/mode/javascript/javascript'; // For JavaScript
-import 'codemirror/mode/clike/clike'; // For C, C++, Java (these use the 'clike' mode)
+import 'codemirror/mode/clike/clike'; // For C, C++, C#, Kotlin, Java (these use the 'clike' mode)
 import 'codemirror/mode/python/python'; // For Python
-import 'codemirror/mode/swift/swift'; // For Swift
+import 'codemirror/mode/ruby/ruby'; // For Ruby
 
 import { assessCode } from '../../api/assesscodeApi.ts';
 
@@ -124,14 +124,18 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(parseInt(e.target.value));
     setSyntaxFullLang(e.target.textContent!);
-    setSyntaxLang(e.target.value === '63' ? 'javascript'
+    setSyntaxLang(
+      e.target.value === '63' ? 'javascript'
       : e.target.value === '54' ? 'text/x-c++src'
-        : e.target.value === '50' ? 'text/x-csrc'
-          : e.target.value === '71' ? 'python'
-            : e.target.value === '62' ? 'text/x-java'
-              : e.target.value === '83' ? 'swift'
-                : 'javascript');
-  }
+      : e.target.value === '50' ? 'text/x-csrc'
+      : e.target.value === '71' ? 'python'
+      : e.target.value === '62' ? 'text/x-java'
+      : e.target.value === '72' ? 'ruby'
+      : e.target.value === '51' ? 'text/x-csharp'    // New language
+      : e.target.value === '78' ? 'text/x-kotlin'    // New language
+      : 'javascript'
+    );
+  };
 
   const handleRunCode = async () => {
     try {
@@ -248,11 +252,13 @@ const CollaborationServiceIntegratedView: React.FC = () => {
             >
               <option value="" disabled>Select Language</option> {/* Placeholder option */}
               <option value="63">JavaScript</option>
-              <option value="54">C++</option>
               <option value="50">C</option>
+              <option value="54">C++</option>
+              <option value="51">C#</option>   {/* New language */}
               <option value="71">Python</option>
               <option value="62">Java</option>
-              <option value="83">Swift</option>
+              <option value="72">Ruby</option> {/* New language */}
+              <option value="78">Kotlin</option> {/* New language */}
             </select>
           </div>
         </div>
