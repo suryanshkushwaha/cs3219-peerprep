@@ -46,6 +46,14 @@ const validateQuestionData = (data: any): data is Question => {
   );
 };
 
+const normalizeQuestionData = (data: Omit<Question, '_id'>): Omit<Question, '_id'> => {
+  return {
+    ...data,
+    categories: data.categories.map(cat => cat.toLowerCase()),
+    difficulty: data.difficulty.toLowerCase()
+  };
+};
+
 export const fetchQuestions = async (): Promise<Question[]> => {
   try {
     const response = await axios.get<any[]>(API_URL);
@@ -61,7 +69,8 @@ export const fetchQuestions = async (): Promise<Question[]> => {
 
 export const createQuestion = async (questionData: Omit<Question, '_id'>): Promise<Question> => {
   try {
-    const response = await axios.post<any>(API_URL, questionData);
+    const normalizedData = normalizeQuestionData(questionData);
+    const response = await axios.post<any>(API_URL, normalizedData);
     if (!validateQuestionData(response.data)) {
       throw new Error('Invalid question data received from server');
     }
@@ -73,7 +82,8 @@ export const createQuestion = async (questionData: Omit<Question, '_id'>): Promi
 
 export const updateQuestion = async (id: string, questionData: Omit<Question, '_id'>): Promise<Question> => {
   try {
-    const response = await axios.put<any>(`${API_URL}/${id}`, questionData);
+    const normalizedData = normalizeQuestionData(questionData);
+    const response = await axios.put<any>(`${API_URL}/${id}`, normalizedData);
     if (!validateQuestionData(response.data)) {
       throw new Error('Invalid question data received from server');
     }
