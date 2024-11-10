@@ -6,7 +6,10 @@ dotenv.config();
 import connectDB from '../config/db';
 import questionRoutes from './routes/questionRoutes';
 import databaseRoutes from './routes/databaseRoutes';
+import gptRoutes from './routes/gptRoutes';
+import testcaseRoutes from './routes/testcaseRoutes';
 import loadSampleData from './sampleData';
+import { normalizeQuestionData } from './middleware/normalizationMiddleware';
 
 connectDB() // Initialize MongoDB connection
   .then(() => {
@@ -42,11 +45,20 @@ app.use(cors({
 } as CorsOptions));
 app.use(express.json());
 
+// Apply normalization middleware to specific routes
+// This middleware will normalize `categories` and `difficulty` fields to lowercase
+app.use('/api/questions', normalizeQuestionData);
+
+
 // API routes
 app.use('/api', questionRoutes);
 
 // Database routes
 app.use('/api', databaseRoutes);
+
+app.use('/api', gptRoutes);
+
+app.use('/api', testcaseRoutes);
 
 // Health check route
 app.get('/hello', (req, res) => {

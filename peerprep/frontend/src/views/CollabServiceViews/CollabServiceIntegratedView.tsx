@@ -24,7 +24,7 @@ import { WebsocketProvider } from 'y-websocket';
 
 import { deleteMatchedSession} from "../../api/matchingApi.ts";
 import { getQuestionById } from '../../api/questionApi.ts';
-
+import { getTestcasesByTitle, Testcase } from '../../api/testcaseApi.ts';
 
 const CollaborationServiceIntegratedView: React.FC = () => {
   const { sessionId } = useParams<{ sessionId: string; }>();
@@ -35,8 +35,22 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   const editorRef = useRef<any>(null);
   const navigate = useNavigate();
   const [yText, setYText] = useState<Y.Text | null>(null);
+
   // const [commentoutput, setCommentOutput] = useState<string | null>(null);
   // console.log(commentoutput);
+
+  const [commentoutput, setCommentOutput] = useState<string | null>(null);
+  const [testcases, setTestcases] = useState<Testcase>({
+    questionId: 0,
+    title: "N/A",
+    input1: "N/A",
+    output1: "N/A",
+    input2: "N/A",
+    output2: "N/A"
+  });
+  
+  console.log(commentoutput);
+
   //let topic = 'topic';
   //let difficulty = 'difficulty';
   // Declare question object
@@ -74,7 +88,6 @@ const CollaborationServiceIntegratedView: React.FC = () => {
 
   useEffect(() => {
     console.log(`Session ID: ${sessionId}, Topics: ${topics}, Difficulty: ${difficulty}`);
-    console.log(`Question: ${questionId}`);
   }, [sessionId, topics, difficulty, questionId]);
 
   useEffect(() => {
@@ -100,6 +113,44 @@ const CollaborationServiceIntegratedView: React.FC = () => {
       };
     }
   }, [sessionId]);
+
+  useEffect(() => {
+    const fetchTestcases = async () => {
+      try {
+        const response = await getTestcasesByTitle(questionTitle);
+        if (response) {
+          console.log('Setting fetched testcases:', response);
+          setTestcases(response);
+        } else {
+          console.log('No testcases found, setting default values');
+          setTestcases({
+            questionId: 0,
+            title: "N/A",
+            input1: "N/A",
+            output1: "N/A",
+            input2: "N/A",
+            output2: "N/A"
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching testcases:', error);
+        setTestcases({
+          questionId: 0,
+          title: "N/A",
+          input1: "N/A",
+          output1: "N/A",
+          input2: "N/A",
+          output2: "N/A"
+        });
+      }
+    };
+  
+    if (questionTitle && questionTitle !== 'N/A') {
+      fetchTestcases();
+    }
+  }, [questionTitle]);
+  
+  
 
   const handleLeaveSession = () => {
     // Call the API to delete the session
@@ -215,8 +266,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
     <div className="editor-container-parent">
       <div className="editor-header">
         <h3>Collaboration Session</h3>
-        <p>Topics: {topics} | Difficulty: {difficulty}</p>
-        <p>Question: {questionTitle}</p>
+        <p>Topics: {topics} | Difficulty: {difficulty} | Question: {questionTitle}</p>
         <p>Description: {questionDescription}</p>
       </div>
 
@@ -307,9 +357,33 @@ const CollaborationServiceIntegratedView: React.FC = () => {
       </div>
       {/*<div className="comments-container"style={{ width: '900px', textAlign: 'left', border: '1px solid #ddd', padding: '10px', borderRadius: '5px', backgroundColor: '#f9f9f9', overflowY: 'scroll'}}>
         <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{commentoutput}</pre>
-      </div>*/}
-    </div >
-  );
+      </div> */}
+
+{testcases && (
+  <div className="testcases-table">
+    <h3>Test Cases</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Input 1</th>
+          <th>Output 1</th>
+          <th>Input 2</th>
+          <th>Output 2</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{testcases.input1}</td>
+          <td>{testcases.output1}</td>
+          <td>{testcases.input2}</td>
+          <td>{testcases.output2}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+)}
+      </div >
+    );
 };
 
 export default CollaborationServiceIntegratedView;

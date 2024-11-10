@@ -158,9 +158,13 @@ const MatchingServiceMainView: React.FC = () => {
             <select name="topic" value={topic} onChange={handleTopicChange} required>
               <option value="">Select Topic</option>
               <option value="algorithms">Algorithms</option>
+              <option value="arrays">Arrays</option>
+              <option value="bit-manipulation">Bit Manipulation</option>
+              <option value="brainteaser">Brainteaser</option>
               <option value="data-structures">Data Structures</option>
               <option value="dynamic-programming">Dynamic Programming</option>
               <option value="graphs">Graphs</option>
+              <option value="recursion">Recursion</option>
               <option value="strings">Strings</option>
             </select>
           </div>
