@@ -163,3 +163,40 @@ export const getRandomQuestionByTopicAndDifficultyOld = async (topic: string, di
     throw new Error("Failed to retrieve a random question");
   }
 };
+
+// Get all unique categories
+export const getAllCategories = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const categories = await Question.distinct('categories');
+    res.status(200).json(categories);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching categories', error });
+  }
+};
+
+// Get all unique difficulties
+export const getAllDifficulties = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const difficulties = await Question.distinct('difficulty');
+    res.status(200).json(difficulties);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching difficulties', error });
+  }
+};
+
+// Check if a specific category and difficulty combination exists
+export const checkCategoryDifficultyAvailability = async (req: Request, res: Response): Promise<void> => {
+  const { category, difficulty } = req.query;
+
+  try {
+    const question = await Question.findOne({ categories: category, difficulty: difficulty });
+    if (question) {
+      res.status(200).json({ available: true });
+    } else {
+      res.status(404).json({ available: false, message: 'No question found for the specified category and difficulty.' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error checking category and difficulty availability', error });
+  }
+};
+
