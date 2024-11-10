@@ -141,13 +141,6 @@ const sampleQuestions = [
     description: `Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection. Design an algorithm to serialize and deserialize a binary tree.`,
     categories: 'data-structures, algorithms',
     difficulty: 'hard',
-  },
-  {
-    title: 'Trips and Users',
-    description: `Given table Trips with columns id, client_id, driver_id, city_id, status, request_at, and table Users with columns users_id, banned, role, write a solution to find the cancellation rate of requests with unbanned users (both client and driver must not be banned) between specific dates.`,
-    categories: 'data-structures, graphs, strings, algorithms',
-    difficulty: 'hard',
-  },
 ];
 
 // Create a helper function to simulate the Express request-response cycle
