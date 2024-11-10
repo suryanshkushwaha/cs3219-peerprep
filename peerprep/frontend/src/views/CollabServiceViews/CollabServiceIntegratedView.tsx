@@ -348,3 +348,37 @@ const CollaborationServiceIntegratedView: React.FC = () => {
 };
 
 export default CollaborationServiceIntegratedView;
+
+/** Sample code snippets in different languages for testing */
+/** TO BE USED FOR INTERNAL TESTING WHERE REQUIRED */
+/*
+KOTLIN
+fun greet(name: String) {
+    println("Hello, $name!")
+}
+
+fun main() {
+    greet("World")
+}
+
+
+C#
+using System;
+
+class Program {
+    static void Greet(string name) {
+        Console.WriteLine("Hello, " + name + "!");
+    }
+
+    static void Main() {
+        Greet("World");
+    }
+}
+
+RUBY
+def greet(name)
+  puts "Hello, #{name}!"
+end
+
+greet("World")
+*/
