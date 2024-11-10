@@ -3,7 +3,7 @@ import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import * as Y from 'yjs';
-import Chat from '../../components/Chat.tsx';
+import Chat from './components/Chat.tsx';
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
