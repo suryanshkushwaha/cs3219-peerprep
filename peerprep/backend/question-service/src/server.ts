@@ -6,7 +6,6 @@ dotenv.config();
 import connectDB from '../config/db';
 import questionRoutes from './routes/questionRoutes';
 import databaseRoutes from './routes/databaseRoutes';
-import gptRoutes from './routes/gptRoutes';
 import testcaseRoutes from './routes/testcaseRoutes';
 import loadSampleData from './sampleData';
 import { normalizeQuestionData } from './middleware/normalizationMiddleware';
@@ -55,8 +54,6 @@ app.use('/api', questionRoutes);
 
 // Database routes
 app.use('/api', databaseRoutes);
-
-app.use('/api', gptRoutes);
 
 app.use('/api', testcaseRoutes);
 

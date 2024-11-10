@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 
-const API_URL = 'http://localhost:8080/api/gpt/asses';
+const API_URL = 'http://localhost:1234/api/gpt/assess';
 
 // Define a custom error class for API errors
 export class ApiError extends Error {
@@ -25,16 +25,16 @@ const handleApiError = (error: unknown): never => {
   }
 };
 
-export const assesCode = async (currentCode: string): Promise<string> => {
+export const assessCode = async (currentCode: string): Promise<string> => {
   try {
     console.log('Submitting code to backend API:');
 
     // Call the backend API instead of OpenAI directly
-    const response = await axios.post(API_URL, { currentCode });
+    const response = await axios.post(API_URL, { codeDetails: currentCode });
 
     // Extract and display the response content from the backend
     const feedback = response.data.feedback;
-    //console.log('Backend API response:', feedback);
+    console.log('Backend API response:', feedback);
     return feedback;
   } catch (error) {
     console.error('Error executing backend API call:', error);

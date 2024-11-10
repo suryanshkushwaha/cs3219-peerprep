@@ -16,7 +16,7 @@ import 'codemirror/mode/clike/clike'; // For C, C++, Java (these use the 'clike'
 import 'codemirror/mode/python/python'; // For Python
 import 'codemirror/mode/swift/swift'; // For Swift
 
-import { assesCode } from '../../api/assescodeApi.ts';
+import { assessCode } from '../../api/assesscodeApi.ts';
 
 // @ts-check
 import { CodemirrorBinding } from 'y-codemirror';
@@ -35,6 +35,10 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   const editorRef = useRef<any>(null);
   const navigate = useNavigate();
   const [yText, setYText] = useState<Y.Text | null>(null);
+
+  // const [commentoutput, setCommentOutput] = useState<string | null>(null);
+  // console.log(commentoutput);
+
   const [commentoutput, setCommentOutput] = useState<string | null>(null);
   const [testcases, setTestcases] = useState<Testcase>({
     questionId: 0,
@@ -46,6 +50,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   });
   
   console.log(commentoutput);
+
   //let topic = 'topic';
   //let difficulty = 'difficulty';
   // Declare question object
@@ -54,7 +59,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   const [difficulty, setDifficulty] = useState<string>('N/A');
   const [questionTitle, setQuestionTitle] = useState<string>('N/A');
   const [questionDescription, setQuestionDescription] = useState<string>('N/A');
-  console.log(sessionId);
+  console.log("session id is " + sessionId);
   const questionId = sessionId ? sessionId.split('-Q')[1] : "N/A";
 
   //set topic, difficulty, questionId by calling the API
@@ -233,24 +238,27 @@ const CollaborationServiceIntegratedView: React.FC = () => {
     }
   };
 
-  const handleAssesCode = async () => {
+  const handleAssessCode = async () => {
     try {
       if (!yText) {
         console.error('Error: Yjs text instance is not available');
-        setCommentOutput('Error: Yjs text instance is not available');
+        setOutput('Error: Yjs text instance is not available');
         return;
       }
+
+      setOutput('Waiting for code assessment...');
 
       const currentCode = yText.toString();
       const questionInput = "1: Question - " + questionTitle + "\n" + "2: Description" + questionDescription + "\n";
       const codeAttempt = "3: Code attempt in - " + syntaxFullLang + "\n" + currentCode;
       const inputString = questionInput + codeAttempt;
-      const responseContent = await assesCode(inputString);
+      const responseContent = await assessCode(inputString);
       //setCommentOutput(responseContent);
+      console.log(responseContent)
       setOutput(responseContent)
     } catch (error) {
       console.error('Error executing OpenAI API call:', error);
-      setCommentOutput('Error executing code');
+      setOutput('Error executing code');
     }
   };
 
@@ -298,7 +306,7 @@ const CollaborationServiceIntegratedView: React.FC = () => {
         > Run Code
         </button>
         <button
-          onClick={handleAssesCode}
+          onClick={handleAssessCode}
           className="run-btn"
           style={{ marginBottom: '0px' }}
         > Assess Code
@@ -338,7 +346,8 @@ const CollaborationServiceIntegratedView: React.FC = () => {
             }}
           />
         </div>
-        {sessionId && <Chat sessionId={sessionId} />}
+        {sessionId && <Chat sessionId={sessionId.replace("matched on Session ID: ", "")} />}
+
       </div>
 
       <h3 style={{ textAlign: 'left', marginBottom: '5px' }}>Output</h3>
