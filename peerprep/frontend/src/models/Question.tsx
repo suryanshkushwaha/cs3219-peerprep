@@ -5,4 +5,8 @@ export interface Question {
   categories: string[];
   difficulty: string;
   questionId: number;
+  input1: string;
+  output1: string;
+  input2: string;
+  output2: string;
 }

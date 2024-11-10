@@ -9,6 +9,10 @@ interface IQuestion extends Document {
     description: string;
     categories: string[];
     difficulty: string;
+    input1: string;
+    output1: string;
+    input2: string;
+    output2: string;
 }
 
 // Mongoose schema for the Question model
@@ -17,7 +21,11 @@ const questionSchema: Schema = new Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     categories: { type: [String], required: true },  // Array for multiple categories
-    difficulty: { type: String, required: true }
+    difficulty: { type: String, required: true },
+    input1: { type: String, required: true },
+    output1: { type: String, required: true },
+    input2: { type: String },
+    output2: { type: String }
 });
 
 // Indexing for effecient search
