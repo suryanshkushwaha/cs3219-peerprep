@@ -27,7 +27,7 @@ export const getQuestionById = async (req: Request, res: Response): Promise<void
 
 // Create a new question
 export const createQuestion = async (req: Request, res: Response): Promise<void> => {
-  const { title, description, categories, difficulty } = req.body;
+  const { title, description, categories, difficulty, input1, output1, input2, output2 } = req.body;
   console.log(req.body);
   try {
     // Check if a question with the same title already exists
@@ -41,7 +41,11 @@ export const createQuestion = async (req: Request, res: Response): Promise<void>
     title,
     description,
     categories,
-    difficulty
+    difficulty,
+    input1,
+    output1,
+    input2,
+    output2
   });
   console.log(newQuestion);
     // Save the new question, questionId will be auto-assigned

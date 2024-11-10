@@ -40,6 +40,10 @@ const validateQuestionData = (data: any): data is Question => {
     typeof data._id === 'string' &&
     typeof data.title === 'string' &&
     typeof data.description === 'string' &&
+    typeof data.input1 === 'string' &&
+    typeof data.output1 === 'string' &&
+    typeof data.input2 === 'string' &&
+    typeof data.output2 === 'string' &&
     Array.isArray(data.categories) &&
     data.categories.every((cat: any) => typeof cat === 'string') &&
     ['easy', 'medium', 'hard'].includes(data.difficulty)

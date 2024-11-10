@@ -24,7 +24,6 @@ import { WebsocketProvider } from 'y-websocket';
 
 import { deleteMatchedSession} from "../../api/matchingApi.ts";
 import { getQuestionById } from '../../api/questionApi.ts';
-import { getTestcasesByTitle, Testcase } from '../../api/testcaseApi.ts';
 
 const CollaborationServiceIntegratedView: React.FC = () => {
   const { sessionId } = useParams<{ sessionId: string; }>();
@@ -39,22 +38,14 @@ const CollaborationServiceIntegratedView: React.FC = () => {
   // const [commentoutput, setCommentOutput] = useState<string | null>(null);
   // console.log(commentoutput);
 
-  const [commentoutput, setCommentOutput] = useState<string | null>(null);
-  const [testcases, setTestcases] = useState<Testcase>({
-    questionId: 0,
-    title: "N/A",
-    input1: "N/A",
-    output1: "N/A",
-    input2: "N/A",
-    output2: "N/A"
-  });
-  
-  console.log(commentoutput);
-
   //let topic = 'topic';
   //let difficulty = 'difficulty';
   // Declare question object
   //extract questionID from session id (eg. 670d81daf90653ef4b9162b8-67094dcc6be97361a2e7cb1a-1730832550120-Q672890c43266d81a769bfaee)
+  const [input1, setInput1] = useState<string>('N/A');
+  const [output1, setOutput1] = useState<string>('N/A');
+  const [input2, setInput2] = useState<string>('N/A');
+  const [output2, setOutput2] = useState<string>('N/A');
   const [topics, setTopics] = useState<string>('N/A');
   const [difficulty, setDifficulty] = useState<string>('N/A');
   const [questionTitle, setQuestionTitle] = useState<string>('N/A');
@@ -76,6 +67,10 @@ const CollaborationServiceIntegratedView: React.FC = () => {
           setDifficulty(response.difficulty); // Set difficulty from API response
           setQuestionTitle(response.title);
           setQuestionDescription(response.description);
+          setInput1(response.input1);
+          setOutput1(response.output1);
+          setInput2(response.input2);
+          setOutput2(response.output2);
         }
       } catch (error) {
         console.error('Error fetching matched session:', error);
@@ -113,44 +108,6 @@ const CollaborationServiceIntegratedView: React.FC = () => {
       };
     }
   }, [sessionId]);
-
-  useEffect(() => {
-    const fetchTestcases = async () => {
-      try {
-        const response = await getTestcasesByTitle(questionTitle);
-        if (response) {
-          console.log('Setting fetched testcases:', response);
-          setTestcases(response);
-        } else {
-          console.log('No testcases found, setting default values');
-          setTestcases({
-            questionId: 0,
-            title: "N/A",
-            input1: "N/A",
-            output1: "N/A",
-            input2: "N/A",
-            output2: "N/A"
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching testcases:', error);
-        setTestcases({
-          questionId: 0,
-          title: "N/A",
-          input1: "N/A",
-          output1: "N/A",
-          input2: "N/A",
-          output2: "N/A"
-        });
-      }
-    };
-  
-    if (questionTitle && questionTitle !== 'N/A') {
-      fetchTestcases();
-    }
-  }, [questionTitle]);
-  
-  
 
   const handleLeaveSession = () => {
     // Call the API to delete the session
@@ -359,7 +316,6 @@ const CollaborationServiceIntegratedView: React.FC = () => {
         <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{commentoutput}</pre>
       </div> */}
 
-{testcases && (
   <div className="testcases-table">
     <h3>Test Cases</h3>
     <table>
@@ -373,15 +329,14 @@ const CollaborationServiceIntegratedView: React.FC = () => {
       </thead>
       <tbody>
         <tr>
-          <td>{testcases.input1}</td>
-          <td>{testcases.output1}</td>
-          <td>{testcases.input2}</td>
-          <td>{testcases.output2}</td>
+          <td>{input1}</td>
+          <td>{output1}</td>
+          <td>{input2}</td>
+          <td>{output2}</td>
         </tr>
       </tbody>
     </table>
   </div>
-)}
       </div >
     );
 };

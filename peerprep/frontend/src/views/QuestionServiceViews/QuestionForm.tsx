@@ -12,6 +12,10 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
     description: '',
     categories: [],
     difficulty: '',
+    input1: '',
+    output1: '',
+    input2: '',
+    output2: '',
     questionId: 0
   });
 
@@ -22,7 +26,11 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
         description: initialData.description || '',
         categories: initialData.categories || [],
         difficulty: initialData.difficulty || '',
-        questionId: initialData.questionId || 0
+        questionId: initialData.questionId || 0,
+        input1: initialData.input1 || '',
+        output1: initialData.output1 || '',
+        input2: initialData.input2 || '',
+        output2: initialData.output2 || ''
       });
     }
   }, [initialData]);
@@ -45,7 +53,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
-    setFormData({ title: '', description: '', categories: [], difficulty: '', questionId: 0 });
+    setFormData({ title: '', description: '', categories: [], difficulty: '', questionId: 0 , input1: '', output1: '', input2: '', output2: '' }); 
   };
 
   return (
@@ -99,6 +107,43 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onSubmit, initialData }) =>
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>
         </select>
+      </div>
+
+      <div className="form-section">
+        <textarea
+          name="input1"
+          value={formData.input1}
+          onChange={handleInputChange}
+          placeholder="Testcase Input 1"
+          required
+        />
+      </div>
+      <div className="form-section">
+        <textarea
+          name="output1"
+          value={formData.output1}
+          onChange={handleInputChange}
+          placeholder="Testcase Output 1"
+          required
+        />
+      </div>
+      <div className="form-section">
+        <textarea
+          name="input2"
+          value={formData.input2}
+          onChange={handleInputChange}
+          placeholder="Testcase Input 2"
+          required
+        />
+      </div>
+      <div className="form-section">
+        <textarea
+          name="output2"
+          value={formData.output2}
+          onChange={handleInputChange}
+          placeholder="Testcase Output 2"
+          required
+        />
       </div>
 
       <button type="submit" className="submit-btn">{initialData ? 'Update' : 'Submit'}</button>

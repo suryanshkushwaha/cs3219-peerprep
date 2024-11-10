@@ -20,6 +20,18 @@ class QuestionController {
     if (!question.difficulty || !['easy', 'medium', 'hard'].includes(question.difficulty)) {
       return new Error("Difficulty must be either 'easy', 'medium', or 'hard'.");
     }
+    if (!question.input1 || question.input1.trim().length === 0) {
+      return new Error("Input1 is required and cannot be empty.");
+    }
+    if (!question.output1 || question.output1.trim().length === 0) {
+      return new Error("Output1 is required and cannot be empty.");
+    }
+    if (!question.input2 || question.input2.trim().length === 0) {
+      return new Error("Input2 is required and cannot be empty.");
+    }
+    if (!question.output2 || question.output2.trim().length === 0) {
+      return new Error("Output2 is required and cannot be empty.");
+    }
     return null;
   };
 
