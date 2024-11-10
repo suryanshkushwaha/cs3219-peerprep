@@ -8,6 +8,7 @@ import questionRoutes from './routes/questionRoutes';
 import databaseRoutes from './routes/databaseRoutes';
 import gptRoutes from './routes/gptRoutes';
 import loadSampleData from './sampleData';
+import { normalizeQuestionData } from './middleware/normalizationMiddleware';
 
 connectDB() // Initialize MongoDB connection
   .then(() => {
@@ -42,6 +43,11 @@ app.use(cors({
   optionsSuccessStatus: 200,
 } as CorsOptions));
 app.use(express.json());
+
+// Apply normalization middleware to specific routes
+// This middleware will normalize `categories` and `difficulty` fields to lowercase
+app.use('/api/questions', normalizeQuestionData);
+
 
 // API routes
 app.use('/api', questionRoutes);
