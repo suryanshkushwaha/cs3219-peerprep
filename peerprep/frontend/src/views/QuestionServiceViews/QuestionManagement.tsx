@@ -134,7 +134,7 @@ const QuestionManagement: React.FC = () => {
   };
 
   return (
-    <div className="container">
+    <div className="question-container">
       {/* Add a link to the login page at the top or in a suitable location */}
       <div className="nav">
         <Link to="/" className="top-left-link">Go to Login</Link> 

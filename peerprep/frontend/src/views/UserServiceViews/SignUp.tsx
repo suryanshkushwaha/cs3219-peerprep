@@ -48,7 +48,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="container">
+    <div className="signup-container">
       <div className="login-form">
         <h2>Sign Up</h2>
 
