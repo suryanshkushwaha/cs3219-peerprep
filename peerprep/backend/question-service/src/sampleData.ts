@@ -141,6 +141,7 @@ const sampleQuestions = [
     description: `Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection. Design an algorithm to serialize and deserialize a binary tree.`,
     categories: 'data-structures, algorithms',
     difficulty: 'hard',
+  }
 ];
 
 // Create a helper function to simulate the Express request-response cycle
