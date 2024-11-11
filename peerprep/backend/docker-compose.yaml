@@ -28,6 +28,8 @@ services:
     env_file:
       - ./matching-service/.env
     restart: always
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
 
   collab-service:
     build:
