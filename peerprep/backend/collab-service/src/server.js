@@ -1,6 +1,8 @@
 const express = require('express');
 const WebSocket = require('ws');
 const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const StaticServer = require('node-static').Server;
 const ywsUtils = require('y-websocket/bin/utils');
 const setupWSConnection = ywsUtils.setupWSConnection;
@@ -11,10 +13,29 @@ const { Server } = require("socket.io");
 const cors = require("cors");
 const gptRoutes = require('./routes/gptRoutes');
 const dotenv = require('dotenv');
-
+dotenv.config();
 const app = express();
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ noServer: true });
+
+let server;
+if (process.env.SSL_KEY_PATH && process.env.SSL_CERT_PATH && process.env.SSL_CA_PATH) {
+    // Load SSL/TLS certificates from environment variables
+    const options = {
+        key: fs.readFileSync(process.env.SSL_KEY_PATH),
+        cert: fs.readFileSync(process.env.SSL_CERT_PATH),
+        ca: fs.readFileSync(process.env.SSL_CA_PATH)
+    };
+
+    // Create an HTTPS server
+    server = https.createServer(options, app);
+    console.log('HTTPS server created with SSL/TLS certificates.');
+} else {
+    // Fallback to HTTP server if SSL/TLS environment variables are not set
+    const http = require('http');
+    server = http.createServer(app);
+    console.log('HTTP server created as SSL/TLS certificates are not provided.');
+}
+
+const wss = new WebSocket.Server({ server });
 
 app.use(cors());
 app.use(express.json());
