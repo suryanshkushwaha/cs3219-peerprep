@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api/testcases';
+const API_URL = import.meta.env.VITE_TESTCASE_API_URL;
 
 export interface Testcase {
   questionId: number;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:1234', {
+const socket = io(import.meta.env.VITE_SOCKET_IO_URL, {
   reconnectionAttempts: 3, // attempt reconnection 3 times
   timeout: 5000,            // connection timeout
 });
