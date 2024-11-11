@@ -8,7 +8,6 @@ const MatchingServiceMainView: React.FC = () => {
   const [difficulty, setDifficulty] = useState<string>('');
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [questionId, setQuestionId] = useState<string>('Q');
   const [loading, setLoading] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const [matchFound, setMatchFound] = useState<boolean>(false); 
@@ -42,26 +41,6 @@ const MatchingServiceMainView: React.FC = () => {
     setProgress(0);
   };
 
-  const getValueAfterDelimiter = (input: string): string | null => {
-    // Split the input string using "-Q" as the delimiter
-    const parts = input.split("-Q");
-
-    // Check if there is a part after the delimiter
-    if (parts.length > 1) {
-        return parts[1].replace(/_/g, " "); // Return the part after "-Q"
-    } else {
-        return "Empty Q"
-    }
-    return null;
-};
-
-  const handleSetQuestionId = (fullSessionId: string) => {
-    const parsedQuestionId = getValueAfterDelimiter(fullSessionId);
-    if (parsedQuestionId != null) {
-        setQuestionId(parsedQuestionId);
-    }
-  }
-
   // Function to listen to match status, declared outside handleSubmit
   const startListeningToMatchStatus = () => {
     const stopListening = listenToMatchStatus(
@@ -71,11 +50,9 @@ const MatchingServiceMainView: React.FC = () => {
         if (data.message.includes("Session")) {
           setStatusMessage(data.message);
           setSessionId(data.message);
-          handleSetQuestionId(data.message);
           console.log(data.message);
           setMatchFound(true); // Set match status to true
           stopProgressBar();
-          //setStatusMessage(`Match found for ${topic} and ${difficulty}!`);
           setStatusMessage(`Match found! Join the session to start coding.`);
           setLoading(false);
           stopListening();
@@ -123,7 +100,6 @@ const MatchingServiceMainView: React.FC = () => {
   useEffect(() => {
     if (progress >= 100) {
       setLoading(false);
-      //setStatusMessage("Match timed out. Please try again.");
       stopProgressBar();
     }
   }, [progress]);
@@ -131,19 +107,6 @@ const MatchingServiceMainView: React.FC = () => {
   // Handle delete request
   const handleDeleteRequest = () => {
     deleteMatchingRequest(userId!); // Fire-and-forget API request
-  };
-
-  // Handle navigation to session stub
-  const goToSession = () => {
-    navigate('/sessionStub', {
-      state: {
-        sessionId: userId,
-        topic,
-        difficulty,
-        userId1: userId,
-        userId2: 'OtherUserId', // Replace with actual matched user ID from the data
-      },
-    });
   };
 
   return (
@@ -223,21 +186,3 @@ const MatchingServiceMainView: React.FC = () => {
 };
 
 export default MatchingServiceMainView;
-
-/*
-          <Link
-          to={{
-            pathname: "/sessionStub",
-          }}
-          state={{
-            sessionId: sessionId, // Replace with the actual session ID if different
-            topic,
-            difficulty,
-            userId1: userId,
-          }}
-          className="center-link"
-          >
-          Go to Session
-          </Link>
-
-*/
