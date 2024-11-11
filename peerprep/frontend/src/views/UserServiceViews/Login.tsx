@@ -1,5 +1,5 @@
 // src/Login.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { loginUser } from "../../api/authApi";
 import { useNavigate, Link } from "react-router-dom"; // Import Link to navigate to signup
 
