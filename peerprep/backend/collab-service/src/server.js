@@ -38,7 +38,13 @@ if (process.env.SSL_KEY_PATH && process.env.SSL_CERT_PATH && process.env.SSL_CA_
     console.log('HTTP server created as SSL/TLS certificates are not provided.');
 }
 
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({
+    server,
+    verifyClient: (info, done) => {
+        // Allow connections from any origin
+        done(true);
+    }
+});
 
 app.use(cors());
 app.use(express.json());
