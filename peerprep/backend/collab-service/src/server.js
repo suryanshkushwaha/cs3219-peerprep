@@ -16,27 +16,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const app = express();
 
-let server;
-if (process.env.SSL_KEY_PATH && process.env.SSL_CERT_PATH && process.env.SSL_CA_PATH &&
-    fs.existsSync(process.env.SSL_KEY_PATH) &&
-    fs.existsSync(process.env.SSL_CERT_PATH) &&
-    fs.existsSync(process.env.SSL_CA_PATH)) {
-    // Load SSL/TLS certificates from environment variables
-    const options = {
-        key: fs.readFileSync(process.env.SSL_KEY_PATH),
-        cert: fs.readFileSync(process.env.SSL_CERT_PATH),
-        ca: fs.readFileSync(process.env.SSL_CA_PATH)
-    };
-
-    // Create an HTTPS server
-    server = https.createServer(options, app);
-    console.log('HTTPS server created with SSL/TLS certificates.');
-} else {
-    // Fallback to HTTP server if SSL/TLS environment variables are not set
-    const http = require('http');
-    server = http.createServer(app);
-    console.log('HTTP server created as SSL/TLS certificates are not provided.');
-}
+const server = http.createServer(app);
 
 const wss = new WebSocket.Server({
     server,
