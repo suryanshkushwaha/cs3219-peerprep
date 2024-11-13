@@ -10,7 +10,7 @@ export const matchStatusStream = (req: Request, res: Response) => {
     res.flushHeaders(); // Ensure headers are sent immediately
 
     const userId = req.params.userId as string; // Get userId from URL parameters
-    const timeout = 30000; // 30-second timeout for example
+    const timeout = 33330; // 30-second timeout for example
     const startTime = Date.now();
 
     // Function to send data to client

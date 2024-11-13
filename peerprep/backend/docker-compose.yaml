@@ -24,12 +24,10 @@ services:
       context: ./matching-service
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3333:3333"
     env_file:
       - ./matching-service/.env
     restart: always
-    volumes:
-      - /etc/letsencrypt:/etc/letsencrypt
 
   collab-service:
     build:
@@ -41,6 +39,8 @@ services:
     env_file:
       - ./collab-service/.env
     restart: always
+    volumes:
+      - "/etc/letsencrypt:/etc/letsencrypt"
 
 networks:
   my-network:

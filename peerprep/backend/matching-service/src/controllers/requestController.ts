@@ -20,7 +20,7 @@ export const createRequest = async (req: Request, res: Response): Promise<void> 
 
     // find within 30 seconds
     let matchedUser = null;
-    const timeout = 30000;
+    const timeout = 33330;
     const startTime = Date.now();
 
     while (!matchedUser && Date.now() - startTime < timeout) {

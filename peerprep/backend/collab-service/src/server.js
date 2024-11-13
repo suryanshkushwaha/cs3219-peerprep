@@ -17,7 +17,10 @@ dotenv.config();
 const app = express();
 
 let server;
-if (process.env.SSL_KEY_PATH && process.env.SSL_CERT_PATH && process.env.SSL_CA_PATH) {
+if (process.env.SSL_KEY_PATH && process.env.SSL_CERT_PATH && process.env.SSL_CA_PATH &&
+    fs.existsSync(process.env.SSL_KEY_PATH) &&
+    fs.existsSync(process.env.SSL_CERT_PATH) &&
+    fs.existsSync(process.env.SSL_CA_PATH)) {
     // Load SSL/TLS certificates from environment variables
     const options = {
         key: fs.readFileSync(process.env.SSL_KEY_PATH),
@@ -44,6 +47,11 @@ app.use(express.json());
 connectDB();
 
 app.use('/api', gptRoutes);
+
+// Sanity testing endpoint
+app.get('/hello', (req, res) => {
+    res.status(200).json({ message: 'Hello, world!' });
+});
 
 // Endpoint to save a document to MongoDB
 app.post('/api/saveDocument', async(req, res) => {
@@ -117,7 +125,6 @@ io.on("connection", (socket) => {
         console.error(`Socket error: ${error.message}`);
     });
 });
-
 
 const PORT = process.env.PORT || 1234;
 server.listen(PORT, () => {
