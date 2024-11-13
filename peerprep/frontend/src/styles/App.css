@@ -265,6 +265,25 @@ h2 {
   vertical-align: middle; /* Align checkbox vertically with the text */
 }
 
+.question-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.question-table th, .question-table td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+@media screen and (max-width: 768px) {
+  .question-table th, .question-table td {
+    font-size: 14px; /* Reduce font size for smaller screens */
+  }
+}
+
 /* Style the buttons inside table cells */
 .question-table .edit-btn {
   display: block;
