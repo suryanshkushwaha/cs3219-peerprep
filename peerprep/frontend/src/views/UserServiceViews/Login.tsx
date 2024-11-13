@@ -9,11 +9,12 @@ const Login = () => {
     const [error, setError] = useState(""); // State to store error messages
     const navigate = useNavigate();
     
-    // Temp stubs needed to move into Collab stub
-    const topic = "algorithms";
-    const difficulty = "easy"; 
-    const sessionId ="session1";
-    const questionId="Q-42: Write an algorithm for Radix Sort";
+    // YB: please coment out variables that you don't use because they get in the way of bundling the code.
+    // // Temp stubs needed to move into Collab stub
+    // const topic = "algorithms";
+    // const difficulty = "easy"; 
+    // const sessionId ="session1";
+    // const questionId="Q-42: Write an algorithm for Radix Sort";
   
     const handleLogin = async () => {
       try {
