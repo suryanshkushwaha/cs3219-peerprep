@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 
-const API_URL = 'http://localhost:1234/api/gpt/assess';
+const API_URL = import.meta.env.VITE_ASSESSCODE_API_URL;
 
 // Define a custom error class for API errors
 export class ApiError extends Error {
@@ -9,21 +9,6 @@ export class ApiError extends Error {
     this.name = 'ApiError';
   }
 }
-
-const handleApiError = (error: unknown): never => {
-  if (axios.isAxiosError(error)) {
-    const axiosError = error as AxiosError;
-    if (axiosError.response) {
-      throw new ApiError(`API error: ${axiosError.response.statusText}`, axiosError.response.status);
-    } else if (axiosError.request) {
-      throw new ApiError('API error: No response received from the server');
-    } else {
-      throw new ApiError(`API error: ${axiosError.message}`);
-    }
-  } else {
-    throw new ApiError(`API error: An unexpected error occurred ${error}`);
-  }
-};
 
 export const assessCode = async (currentCode: string): Promise<string> => {
   try {
@@ -38,6 +23,16 @@ export const assessCode = async (currentCode: string): Promise<string> => {
     return feedback;
   } catch (error) {
     console.error('Error executing backend API call:', error);
-    return "Failed to process code assessment on backend";
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response) {
+        throw new ApiError(`API error: ${axiosError.response.statusText}`, axiosError.response.status);
+      } else if (axiosError.request) {
+        throw new ApiError('API error: No response received from the server');
+      } else {
+        throw new ApiError(`API error: ${axiosError.message}`);
+      }
+    }
+    throw new ApiError(`API error: An unexpected error occurred ${error}`);
   }
 };

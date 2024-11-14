@@ -3,7 +3,7 @@ import axios, { AxiosError } from 'axios';
 import { User } from '../models/User';
 
 // Base URL for user APIs
-const API_URL = 'http://localhost:3001/users';
+const API_URL = import.meta.env.VITE_USERS_API_URL;
 
 class ApiError extends Error {
   constructor(message: string, public statusCode?: number) {
